@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gladiator AI — Génération Vidéo & Image IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #ffffff0f;
+    --accent: #7c3aed;
+    --accent2: #ec4899;
+    --text: #f0f0f8;
+    --muted: #6b6b80;
+    --gradient: linear-gradient(135deg, #7c3aed, #ec4899);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+  /* BANNER */
+  .banner { background: var(--gradient); text-align: center; padding: 10px 16px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .banner button { background: #fff; color: #7c3aed; border: none; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .banner .close { margin-left: auto; cursor: pointer; opacity: 0.8; font-size: 16px; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 20px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; }
+  .logo-icon { width: 34px; height: 34px; border-radius: 10px; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .credits-badge { background: rgba(124,58,237,0.2); border: 1px solid var(--accent); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: #c4b5fd; display: none; }
+  .auth-btn { background: var(--gradient); border: none; color: white; border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Syne', sans-serif; }
+
+  /* TABS */
+  .tabs-wrapper { padding: 0 20px; border-bottom: 1px solid var(--border); background: var(--bg); display: flex; overflow-x: auto; scrollbar-width: none; }
+  .tabs-wrapper::-webkit-scrollbar { display: none; }
+  .tab { padding: 14px 20px; font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+  /* GRID */
+  .grid-container { padding: 16px; columns: 2; column-gap: 10px; }
+  .card { break-inside: avoid; margin-bottom: 10px; border-radius: 14px; overflow: hidden; position: relative; cursor: pointer; background: var(--card); animation: fadeUp 0.5s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .card-media { width: 100%; display: block; object-fit: cover; }
+  .card-placeholder { width: 100%; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+  .card .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 12px; background: linear-gradient(transparent, rgba(0,0,0,0.75)); display: flex; align-items: center; justify-content: space-between; }
+  .card .likes { display: flex; align-items: center; gap: 5px; font-size: 13px; color: rgba(255,255,255,0.9); }
+  .card .badge { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 3px 8px; font-size: 10px; color: #fff; }
+  .card .play-btn { width: 28px; height: 28px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+
+  /* BOTTOM NAV */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,10,15,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; align-items: center; height: 64px; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; color: var(--muted); font-size: 10px; transition: color 0.2s; }
+  .nav-item.active { color: var(--accent); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-create { width: 48px; height: 48px; background: var(--gradient); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 20px rgba(124,58,237,0.5); cursor: pointer; }
+  .spacer { height: 80px; }
+
+  /* MODALS */
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 200; align-items: flex-end; justify-content: center; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 24px 24px 0 0; border: 1px solid var(--border); width: 100%; max-width: 480px; padding: 24px 20px 40px; animation: slideUp 0.3s ease; max-height: 90vh; overflow-y: auto; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+  .modal h2 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 6px; }
+  .modal p { color: var(--muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+
+  /* AUTH MODAL */
+  .input-field { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+  .input-field:focus { border-color: var(--accent); }
+  .primary-btn { width: 100%; background: var(--gradient); border: none; color: white; border-radius: 14px; padding: 14px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: opacity 0.2s; }
+  .primary-btn:hover { opacity: 0.9; }
+  .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .toggle-link { text-align: center; margin-top: 14px; font-size: 13px; color: var(--muted); cursor: pointer; }
+  .toggle-link span { color: #c4b5fd; }
+
+  /* CREATE MODAL */
+  .type-btns { display: flex; gap: 8px; margin-bottom: 16px; }
+  .type-btn { flex: 1; padding: 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--muted); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+  .type-btn.active { background: rgba(124,58,237,0.15); border-color: var(--accent); color: var(--text); }
+  .prompt-area { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; resize: none; height: 100px; outline: none; transition: border-color 0.2s; }
+  .prompt-area:focus { border-color: var(--accent); }
+  .credits-info { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #c4b5fd; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+  /* PRICING MODAL */
+  .plan-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+  .plan-card:hover, .plan-card.selected { border-color: var(--accent); background: rgba(124,58,237,0.1); }
+  .plan-card.popular { border-color: var(--accent2); }
+  .plan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .plan-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; }
+  .plan-price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; }
+  .plan-credits { color: var(--muted); font-size: 13px; }
+  .popular-badge { background: var(--gradient); color: white; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+
+  /* GENERATION STATUS */
+  .gen-status { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); border-radius: 12px; padding: 14px; margin-top: 14px; text-align: center; display: none; }
+  .gen-status.show { display: block; }
+  .spinner { width: 32px; height: 32px; border: 3px solid rgba(124,58,237,0.3); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 20px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity 0.3s; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+  .toast.success { border-color: #22c55e; color: #86efac; }
+  .toast.error { border-color: #ef4444; color: #fca5a5; }
+
+  /* VIDEO PLAYER */
+  .card video { width: 100%; display: block; border-radius: 0; }
+  .fullscreen-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300; align-items: center; justify-content: center; }
+  .fullscreen-modal.open { display: flex; }
+  .fullscreen-modal video, .fullscreen-modal img { max-width: 95vw; max-height: 90vh; border-radius: 16px; }
+  .fullscreen-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 28px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="banner" id="banner">
+  ✨ Nouveau — Générez des vidéos et images IA réelles !
+  <button onclick="openPricing()">Commencer</button>
+  <span class="close" onclick="document.getElementById('banner').remove()">✕</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">⚔️</div>
+    Gladiator AI
+  </div>
+  <div class="nav-right">
+    <div class="credits-badge" id="creditsBadge">⚡ <span id="creditsCount">0</span> crédits</div>
+    <button class="auth-btn" id="authBtn" onclick="openAuth()">Connexion</button>
+  </div>
+</nav>
+
+<!-- TABS -->
+<div class="tabs-wrapper">
+  <div class="tab active" onclick="setTab(this)">Tendances</div>
+  <div class="tab" onclick="setTab(this)">Mes créations</div>
+  <div class="tab" onclick="setTab(this)">Communauté</div>
+</div>
+
+<!-- GRID -->
+<div class="grid-container" id="grid">
+  <div class="card"><div class="card-placeholder" style="height:220px;background:linear-gradient(145deg,#1a0533,#7c3aed)">💎</div><div class="badge">🖼 Image</div><div class="overlay"><div class="likes">❤️ 492</div></div></div>
+  <div class="card"><div class="card-placeholder" style="height:180px;background:linear-gradient(145deg,#0f172a,#0ea5e9)">🚗</div><div class="badge">🎬 Vidéo</div><div class="overlay"><div class="likes">❤️ 425</div><div class="play-btn">▶</div></div></div>
+  <div class="card"><div class="card-placeholder" style="height:260px;background:linear-gradient(145deg,#14532d,#16a34a)">🏈</div><div class="badge">🖼 Image</div><div class="overlay"><div class="likes">❤️ 318</div></div></div>
+  <div class="card"><div class="card-placeholder" style="height:200px;background:linear-gradient(145deg,#7f1d1d,#dc2626)">🚁</div><div class="badge">🎬 Vidéo</div><div class="overlay"><div class="likes">❤️ 1.2k</div><div class="play-btn">▶</div></div></div>
+  <div class="card"><div class="card-placeholder" style="height:230px;background:linear-gradient(145deg,#134e4a,#06b6d4)">🌊</div><div class="badge">🎬 Vidéo</div><div class="overlay"><div class="likes">❤️ 2.1k</div><div class="play-btn">▶</div></div></div>
+  <div class="card"><div class="card-placeholder" style="height:190px;background:linear-gradient(145deg,#312e81,#6366f1)">🤖</div><div class="badge">🖼 Image</div><div class="overlay"><div class="likes">❤️ 639</div></div></div>
+</div>
+<div class="spacer"></div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Explorer</div>
+  <div class="nav-item" onclick="showMyCreations()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Mes médias</div>
+  <div class="nav-item" onclick="openCreate()"><div class="nav-create"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+  <div class="nav-item" onclick="openPricing()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Crédits</div>
+  <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profil</div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-backdrop" id="authModal" onclick="closeOutside(event,'authModal')">
+  <div class="modal">
+    <div class="handle"></div>
+    <h2 id="authTitle">👋 Connexion</h2>
+    <p id="authSubtitle">Connectez-vous pour créer des médias IA</p>
+    <input class="input-field" type="email" id="authEmail" placeholder="Votre email">
+    <input class="input-field" type="password" id="authPassword" placeholder="Mot de passe">
+    <button class="primary-btn" id="authSubmitBtn" onclick="handleAuth()">Se connecter</button>
+    <div class="toggle-link" onclick="toggleAuthMode()">Pas de compte ? <span>Créer un compte gratuit</span></div>
+  </div>
+</div>
+
+<!-- CREATE MODAL -->
+<div class="modal-backdrop" id="createModal" onclick="closeOutside(event,'createModal')">
+  <div class="modal">
+    <div class="handle"></div>
+    <h2>✦ Créer un média IA</h2>
+    <p>Décrivez ce que vous voulez générer</p>
+    <div class="type-btns">
+      <button class="type-btn active" onclick="setType(this,'image')">🖼 Image</button>
+      <button class="type-btn" onclick="setType(this,'video')">🎬 Vidéo</button>
+    </div>
+    <div class="credits-info" id="creditsInfo">⚡ <span id="creditsInModal">0</span> crédits disponibles · Image = 1 crédit · Vidéo = 3 crédits</div>
+    <textarea class="prompt-area" id="promptText" placeholder="Ex: Un lion majestueux au coucher du soleil, style cinématographique, 4K..."></textarea>
+    <button class="primary-btn" onclick="generateMedia()" id="generateBtn" style="margin-top:12px">✦ Générer maintenant</button>
+    <div class="gen-status" id="genStatus">
+      <div class="spinner"></div>
+      <div id="genStatusText">Génération en cours...</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:4px">Cela peut prendre 30 à 60 secondes</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING MODAL -->
+<div class="modal-backdrop" id="pricingModal" onclick="closeOutside(event,'pricingModal')">
+  <div class="modal">
+    <div class="handle"></div>
+    <h2>⚡ Acheter des crédits</h2>
+    <p>1 image = 1 crédit · 1 vidéo = 3 crédits</p>
+    <div class="plan-card" onclick="selectPlan(this,'starter',299,'price_starter')">
+      <div class="plan-header"><span class="plan-name">Starter</span><span class="plan-price">2,99€</span></div>
+      <div class="plan-credits">20 crédits · ~20 images ou 6 vidéos</div>
+    </div>
+    <div class="plan-card popular" onclick="selectPlan(this,'pro',699,'price_pro')">
+      <div class="plan-header"><span class="plan-name">Pro</span><span class="plan-price">6,99€</span><span class="popular-badge">⭐ Populaire</span></div>
+      <div class="plan-credits">60 crédits · ~60 images ou 20 vidéos</div>
+    </div>
+    <div class="plan-card" onclick="selectPlan(this,'ultra',1499,'price_ultra')">
+      <div class="plan-header"><span class="plan-name">Ultra</span><span class="plan-price">14,99€</span></div>
+      <div class="plan-credits">150 crédits · ~150 images ou 50 vidéos</div>
+    </div>
+    <button class="primary-btn" id="payBtn" onclick="startPayment()" disabled>Payer maintenant</button>
+  </div>
+</div>
+
+<!-- FULLSCREEN VIEWER -->
+<div class="fullscreen-modal" id="fullscreenModal">
+  <span class="fullscreen-close" onclick="closeFullscreen()">✕</span>
+  <div id="fullscreenContent"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://sgrmbruwnswddulpdbic.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_NpMXZk_OYIV958R4OGHpBA_DjSN6Q7J';
+const STRIPE_PK = 'pk_test_51TbJh2CHoLQYa6PhNsEA4wSa0IuEBzCW9fs0qmh7BsMTYzMwuHAzmaonWauD911BsliEmm0oXkgW05zNuFJWCPY900c5lohNNU';
+
+let currentUser = null;
+let userCredits = 0;
+let authMode = 'login';
+let selectedPlan = null;
+let selectedType = 'image';
+let stripe = null;
+
+// Init Stripe
+try { stripe = Stripe(STRIPE_PK); } catch(e) {}
+
+// ── SUPABASE HELPERS ──
+async function sbFetch(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${currentUser?.token || SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation',
+      ...(options.headers || {})
+    }
+  });
+  return res;
+}
+
+async function sbAuth(endpoint, body) {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ── AUTH ──
+function openAuth() {
+  if (currentUser) { showToast('Vous êtes déjà connecté !', 'success'); return; }
+  document.getElementById('authModal').classList.add('open');
+}
+
+function toggleAuthMode() {
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  document.getElementById('authTitle').textContent = authMode === 'login' ? '👋 Connexion' : '🚀 Créer un compte';
+  document.getElementById('authSubtitle').textContent = authMode === 'login' ? 'Connectez-vous pour créer des médias IA' : 'Rejoignez Gladiator AI gratuitement';
+  document.getElementById('authSubmitBtn').textContent = authMode === 'login' ? 'Se connecter' : 'Créer mon compte';
+  document.querySelector('.toggle-link').innerHTML = authMode === 'login' ? 'Pas de compte ? <span>Créer un compte gratuit</span>' : 'Déjà un compte ? <span>Se connecter</span>';
+}
+
+async function handleAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  if (!email || !password) { showToast('Remplissez tous les champs', 'error'); return; }
+
+  const btn = document.getElementById('authSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Chargement...';
+
+  const endpoint = authMode === 'login' ? 'token?grant_type=password' : 'signup';
+  const data = await sbAuth(endpoint, { email, password });
+
+  if (data.access_token) {
+    currentUser = { email, token: data.access_token, id: data.user.id };
+    localStorage.setItem('gladiator_user', JSON.stringify(currentUser));
+    document.getElementById('authModal').classList.remove('open');
+    document.getElementById('authBtn').textContent = '👤 ' + email.split('@')[0];
+    await loadCredits();
+    showToast('Bienvenue sur Gladiator AI ! 🎉', 'success');
+    if (authMode === 'signup') await initUserCredits();
+  } else {
+    showToast(data.error_description || 'Erreur de connexion', 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = authMode === 'login' ? 'Se connecter' : 'Créer mon compte';
+}
+
+async function initUserCredits() {
+  try {
+    await sbFetch('user_credits', {
+      method: 'POST',
+      body: JSON.stringify({ user_id: currentUser.id, credits: 3, email: currentUser.email })
+    });
+    userCredits = 3;
+    updateCreditsUI();
+  } catch(e) {}
+}
+
+async function loadCredits() {
+  try {
+    const res = await sbFetch(`user_credits?user_id=eq.${currentUser.id}&select=credits`);
+    const data = await res.json();
+    if (data && data[0]) {
+      userCredits = data[0].credits;
+    } else {
+      await initUserCredits();
+    }
+    updateCreditsUI();
+  } catch(e) {}
+}
+
+function updateCreditsUI() {
+  document.getElementById('creditsCount').textContent = userCredits;
+  document.getElementById('creditsInModal').textContent = userCredits;
+  document.getElementById('creditsBadge').style.display = 'flex';
+}
+
+// ── CREATE ──
+function openCreate() {
+  if (!currentUser) { openAuth(); return; }
+  document.getElementById('createModal').classList.add('open');
+  document.getElementById('creditsInModal').textContent = userCredits;
+}
+
+function setType(btn, type) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedType = type;
+}
+
+async function generateMedia() {
+  const prompt = document.getElementById('promptText').value.trim();
+  if (!prompt) { showToast('Entrez une description !', 'error'); return; }
+
+  const cost = selectedType === 'video' ? 3 : 1;
+  if (userCredits < cost) {
+    showToast(`Crédits insuffisants ! Besoin de ${cost} crédits`, 'error');
+    setTimeout(() => { document.getElementById('createModal').classList.remove('open'); openPricing(); }, 1000);
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  const status = document.getElementById('genStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳ Génération...';
+  status.classList.add('show');
+
+  try {
+    // Call our serverless API
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentUser.token}` },
+      body: JSON.stringify({ prompt, type: selectedType, userId: currentUser.id })
+    });
+    const data = await res.json();
+
+    if (data.url) {
+      // Deduct credits
+      await sbFetch(`user_credits?user_id=eq.${currentUser.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ credits: userCredits - cost })
+      });
+      userCredits -= cost;
+      updateCreditsUI();
+
+      // Save to DB
+      await sbFetch('user_generations', {
+        method: 'POST',
+        body: JSON.stringify({ user_id: currentUser.id, prompt, type: selectedType, url: data.url })
+      });
+
+      // Add to grid
+      addMediaToGrid(data.url, selectedType, prompt);
+      document.getElementById('createModal').classList.remove('open');
+      showToast('Média généré avec succès ! 🎉', 'success');
+    } else {
+      showToast('Erreur de génération. Réessayez.', 'error');
+    }
+  } catch(e) {
+    showToast('Erreur réseau. Réessayez.', 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✦ Générer maintenant';
+  status.classList.remove('show');
+  document.getElementById('promptText').value = '';
+}
+
+function addMediaToGrid(url, type, prompt) {
+  const grid = document.getElementById('grid');
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.animationDelay = '0s';
+
+  if (type === 'video') {
+    card.innerHTML = `
+      <video src="${url}" style="width:100%;border-radius:14px 14px 0 0" autoplay muted loop playsinline></video>
+      <div class="badge">🎬 Vidéo</div>
+      <div class="overlay">
+        <div class="likes">❤️ 0</div>
+        <div class="play-btn" onclick="openFullscreen('${url}','video')">⤢</div>
+      </div>`;
+  } else {
+    card.innerHTML = `
+      <img src="${url}" style="width:100%;border-radius:14px 14px 0 0" alt="${prompt}">
+      <div class="badge">🖼 Image</div>
+      <div class="overlay">
+        <div class="likes">❤️ 0</div>
+        <div class="play-btn" onclick="openFullscreen('${url}','image')">⤢</div>
+      </div>`;
+  }
+  grid.prepend(card);
+}
+
+// ── PRICING ──
+function openPricing() {
+  if (!currentUser) { openAuth(); return; }
+  document.getElementById('pricingModal').classList.add('open');
+}
+
+function selectPlan(el, name, amount, priceId) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = { name, amount, priceId };
+  document.getElementById('payBtn').disabled = false;
+}
+
+async function startPayment() {
+  if (!selectedPlan) return;
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.textContent = 'Redirection...';
+
+  try {
+    const res = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentUser.token}` },
+      body: JSON.stringify({ plan: selectedPlan.name, userId: currentUser.id, email: currentUser.email })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      showToast('Erreur paiement. Réessayez.', 'error');
+    }
+  } catch(e) {
+    showToast('Erreur réseau.', 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Payer maintenant';
+}
+
+// ── MY CREATIONS ──
+async function showMyCreations() {
+  if (!currentUser) { openAuth(); return; }
+  try {
+    const res = await sbFetch(`user_generations?user_id=eq.${currentUser.id}&order=created_at.desc&select=*`);
+    const data = await res.json();
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    if (!data || data.length === 0) {
+      grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);grid-column:span 2">Aucune création pour l\'instant.<br>Appuyez sur + pour créer !</div>';
+      return;
+    }
+    data.forEach(item => addMediaToGrid(item.url, item.type, item.prompt));
+  } catch(e) {
+    showToast('Erreur chargement', 'error');
+  }
+}
+
+// ── UI HELPERS ──
+function setTab(el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function closeOutside(e, id) {
+  if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('open');
+}
+
+function openFullscreen(url, type) {
+  const modal = document.getElementById('fullscreenModal');
+  const content = document.getElementById('fullscreenContent');
+  content.innerHTML = type === 'video'
+    ? `<video src="${url}" controls autoplay style="max-width:95vw;max-height:90vh;border-radius:16px"></video>`
+    : `<img src="${url}" style="max-width:95vw;max-height:90vh;border-radius:16px">`;
+  modal.classList.add('open');
+}
+
+function closeFullscreen() {
+  document.getElementById('fullscreenModal').classList.remove('open');
+  document.getElementById('fullscreenContent').innerHTML = '';
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── CHECK SESSION ──
+window.addEventListener('load', async () => {
+  const saved = localStorage.getItem('gladiator_user');
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      document.getElementById('authBtn').textContent = '👤 ' + currentUser.email.split('@')[0];
+      await loadCredits();
+    } catch(e) { localStorage.removeItem('gladiator_user'); }
+  }
+
+  // Check if returning from payment
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('success') === 'true') {
+    showToast('Paiement réussi ! Crédits ajoutés 🎉', 'success');
+    if (currentUser) await loadCredits();
+    window.history.replaceState({}, '', '/');
+  }
+});
+</script>
+</body>
+</html>
