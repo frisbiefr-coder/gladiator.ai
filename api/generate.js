@@ -43,3 +43,6 @@ module.exports = async (req, res) => {
 
   } catch (e) {
     return res.status(500).jso
+n({ error: e.message });
+  }
+};
