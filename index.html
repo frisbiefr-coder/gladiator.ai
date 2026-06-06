@@ -725,10 +725,16 @@ async function generateMedia(){
   if(selectedType==='img2video'){
     if(!pendingUploadFile){showToast('Téléchargez une image !','error');return;}
     prompt=document.getElementById('img2vidPrompt').value.trim()||'Animate this image with smooth motion';
-    imageBase64=await new Promise((resolve)=>{
-      const reader=new FileReader();
-      reader.onload=e=>resolve(e.target.result);
-      reader.readAsDataURL(pendingUploadFile);
+    const preview=document.getElementById('uploadPreview');
+if(preview&&preview.src&&preview.src.startsWith('data:')){
+  imageBase64=preview.src;
+}else{
+  imageBase64=await new Promise((resolve)=>{
+    const reader=new FileReader();
+    reader.onload=e=>resolve(e.target.result);
+    reader.readAsDataURL(pendingUploadFile);
+  });
+}
     });
     imageMimeType=pendingUploadFile.type;
   } else {
