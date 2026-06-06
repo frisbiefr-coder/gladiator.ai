@@ -23,8 +23,8 @@ module.exports = async (req, res) => {
     } catch(e) {}
     let falUrl, falBody;
     if (type === 'video') {
-      falUrl = 'https://fal.run/fal-ai/kling-video/v1.6/pro/text-to-video';
-      falBody = { prompt: enhancedPrompt, duration: '10', aspect_ratio: '16:9', cfg_scale: 0.5 };
+      falUrl = 'https://fal.run/fal-ai/minimax/video-01';
+      falBody = { prompt: enhancedPrompt, duration: 6 };
     } else {
       falUrl = 'https://fal.run/fal-ai/flux/schnell';
       falBody = { prompt: enhancedPrompt, image_size: 'portrait_4_3', num_images: 1 };
