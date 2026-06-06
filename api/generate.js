@@ -1,5 +1,4 @@
-                                                                                                                                                                                    const submitData = await submitRes.json();
-        module.exports = async (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -18,73 +17,29 @@
 
     if (type === 'video') {
       falUrl = 'https://fal.run/fal-ai/ltx-video';
-      falBody = {
-        prompt,
-        num_inference_steps: 30,
-        guidance_scale: 3,
-        num_frames: 97
-      };
+      falBody = { prompt, num_inference_steps: 30, guidance_scale: 3, num_frames: 97 };
     } else {
       falUrl = 'https://fal.run/fal-ai/flux/schnell';
-      falBody = {
-        prompt,
-        image_size: 'portrait_4_3',
-        num_images: 1,
-        enable_safety_checker: false
-      };
+      falBody = { prompt, image_size: 'portrait_4_3', num_images: 1, enable_safety_checker: false };
     }
 
     const response = await fetch(falUrl, {
       method: 'POST',
-      headers: {
-        'Authorization': `Key ${FAL_KEY}`,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Authorization': `Key ${FAL_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(falBody)
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
-      console.error('FAL error:', JSON.stringify(data));
-      return res.status(500).json({ error: 'Erreur FAL.ai', details: data });
-    }
+    if (!response.ok) return res.status(500).json({ error: 'Erreur FAL.ai', details: data });
 
-    let url = null;
-    if (type === 'video') {
-      url = data?.video?.url || data?.url || null;
-    } else {
-      url = data?.images?.[0]?.url || data?.image?.url || null;
-    }
+    const url = type === 'video'
+      ? (data?.video?.url || data?.url || null)
+      : (data?.images?.[0]?.url || data?.image?.url || null);
 
-    if (!url) {
-      console.error('No URL in FAL response:', JSON.stringify(data));
-      return res.status(500).json({ error: 'Pas d\'URL dans la réponse FAL', raw: data });
-    }
+    if (!url) return res.status(500).json({ error: 'Pas d URL dans la reponse FAL', raw: data });
 
     return res.status(200).json({ url });
 
   } catch (e) {
-    console.error('Exception:', e.message);
-    return res.status(500).json({ error: e.message });
-  }
-};
-                                                                                                                                                                                  const requestId = submitData.request_id;
-                                                                                                                                                                                                if (!requestId) return res.status(500).json({ error: 'Pas de request_id' });
-
-                                                                                                                                                                                                      for (let i = 0; i < 30; i++) {
-                                                                                                                                                                                                              await new Promise(r => setTimeout(r, 6000));
-                                                                                                                                                                                                                      const statusRes = await fetch(`https://fal.run/fal-ai/kling-video/v1.6/standard/text-to-video/requests/${requestId}`, {
-                                                                                                                                                                                                                                headers: { 'Authorization': `Key ${FAL_KEY}` }
-                                                                                                                                                                                                                                        });
-                                                                                                                                                                                                                                                const statusData = await statusRes.json();
-                                                                                                                                                                                                                                                        if (statusData.status === 'COMPLETED') {
-                                                                                                                                                                                                                                                                  return res.status(200).json({ url: statusData.video?.url });
-                                                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                      return res.status(500).json({ error: 'Timeout vidéo' });
-                                                                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                                                                            } catch (err) {
-                                                                                                                                                                                                                                                                                                return res.status(500).json({ error: err.message });
-                                                                                                                                                                                                                                                                                                  }
-                                                                                                                                                                                                                                                                                                  };
+    return res.status(500).jso
