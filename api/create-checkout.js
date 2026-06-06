@@ -3,9 +3,9 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PLANS = {
-  starter: { credits: 20, amount: 299, name: 'Starter' },
-  pro:     { credits: 60, amount: 699, name: 'Pro' },
-  ultra:   { credits: 150, amount: 1499, name: 'Ultra' }
+  starter: { credits: 100, amount: 990, name: 'Starter' },
+pro:     { credits: 225, amount: 1990, name: 'Pro' },
+ultra:   { credits: 500, amount: 3990, name: 'Ultra' }
 };
 
 export default async function handler(req, res) {
