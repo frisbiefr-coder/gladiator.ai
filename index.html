@@ -720,11 +720,8 @@ function switchNav(s){
 function logout(){
   localStorage.removeItem('limineo_user');
   currentUser=null;userCredits=0;
-  document.getElementById('authBtn').textContent='Connexion';
-  document.getElementById('creditsBadge').style.display='none';
-  document.getElementById('profileModal').classList.remove('open');
-  showLanding();
   showToast('Déconnecté avec succès','success');
+  setTimeout(()=>window.location.reload(),1000);
 }
 function setTab(el,s){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');if(s==='mine')showMyCreations();}
 function closeOutside(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
