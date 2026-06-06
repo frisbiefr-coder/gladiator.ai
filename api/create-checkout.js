@@ -3,9 +3,12 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PLANS = {
-  starter: { credits: 100, amount: 990, name: 'Starter' },
-pro:     { credits: 225, amount: 1990, name: 'Pro' },
-ultra:   { credits: 500, amount: 3990, name: 'Ultra' }
+  starter_monthly: { credits: 100, amount: 990, name: 'Starter' },
+  pro_monthly:     { credits: 225, amount: 1990, name: 'Pro' },
+  ultra_monthly:   { credits: 500, amount: 3990, name: 'Ultra' },
+  starter_yearly:  { credits: 100, amount: 890, name: 'Starter Annuel' },
+  pro_yearly:      { credits: 225, amount: 1790, name: 'Pro Annuel' },
+  ultra_yearly:    { credits: 500, amount: 3490, name: 'Ultra Annuel' },
 };
 
 export default async function handler(req, res) {
