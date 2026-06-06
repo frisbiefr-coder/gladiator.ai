@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
   try {
     let enhancedPrompt = prompt;
     try {
-      const transRes = await fetch('https://libretranslate.com/translate', {
+      const transRes = await fetch('https://translate.argosopentech.com/translate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ q: prompt, source: 'auto', target: 'en', format: 'text' })
@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
     }
     if (!url) return res.status(500).json({ error: 'Pas URL', raw: data });
     return res.status(200).json({ url: url });
-  } catch (e) {
+  } catch(e) {
     return res.status(500).json({ error: e.message });
   }
 };
