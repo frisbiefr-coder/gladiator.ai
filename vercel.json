@@ -3,7 +3,7 @@
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
   "functions": {
-    "api/generate.js": { "maxDuration": 60 },
+    "api/generate.js": { "maxDuration": 300 },
     "api/create-checkout.js": { "maxDuration": 60 },
     "api/webhook.js": { "maxDuration": 60 }
   }
