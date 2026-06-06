@@ -318,7 +318,7 @@ body.landing-mode .bottom-nav { display:none !important; }
       </g>
       <circle cx="27" cy="24" r="2" fill="white" fill-opacity="0.5"/>
     </svg>
-    <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;transform:scaleX(1.6);display:inline-block;transform-origin:left;">Limineo AI</span>
+    <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0px;display:inline-block;">Limineo <span style="background:linear-gradient(135deg,#ec4899,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">AI</span></span>
   </div>
   <div class="nav-right">
     <div class="credits-badge" id="creditsBadge">⚡ <span id="creditsCount">0</span> crédits</div>
@@ -372,6 +372,23 @@ body.landing-mode .bottom-nav { display:none !important; }
   <div class="nav-item" onclick="openCreate()"><div class="nav-create"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
   <div class="nav-item" id="navCredits" onclick="switchNav('credits')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Crédits</div>
   <div class="nav-item" id="navProfile" onclick="switchNav('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profil</div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-backdrop" id="profileModal" onclick="closeOutside(event,'profileModal')">
+  <div class="modal">
+    <div class="handle"></div>
+    <h2>👤 Mon profil</h2>
+    <p id="profileEmail" style="color:var(--muted);font-size:14px;margin-bottom:20px;"></p>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:14px;color:var(--muted);">Crédits disponibles</span>
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="profileCredits">0</span>
+      </div>
+    </div>
+    <button class="primary-btn" onclick="openPricing();document.getElementById('profileModal').classList.remove('open');" style="margin-bottom:10px;">⚡ Acheter des crédits</button>
+    <button onclick="logout()" style="width:100%;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:14px;padding:14px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;">🚪 Se déconnecter</button>
+  </div>
 </div>
 
 <!-- AUTH MODAL -->
@@ -571,7 +588,7 @@ async function handleAuth(){
   btn.disabled=false;btn.textContent=authMode==='login'?'Se connecter':'Créer mon compte';
 }
 async function initUserCredits(){
-  try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:50,email:currentUser.email})});userCredits=50;updateCreditsUI();}catch(e){}
+  try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:5,email:currentUser.email})});userCredits=5;updateCreditsUI();}catch(e){}
 }
 async function loadCredits(){
   try{
@@ -693,6 +710,21 @@ function switchNav(s){
   ['explore','mine','credits','profile'].forEach(x=>{const el=document.getElementById('nav'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.classList.remove('active');});
   const a=document.getElementById('nav'+s.charAt(0).toUpperCase()+s.slice(1));if(a)a.classList.add('active');
   if(s==='mine')showMyCreations();if(s==='credits')openPricing();
+  if(s==='profile'){
+    if(!currentUser){openAuth();return;}
+    document.getElementById('profileEmail').textContent=currentUser.email;
+    document.getElementById('profileCredits').textContent=userCredits;
+    document.getElementById('profileModal').classList.add('open');
+  }
+}
+function logout(){
+  localStorage.removeItem('limineo_user');
+  currentUser=null;userCredits=0;
+  document.getElementById('authBtn').textContent='Connexion';
+  document.getElementById('creditsBadge').style.display='none';
+  document.getElementById('profileModal').classList.remove('open');
+  showLanding();
+  showToast('Déconnecté avec succès','success');
 }
 function setTab(el,s){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');if(s==='mine')showMyCreations();}
 function closeOutside(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
