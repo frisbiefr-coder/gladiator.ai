@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Limineo AI — Génération Vidéo & Image IA</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://js.stripe.com/v3/"></script>
 <style>
 :root{--bg:#0a0a0f;--surface:#111118;--card:#16161f;--border:rgba(255,255,255,0.06);--accent:#7c3aed;--accent2:#ec4899;--text:#f0f0f8;--muted:#6b6b80;--gradient:linear-gradient(135deg,#7c3aed,#ec4899);}
@@ -15,11 +15,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .logo{display:flex;align-items:center;gap:8px;cursor:pointer;}
 .nav-right{display:flex;align-items:center;gap:8px;}
 .lang-picker{position:relative;}
-.lang-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.5);border-radius:20px;padding:7px 12px;color:var(--text);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.lang-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.5);border-radius:20px;padding:7px 12px;color:var(--text);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;}
 .lang-dropdown{display:none;position:fixed;top:62px;right:12px;background:#1a1a28;border:1px solid rgba(124,58,237,0.4);border-radius:18px;padding:8px;z-index:9999;min-width:200px;box-shadow:0 20px 60px rgba(0,0,0,0.8);}
 .lang-dropdown.open{display:block;}
-.lang-option{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:10px;cursor:pointer;font-size:14px;-webkit-tap-highlight-color:transparent;}
-.lang-option:active{background:rgba(124,58,237,0.25);}
+.lang-option{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:10px;cursor:pointer;font-size:14px;}
 .lang-option.active{background:rgba(124,58,237,0.2);color:#c4b5fd;font-weight:700;}
 .auth-btn{background:var(--gradient);border:none;color:white;border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;white-space:nowrap;}
 .credits-badge{background:rgba(124,58,237,0.2);border:1px solid var(--accent);border-radius:20px;padding:5px 12px;font-size:12px;color:#c4b5fd;display:none;}
@@ -29,10 +28,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .user-dropdown-header{padding:12px 14px;border-bottom:1px solid var(--border);margin-bottom:6px;}
 .user-dropdown-email{font-size:12px;color:var(--muted);margin-bottom:4px;}
 .user-dropdown-credits{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.dropdown-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;cursor:pointer;font-size:14px;-webkit-tap-highlight-color:transparent;}
-.dropdown-item:active{background:rgba(124,58,237,0.2);}
+.dropdown-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;cursor:pointer;font-size:14px;}
 .dropdown-item.danger{color:#fca5a5;}
-.dropdown-item.danger:active{background:rgba(239,68,68,0.15);}
 .banner{background:var(--gradient);text-align:center;padding:10px 16px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;margin-top:54px;}
 .banner button{background:#fff;color:#7c3aed;border:none;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;cursor:pointer;}
 .banner .close{margin-left:auto;cursor:pointer;opacity:0.8;font-size:16px;}
@@ -47,16 +44,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .grid-row-center .card{width:100%;}
 .card video,.card img{width:100%;height:100%;object-fit:cover;display:block;}
 .card-sm{height:200px;}
-.card-lg{height:260px;}
 .card-full{height:220px;}
-.card img,.card video{width:100%;display:block;}
 .card .overlay{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;background:linear-gradient(transparent,rgba(0,0,0,0.75));display:flex;align-items:center;justify-content:space-between;}
 .card .likes{display:flex;align-items:center;gap:5px;font-size:13px;color:rgba(255,255,255,0.9);}
 .card .badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 8px;font-size:10px;color:#fff;}
 .card .play-btn{width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;}
 .filter-bar{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
-.filter-btn{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.filter-btn{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;}
 .filter-btn.active{background:rgba(124,58,237,0.2);border-color:var(--accent);color:#c4b5fd;}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;height:64px;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--muted);font-size:10px;transition:color 0.2s;}
@@ -124,17 +119,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .consent-cancel{flex:1;background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:12px;padding:12px;font-size:14px;cursor:pointer;}
 .consent-confirm{flex:2;background:var(--gradient);border:none;color:white;border-radius:12px;padding:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
 .consent-confirm:disabled{opacity:0.4;cursor:not-allowed;}
-
-/* Pricing toggle in modal */
 .modal-pricing-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px;}
 .modal-pricing-toggle-btn{flex:1;padding:8px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;}
 .modal-pricing-toggle-btn.active{background:var(--accent);color:white;}
-
-/* LANDING */
 #landingPage{display:none;padding-top:54px;}
 #landingPage.show{display:block;}
 body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mainContent,body.landing-mode .spacer,body.landing-mode .bottom-nav{display:none !important;}
-.lp-hero{position:relative;display:flex;flex-direction:column;align-items:center;padding:40px 20px 40px;text-align:center;background:linear-gradient(160deg,#1a0533 0%,#0d0d1a 40%,#0a1628 100%);overflow:hidden;}
+.lp-hero{position:relative;display:flex;flex-direction:column;align-items:center;padding:40px 20px;text-align:center;background:linear-gradient(160deg,#1a0533 0%,#0d0d1a 40%,#0a1628 100%);overflow:hidden;}
 .orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.2;pointer-events:none;}
 .orb-1{width:300px;height:300px;background:#7c3aed;top:-60px;left:-80px;}
 .orb-2{width:220px;height:220px;background:#ec4899;bottom:60px;right:-60px;}
@@ -177,14 +168,12 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
 .lp-plan-btn.filled{background:var(--gradient);color:white;}
 .lp-plan-btn.outlined{background:transparent;border:1px solid var(--border);color:var(--text);}
 .lp-final-cta{margin:0 20px 48px;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px 24px;text-align:center;position:relative;overflow:hidden;}
-.lp-final-cta::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(124,58,237,0.3) 0%,transparent 70%);}
-.lp-final-cta h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;position:relative;}
-.lp-final-cta p{color:var(--muted);font-size:14px;margin-bottom:24px;position:relative;}
+.lp-final-cta h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;}
+.lp-final-cta p{color:var(--muted);font-size:14px;margin-bottom:24px;}
 </style>
 </head>
 <body>
 
-<!-- LANDING -->
 <div id="landingPage">
   <section class="lp-hero">
     <div class="orb orb-1"></div>
@@ -196,25 +185,12 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
       <button class="btn-hero" onclick="hideLanding();openAuth();">✦ Commencer gratuitement</button>
       <button class="btn-ghost" onclick="document.getElementById('lpPricing').scrollIntoView({behavior:'smooth'})">Voir les offres ↓</button>
     </div>
-    <div class="lp-preview">
-      <div class="preview-label">Créations de la communauté</div>
-      <div class="preview-scroll">
-        <div class="preview-item" onclick="openFullscreen('https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_1.mp4','video')"><video src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_1.mp4" autoplay muted loop playsinline></video><div class="pi-label">🎬 Vidéo IA</div></div>
-        <div class="preview-item" onclick="openFullscreen('https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/1006d0e4ed84490f.png','image')"><img src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/1006d0e4ed84490f.png" alt="IA"><div class="pi-label">🖼 Image IA</div></div>
-        <div class="preview-item" onclick="openFullscreen('https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_2.mp4','video')"><video src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_2.mp4" autoplay muted loop playsinline></video><div class="pi-label">🎬 Vidéo IA</div></div>
-        <div class="preview-item" onclick="openFullscreen('https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fdf70ad5e98f691c.png','image')"><img src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fdf70ad5e98f691c.png" alt="IA"><div class="pi-label">🖼 Image IA</div></div>
-        <div class="preview-item" onclick="openFullscreen('https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_3.mp4','video')"><video src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_3.mp4" autoplay muted loop playsinline></video><div class="pi-label">🎬 Vidéo IA</div></div>
-        <div class="preview-item" onclick="openFullscreen('https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/9c2b6d7a7919fac2.png','image')"><img src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/9c2b6d7a7919fac2.png" alt="IA"><div class="pi-label">🖼 Image IA</div></div>
-      </div>
-    </div>
   </section>
-
   <div class="lp-stats">
     <div class="stat-item"><div class="stat-num">50k+</div><div class="stat-label">Créateurs</div></div>
     <div class="stat-item"><div class="stat-num">2M+</div><div class="stat-label">Médias créés</div></div>
     <div class="stat-item"><div class="stat-num">45s</div><div class="stat-label">Temps moyen</div></div>
   </div>
-
   <section class="lp-features">
     <div class="section-label">Pourquoi Limineo AI</div>
     <div class="section-title">Tout ce dont vous<br>avez besoin</div>
@@ -223,7 +199,6 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
     <div class="feature-card"><div class="feature-icon">📸</div><div class="feature-title">Image vers Vidéo</div><div class="feature-desc">Téléchargez votre photo et transformez-la en vidéo animée.</div></div>
     <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Résultats en Secondes</div><div class="feature-desc">Génération en 30 à 60 secondes. Pas d'attente, juste de la créativité.</div></div>
   </section>
-
   <section class="lp-pricing" id="lpPricing">
     <div class="section-label">Nos offres</div>
     <div class="section-title">Choisissez votre formule</div>
@@ -233,7 +208,6 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
     </div>
     <div id="lpPlansContainer"></div>
   </section>
-
   <div class="lp-final-cta">
     <h2>Prêt à créer ?</h2>
     <p>Rejoignez des milliers de créateurs qui utilisent déjà Limineo AI</p>
@@ -242,21 +216,9 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   </div>
 </div>
 
-<!-- NAV -->
 <nav>
   <div class="logo" onclick="window.location.reload()">
-    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="lgMain" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="50%" stop-color="#a855f7"/><stop offset="100%" stop-color="#ec4899"/></linearGradient>
-        <linearGradient id="lgMainB" x1="0" y1="0" x2="36" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/><stop offset="100%" stop-color="#f9d7ff" stop-opacity="0.9"/></linearGradient>
-        <filter id="glowMain"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      </defs>
-      <rect width="36" height="36" rx="11" fill="url(#lgMain)"/>
-      <rect width="36" height="18" rx="11" fill="white" fill-opacity="0.07"/>
-      <path d="M10 9 L10 27 L20 27" stroke="url(#lgMainB)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <g filter="url(#glowMain)"><path d="M25 8 L26.2 11.8 L30 13 L26.2 14.2 L25 18 L23.8 14.2 L20 13 L23.8 11.8 Z" fill="white" fill-opacity="0.95"/></g>
-      <circle cx="27" cy="24" r="2" fill="white" fill-opacity="0.5"/>
-    </svg>
+    <svg width="34" height="34" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><rect width="36" height="36" rx="11" fill="url(#lg1)"/><path d="M10 9 L10 27 L20 27" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M25 8 L26.2 11.8 L30 13 L26.2 14.2 L25 18 L23.8 14.2 L20 13 L23.8 11.8 Z" fill="white" fill-opacity="0.95"/></svg>
     <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;">Limineo AI</span>
   </div>
   <div class="nav-right">
@@ -277,9 +239,7 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
     </div>
     <button class="auth-btn" id="authBtn" onclick="openAuth()">Connexion</button>
     <div style="position:relative;" id="userMenuWrap">
-      <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserDropdown(event)">
-        <span id="userMenuName"></span> ▾
-      </button>
+      <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserDropdown(event)"><span id="userMenuName"></span> ▾</button>
       <div class="user-dropdown" id="userDropdown">
         <div class="user-dropdown-header">
           <div class="user-dropdown-email" id="dropdownEmail"></div>
@@ -292,20 +252,17 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   </div>
 </nav>
 
-<!-- BANNER -->
 <div class="banner" id="banner">
   <span id="bannerText">✨ Nouveau — Générez des vidéos et images IA réelles !</span>
   <button onclick="openPricing()">Commencer</button>
   <span class="close" onclick="document.getElementById('banner').style.display='none'">✕</span>
 </div>
 
-<!-- TABS -->
 <div class="tabs-wrapper">
   <div class="tab active" onclick="setTab(this,'trending')">Tendances</div>
   <div class="tab" onclick="setTab(this,'mine')">Mes créations</div>
 </div>
 
-<!-- MAIN CONTENT -->
 <div id="mainContent">
   <div class="filter-bar" id="filterBar" style="display:none;">
     <button class="filter-btn active" onclick="filterMedia('all',this)">Tout</button>
@@ -316,14 +273,12 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
 </div>
 <div class="spacer"></div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <div class="nav-item active" id="navMine" onclick="switchNav('mine')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Mes médias</div>
   <div class="nav-item" onclick="openCreate()"><div class="nav-create"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
   <div class="nav-item" id="navCredits" onclick="switchNav('credits')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Crédits</div>
 </div>
 
-<!-- AUTH MODAL -->
 <div class="modal-backdrop" id="authModal" onclick="closeOutside(event,'authModal')">
   <div class="modal">
     <div class="handle"></div>
@@ -336,7 +291,6 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   </div>
 </div>
 
-<!-- CREATE MODAL -->
 <div class="modal-backdrop" id="createModal" onclick="closeOutside(event,'createModal')">
   <div class="modal">
     <div class="handle"></div>
@@ -347,11 +301,11 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
       <button class="type-btn" onclick="setType(this,'video')">🎬 Vidéo</button>
       <button class="type-btn" onclick="setType(this,'img2video')">📸 Image→Vidéo</button>
     </div>
-    <div class="credits-info" id="creditsInfo">⚡ <span id="creditsInModal">0</span> crédits · Image = 1 crédit · Vidéo = 5 crédits</div>
+    <div class="credits-info">⚡ <span id="creditsInModal">0</span> crédits · Image = 1 crédit · Vidéo = 5 crédits</div>
     <div id="promptSection"><textarea class="prompt-area" id="promptText" placeholder="Ex: Un lion majestueux au coucher du soleil..."></textarea></div>
     <div class="img2vid-section" id="img2vidSection" style="display:none;">
       <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">📸 Téléchargez votre photo pour la transformer en vidéo</p>
-      <div class="upload-zone" id="uploadZone">
+      <div class="upload-zone">
         <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
         <div id="uploadPlaceholder"><div style="font-size:28px;margin-bottom:8px;">📤</div><div style="font-size:13px;color:var(--muted);">Appuyez pour choisir une photo</div></div>
         <img id="uploadPreview" class="upload-preview">
@@ -367,7 +321,6 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   </div>
 </div>
 
-<!-- PRICING MODAL -->
 <div class="modal-backdrop" id="pricingModal" onclick="closeOutside(event,'pricingModal')">
   <div class="modal">
     <div class="handle"></div>
@@ -382,7 +335,6 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   </div>
 </div>
 
-<!-- FULLSCREEN -->
 <div class="fullscreen-modal" id="fullscreenModal" onclick="closeFullscreenOutside(event)">
   <span class="fullscreen-close" onclick="closeFullscreen()">✕</span>
   <div id="fullscreenContent"></div>
@@ -392,7 +344,6 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   </div>
 </div>
 
-<!-- CONSENT MODAL -->
 <div class="consent-modal-backdrop" id="consentModal">
   <div class="consent-box">
     <div class="consent-icon">🛡️</div>
@@ -415,11 +366,11 @@ const SUPABASE_URL='https://sgrmbruwnswddulpdbic.supabase.co';
 const SUPABASE_KEY='sb_publishable_NpMXZk_OYIV958R4OGHpBA_DjSN6Q7J';
 const STRIPE_PK='pk_live_51TbJgSC8IJGdwt4DColGTyHR0P47uS8j7V2loB43Vec0ScCNE0N3YY7ou43SjSWTKIxIMqIqwdtWmGNG7BQnLXBP00veCoQH8z';
 
-let currentUser=null,userCredits=0,authMode='login',selectedPlan=null,selectedType='image',stripe=null,currentMediaUrl='',currentMediaType='',pendingUploadFile=null,currentPricingPeriod='monthly',currentModalPeriod='monthly',currentLang='fr',currentFilter='all',allMyMedia=[];
+let currentUser=null,userCredits=0,authMode='login',selectedPlan=null,selectedType='image',currentMediaUrl='',currentMediaType='',pendingUploadFile=null,currentPricingPeriod='monthly',currentModalPeriod='monthly',currentLang='fr',currentFilter='all',allMyMedia=[];
 
 const LANGS={fr:{flag:'🇫🇷',label:'FR'},en:{flag:'🇬🇧',label:'EN'},es:{flag:'🇪🇸',label:'ES'},de:{flag:'🇩🇪',label:'DE'},pt:{flag:'🇵🇹',label:'PT'},it:{flag:'🇮🇹',label:'IT'},ar:{flag:'🇸🇦',label:'AR'},zh:{flag:'🇨🇳',label:'ZH'},tr:{flag:'🇹🇷',label:'TR'}};
 
-let siteSettings={
+const siteSettings={
   plans:{
     monthly:[
       {name:'Starter',price:9.90,credits:100,desc:'~100 images ou 20 vidéos',popular:false,planKey:'starter_monthly'},
@@ -432,27 +383,27 @@ let siteSettings={
       {name:'Ultra',price:34.90,credits:500,desc:'~500 images ou 100 vidéos/mois',popular:false,planKey:'ultra_yearly'}
     ]
   },
-  banner:'✨ Nouveau — Générez des vidéos et images IA réelles !',
   creditCost:{image:1,video:5,img2video:5}
 };
 
-function loadSettings(){
-  const s=localStorage.getItem('limineo_settings');
-  if(s){try{siteSettings={...siteSettings,...JSON.parse(s)};}catch(e){}}
-  const b=document.getElementById('bannerText');
-  if(b&&siteSettings.banner)b.textContent=siteSettings.banner;
-  renderLandingPlans();
-  renderPricingModal();
-}
+const defaultMedia=[
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_1.mp4',type:'video'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/1006d0e4ed84490f.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_2.mp4',type:'video'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fdf70ad5e98f691c.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_3.mp4',type:'video'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/9c2b6d7a7919fac2.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/138d10ed8ce449b6.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fa0f36a927827787.png',type:'image'}
+];
 
 function renderLandingPlans(){
   const c=document.getElementById('lpPlansContainer');if(!c)return;
-  const period=currentPricingPeriod==='monthly'?'mois':'mois';
   c.innerHTML=(siteSettings.plans[currentPricingPeriod]||[]).map(p=>`
     <div class="lp-plan-card ${p.popular?'popular':''}">
       ${p.popular?'<span class="popular-tag">⭐ Le plus populaire</span>':''}
       <div class="lp-plan-name">${p.name}</div>
-      <div class="lp-plan-price-wrap"><span class="lp-plan-price">${p.price.toFixed(2).replace('.',',')}€</span><span class="lp-plan-period">/${period}</span></div>
+      <div class="lp-plan-price-wrap"><span class="lp-plan-price">${p.price.toFixed(2).replace('.',',')}€</span><span class="lp-plan-period">/mois</span></div>
       <div class="lp-plan-desc">${p.credits} crédits · ${p.desc}</div>
       <ul class="lp-plan-features"><li>${p.credits} crédits inclus</li><li>Génération images IA</li><li>Génération vidéos IA</li><li>Image vers Vidéo IA</li><li>Téléchargement HD</li></ul>
       <button class="lp-plan-btn ${p.popular?'filled':'outlined'}" onclick="hideLanding();openAuth();">Choisir ${p.name}</button>
@@ -461,8 +412,7 @@ function renderLandingPlans(){
 
 function renderPricingModal(){
   const c=document.getElementById('pricingModalPlans');if(!c)return;
-  const plans=siteSettings.plans[currentModalPeriod]||[];
-  c.innerHTML=plans.map(p=>`
+  c.innerHTML=(siteSettings.plans[currentModalPeriod]||[]).map(p=>`
     <div class="plan-card ${p.popular?'popular':''}" onclick="selectPlan(this,'${p.planKey}',${Math.round(p.price*100)})">
       <div class="plan-header">
         <span class="plan-name">${p.name}</span>
@@ -485,7 +435,8 @@ function setModalPeriod(p,el){
 function setPricingPeriod(p,el){
   currentPricingPeriod=p;
   document.querySelectorAll('.pricing-toggle-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');renderLandingPlans();
+  el.classList.add('active');
+  renderLandingPlans();
 }
 
 function setLang(lang){
@@ -523,6 +474,7 @@ function toggleAuthMode(){
   document.getElementById('authSubmitBtn').textContent=authMode==='login'?'Se connecter':'Créer mon compte';
   document.querySelector('.toggle-link').innerHTML=authMode==='login'?'Pas de compte ? <span>Créer un compte gratuit</span>':'Déjà un compte ? <span>Se connecter</span>';
 }
+
 async function handleAuth(){
   const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
   if(!email||!password){showToast('Remplissez tous les champs','error');return;}
@@ -553,6 +505,7 @@ function showUserMenu(email){
 async function initUserCredits(){
   try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:50,email:currentUser.email})});userCredits=50;updateCreditsUI();}catch(e){}
 }
+
 async function loadCredits(){
   try{
     const r=await sbFetch(`user_credits?user_id=eq.${currentUser.id}&select=credits`);
@@ -561,6 +514,7 @@ async function loadCredits(){
     updateCreditsUI();
   }catch(e){}
 }
+
 function updateCreditsUI(){
   document.getElementById('creditsCount').textContent=userCredits;
   const c=document.getElementById('creditsInModal');if(c)c.textContent=userCredits;
@@ -596,22 +550,7 @@ async function loadTrending(){
   const grid=document.getElementById('grid');
   document.getElementById('filterBar').style.display='none';
   grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Chargement...</div>';
-  const defaultMedia=[
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_1.mp4',type:'video'},
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/1006d0e4ed84490f.png',type:'image'},
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_2.mp4',type:'video'},
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fdf70ad5e98f691c.png',type:'image'},
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_3.mp4',type:'video'},
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/9c2b6d7a7919fac2.png',type:'image'},
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/138d10ed8ce449b6.png',type:'image'},
-    {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fa0f36a927827787.png',type:'image'},
-  ];
-  try{
-    const r=await fetch(`${SUPABASE_URL}/rest/v1/homepage_media?select=*&order=created_at.desc`,{headers:{'apikey':SUPABASE_KEY}});
-    const data=await r.json();
-    const mediaList=Array.isArray(data)&&data.length>0?data:defaultMedia;
-    renderGrid(grid,mediaList);
-  }catch(e){renderGrid(grid,defaultMedia);}
+  renderGrid(grid,defaultMedia);
 }
 
 function makeCard(m,sizeClass){
@@ -636,25 +575,16 @@ function renderGrid(grid,items){
       if(items[i])row1.appendChild(makeCard(items[i],'card-sm'));
       if(items[i+1])row1.appendChild(makeCard(items[i+1],'card-sm'));
       grid.appendChild(row1);
-      if(items[i+2]){
-        const row2=document.createElement('div');row2.className='grid-row grid-row-center';
-        row2.appendChild(makeCard(items[i+2],'card-full'));
-        grid.appendChild(row2);
-      }
+      if(items[i+2]){const row2=document.createElement('div');row2.className='grid-row grid-row-center';row2.appendChild(makeCard(items[i+2],'card-full'));grid.appendChild(row2);}
       i+=3;
     }else if(pattern===1){
-      if(items[i]){
-        const row=document.createElement('div');row.className='grid-row grid-row-center';
-        row.appendChild(makeCard(items[i],'card-full'));
-        grid.appendChild(row);
-      }
+      if(items[i]){const row=document.createElement('div');row.className='grid-row grid-row-center';row.appendChild(makeCard(items[i],'card-full'));grid.appendChild(row);}
       i+=1;
     }else{
       const row=document.createElement('div');row.className='grid-row';
       if(items[i])row.appendChild(makeCard(items[i],'card-sm'));
       if(items[i+1])row.appendChild(makeCard(items[i+1],'card-sm'));
-      grid.appendChild(row);
-      i+=2;
+      grid.appendChild(row);i+=2;
     }
   }
 }
@@ -667,10 +597,10 @@ async function showMyCreations(){
   try{
     const r=await sbFetch(`user_generations?user_id=eq.${currentUser.id}&order=created_at.desc&select=*`);
     const data=await r.json();
-    if(!data||data.length===0){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);grid-column:span 2">Aucune création.<br>Appuyez sur + pour créer !</div>';return;}
+    if(!data||data.length===0){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune création.<br>Appuyez sur + pour créer !</div>';return;}
     allMyMedia=[...data.filter(d=>d.type==='video'||d.type==='img2video'),...data.filter(d=>d.type==='image')];
     renderMyMedia();
-  }catch(e){showToast('Erreur chargement','error');}
+  }catch(e){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune création.<br>Appuyez sur + pour créer !</div>';}
 }
 
 function filterMedia(f,el){
@@ -686,7 +616,7 @@ function renderMyMedia(){
     if(currentFilter==='video')return m.type==='video'||m.type==='img2video';
     return m.type==='image';
   });
-  if(!filtered.length){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);grid-column:span 2">Aucun média dans cette catégorie.</div>';return;}
+  if(!filtered.length){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucun média dans cette catégorie.</div>';return;}
   filtered.forEach(item=>{
     const card=document.createElement('div');card.className='card';
     const isVideo=item.type==='video'||item.type==='img2video';
@@ -697,11 +627,13 @@ function renderMyMedia(){
 }
 
 function openCreate(){if(!currentUser){openAuth();return;}document.getElementById('createModal').classList.add('open');updateCreditsUI();}
+
 function setType(btn,type){
   document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedType=type;
   document.getElementById('promptSection').style.display=type==='img2video'?'none':'block';
   document.getElementById('img2vidSection').style.display=type==='img2video'?'block':'none';
 }
+
 function handleImageUpload(e){
   const file=e.target.files[0];if(!file)return;
   pendingUploadFile=file;
@@ -709,46 +641,66 @@ function handleImageUpload(e){
   ['consent1','consent2','consent3'].forEach(id=>document.getElementById(id).checked=false);
   document.getElementById('consentConfirm').disabled=true;e.target.value='';
 }
+
 function checkConsents(){document.getElementById('consentConfirm').disabled=!['consent1','consent2','consent3'].every(id=>document.getElementById(id).checked);}
 function cancelConsent(){document.getElementById('consentModal').classList.remove('open');pendingUploadFile=null;}
+
 function confirmConsent(){
-  document.getElementById('consentModal').classList.remove('open');if(!pendingUploadFile)return;
+  document.getElementById('consentModal').classList.remove('open');
+  if(!pendingUploadFile)return;
   const reader=new FileReader();
-  reader.onload=ev=>{const p=document.getElementById('uploadPreview');p.src=ev.target.result;p.style.display='block';document.getElementById('uploadPlaceholder').style.display='none';};
-  reader.readAsDataURL(pendingUploadFile);showToast('Photo acceptée !','success');
+  reader.onload=ev=>{
+    const p=document.getElementById('uploadPreview');
+    p.src=ev.target.result;p.style.display='block';
+    document.getElementById('uploadPlaceholder').style.display='none';
+  };
+  reader.readAsDataURL(pendingUploadFile);
+  showToast('Photo acceptée !','success');
 }
+
 async function generateMedia(){
   const cost=siteSettings.creditCost[selectedType]||1;
   let prompt='';
   let imageBase64=null;
   let imageMimeType=null;
+
   if(selectedType==='img2video'){
     if(!pendingUploadFile){showToast('Téléchargez une image !','error');return;}
     prompt=document.getElementById('img2vidPrompt').value.trim()||'Animate this image with smooth motion';
     const preview=document.getElementById('uploadPreview');
-if(preview&&preview.src&&preview.src.startsWith('data:')){
-  imageBase64=preview.src;
-}else{
-  imageBase64=await new Promise((resolve)=>{
-    const reader=new FileReader();
-    reader.onload=e=>resolve(e.target.result);
-    reader.readAsDataURL(pendingUploadFile);
-  });
-}
-    });
+    if(preview&&preview.src&&preview.src.startsWith('data:')){
+      imageBase64=preview.src;
+    }else{
+      imageBase64=await new Promise((resolve)=>{
+        const reader=new FileReader();
+        reader.onload=e=>resolve(e.target.result);
+        reader.readAsDataURL(pendingUploadFile);
+      });
+    }
     imageMimeType=pendingUploadFile.type;
-  } else {
+  }else{
     prompt=document.getElementById('promptText').value.trim();
     if(!prompt){showToast('Entrez une description !','error');return;}
   }
-  if(userCredits<cost){showToast(`Crédits insuffisants (besoin de ${cost})`,'error');setTimeout(()=>{document.getElementById('createModal').classList.remove('open');openPricing();},1000);return;}
+
+  if(userCredits<cost){
+    showToast(`Crédits insuffisants (besoin de ${cost})`,'error');
+    setTimeout(()=>{document.getElementById('createModal').classList.remove('open');openPricing();},1000);
+    return;
+  }
+
   const btn=document.getElementById('generateBtn'),status=document.getElementById('genStatus');
   btn.disabled=true;btn.textContent='⏳ Génération...';status.classList.add('show');
   document.getElementById('genStatusText').textContent=selectedType==='img2video'?'Animation en cours... (1-2 min)':'Génération en cours...';
+
   try{
     const body={prompt,type:selectedType,userId:currentUser.id};
     if(imageBase64){body.imageBase64=imageBase64;body.imageMimeType=imageMimeType;}
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},body:JSON.stringify(body)});
+    const r=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},
+      body:JSON.stringify(body)
+    });
     const data=await r.json();
     if(data.url){
       if(data.creditsLeft!==undefined){userCredits=data.creditsLeft;}else{userCredits-=cost;}
@@ -763,15 +715,20 @@ if(preview&&preview.src&&preview.src.startsWith('data:')){
       document.getElementById('filterBar').style.display='flex';
     }else{showToast(data.error||'Erreur de génération.','error');}
   }catch(e){showToast('Erreur réseau.','error');}
+
   btn.disabled=false;btn.textContent='✦ Générer maintenant';status.classList.remove('show');
   document.getElementById('promptText').value='';
 }
 
 function openPricing(){if(!currentUser){openAuth();return;}document.getElementById('pricingModal').classList.add('open');}
+
 function selectPlan(el,planKey,amount){
-  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');
-  selectedPlan={planKey,amount};document.getElementById('payBtn').disabled=false;
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan={planKey,amount};
+  document.getElementById('payBtn').disabled=false;
 }
+
 async function startPayment(){
   if(!selectedPlan)return;
   const btn=document.getElementById('payBtn');btn.disabled=true;btn.textContent='Redirection...';
@@ -796,13 +753,12 @@ function closeFullscreenOutside(e){if(e.target.id==='fullscreenModal')closeFulls
 function downloadCurrent(){if(!currentMediaUrl)return;const a=document.createElement('a');a.href=currentMediaUrl;a.download='limineo-media.'+(currentMediaType==='video'?'mp4':'jpg');a.click();}
 function shareCurrent(){if(navigator.share&&currentMediaUrl){navigator.share({title:'Limineo AI',url:currentMediaUrl});}else{navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copié !','success');}}
 
-try{stripe=Stripe(STRIPE_PK);}catch(e){}
-
 window.addEventListener('load',async()=>{
   currentLang=localStorage.getItem('limineo_lang')||'fr';
   const lb=document.getElementById('langBtn');if(lb)lb.textContent=LANGS[currentLang].flag+' '+LANGS[currentLang].label;
   document.querySelectorAll('.lang-option').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick').includes("'"+currentLang+"'")));
-  loadSettings();
+  renderLandingPlans();
+  renderPricingModal();
   const saved=localStorage.getItem('limineo_user');
   if(saved){
     try{
