@@ -571,7 +571,7 @@ async function handleAuth(){
   btn.disabled=false;btn.textContent=authMode==='login'?'Se connecter':'Créer mon compte';
 }
 async function initUserCredits(){
-  try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:5,email:currentUser.email})});userCredits=5;updateCreditsUI();}catch(e){}
+  try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:50,email:currentUser.email})});userCredits=5;updateCreditsUI();}catch(e){}
 }
 async function loadCredits(){
   try{
