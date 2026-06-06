@@ -85,8 +85,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .prompt-area:focus{border-color:var(--accent);}
 .credits-info{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:12px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:14px;}
 .plan-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all 0.2s;}
-.plan-card:hover,.plan-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.1);}
-.plan-card.popular{border-color:var(--accent2);}
+.plan-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.15);box-shadow:0 0 0 2px var(--accent);}
+.plan-card.popular{border-color:rgba(236,72,153,0.3);}
+.plan-card.popular.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent);}
 .plan-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;}
 .plan-price{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;}
