@@ -9,13 +9,25 @@ module.exports = async (req, res) => {
   const FAL_KEY = process.env.FAL_KEY;
   if (!FAL_KEY) return res.status(500).json({ error: 'FAL_KEY manquante' });
   try {
+    let enhancedPrompt = prompt;
+    try {
+      const transRes = await fetch('https://libretranslate.com/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: prompt, source: 'auto', target: 'en', format: 'text' })
+      });
+      const transData = await transRes.json();
+      if (transData.translatedText) {
+        enhancedPrompt = transData.translatedText + ', cinematic, 4K, highly detailed, smooth motion';
+      }
+    } catch(e) {}
     let falUrl, falBody;
     if (type === 'video') {
       falUrl = 'https://fal.run/fal-ai/kling-video/v1.6/pro/text-to-video';
-      falBody = { prompt, duration: '10', aspect_ratio: '16:9', cfg_scale: 0.5 };
+      falBody = { prompt: enhancedPrompt, duration: '10', aspect_ratio: '16:9', cfg_scale: 0.5 };
     } else {
       falUrl = 'https://fal.run/fal-ai/flux/schnell';
-      falBody = { prompt, image_size: 'portrait_4_3', num_images: 1 };
+      falBody = { prompt: enhancedPrompt, image_size: 'portrait_4_3', num_images: 1 };
     }
     const response = await fetch(falUrl, {
       method: 'POST',
