@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Limineo AI — Génération Vidéo & Image IA</title>
+<title>Limineo AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://js.stripe.com/v3/"></script>
 <style>
@@ -106,19 +106,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .upload-zone{border:2px dashed rgba(124,58,237,0.4);border-radius:12px;padding:20px;text-align:center;cursor:pointer;position:relative;}
 .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
 .upload-preview{width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover;display:none;}
-.consent-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(12px);z-index:500;align-items:center;justify-content:center;padding:20px;}
-.consent-modal-backdrop.open{display:flex;}
-.consent-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:28px 24px;max-width:420px;width:100%;}
-.consent-icon{font-size:40px;text-align:center;margin-bottom:16px;}
-.consent-box h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:10px;text-align:center;}
-.consent-box p{color:var(--muted);font-size:13px;line-height:1.65;margin-bottom:16px;}
-.consent-check{display:flex;gap:10px;align-items:flex-start;background:var(--card);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer;}
-.consent-check input[type=checkbox]{margin-top:2px;flex-shrink:0;accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
-.consent-check label{font-size:12px;color:var(--muted);line-height:1.5;cursor:pointer;}
-.consent-btns{display:flex;gap:10px;margin-top:6px;}
-.consent-cancel{flex:1;background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:12px;padding:12px;font-size:14px;cursor:pointer;}
-.consent-confirm{flex:2;background:var(--gradient);border:none;color:white;border-radius:12px;padding:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
-.consent-confirm:disabled{opacity:0.4;cursor:not-allowed;}
 .modal-pricing-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px;}
 .modal-pricing-toggle-btn{flex:1;padding:8px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;}
 .modal-pricing-toggle-btn.active{background:var(--accent);color:white;}
@@ -163,7 +150,7 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
 .lp-plan-desc{color:var(--muted);font-size:13px;margin-bottom:14px;}
 .lp-plan-features{list-style:none;margin-bottom:16px;}
 .lp-plan-features li{font-size:13px;padding:4px 0;display:flex;align-items:center;gap:8px;}
-.lp-plan-features li::before{content:'✓';color:#22c55e;font-weight:700;}
+.lp-plan-features li::before{content:'\2713';color:#22c55e;font-weight:700;}
 .lp-plan-btn{width:100%;padding:13px;border-radius:12px;border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
 .lp-plan-btn.filled{background:var(--gradient);color:white;}
 .lp-plan-btn.outlined{background:transparent;border:1px solid var(--border);color:var(--text);}
@@ -173,46 +160,46 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
 </style>
 </head>
 <body>
-
+HTMLEOF
+echo "Part 1 done"
 <div id="landingPage">
   <section class="lp-hero">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="lp-eyebrow"><span class="eyebrow-dot"></span>IA Génération · Nouvelle Ère</div>
-    <h1 class="lp-title">Créez des médias<br><span class="grad">extraordinaires</span><br>en secondes</h1>
-    <p class="lp-subtitle">Transformez vos idées en images et vidéos époustouflantes grâce à l'intelligence artificielle.</p>
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="lp-eyebrow"><span class="eyebrow-dot"></span>IA Generation - Nouvelle ERe</div>
+    <h1 class="lp-title">Creez des medias<br><span class="grad">extraordinaires</span><br>en secondes</h1>
+    <p class="lp-subtitle">Transformez vos idees en images et videos epoustouflantes grace a l intelligence artificielle.</p>
     <div class="lp-cta-group">
-      <button class="btn-hero" onclick="hideLanding();openAuth();">✦ Commencer gratuitement</button>
-      <button class="btn-ghost" onclick="document.getElementById('lpPricing').scrollIntoView({behavior:'smooth'})">Voir les offres ↓</button>
+      <button class="btn-hero" onclick="hideLanding();openAuth();">Commencer gratuitement</button>
+      <button class="btn-ghost" onclick="document.getElementById('lpPricing').scrollIntoView({behavior:'smooth'})">Voir les offres</button>
     </div>
   </section>
   <div class="lp-stats">
-    <div class="stat-item"><div class="stat-num">50k+</div><div class="stat-label">Créateurs</div></div>
-    <div class="stat-item"><div class="stat-num">2M+</div><div class="stat-label">Médias créés</div></div>
+    <div class="stat-item"><div class="stat-num">50k+</div><div class="stat-label">Createurs</div></div>
+    <div class="stat-item"><div class="stat-num">2M+</div><div class="stat-label">Medias crees</div></div>
     <div class="stat-item"><div class="stat-num">45s</div><div class="stat-label">Temps moyen</div></div>
   </div>
   <section class="lp-features">
     <div class="section-label">Pourquoi Limineo AI</div>
-    <div class="section-title">Tout ce dont vous<br>avez besoin</div>
-    <div class="feature-card"><div class="feature-icon">🎨</div><div class="feature-title">Images IA Ultra-réalistes</div><div class="feature-desc">Générez des images de qualité professionnelle à partir d'un simple texte.</div></div>
-    <div class="feature-card"><div class="feature-icon">🎬</div><div class="feature-title">Vidéos IA Cinématiques</div><div class="feature-desc">Donnez vie à vos idées avec des vidéos fluides et réalistes.</div></div>
-    <div class="feature-card"><div class="feature-icon">📸</div><div class="feature-title">Image vers Vidéo</div><div class="feature-desc">Téléchargez votre photo et transformez-la en vidéo animée.</div></div>
-    <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Résultats en Secondes</div><div class="feature-desc">Génération en 30 à 60 secondes. Pas d'attente, juste de la créativité.</div></div>
+    <div class="section-title">Tout ce dont vous avez besoin</div>
+    <div class="feature-card"><div class="feature-icon">&#127912;</div><div class="feature-title">Images IA Ultra-realistes</div><div class="feature-desc">Generez des images de qualite professionnelle a partir d un simple texte.</div></div>
+    <div class="feature-card"><div class="feature-icon">&#127916;</div><div class="feature-title">Videos IA Cinematiques</div><div class="feature-desc">Donnez vie a vos idees avec des videos fluides et realistes.</div></div>
+    <div class="feature-card"><div class="feature-icon">&#128247;</div><div class="feature-title">Image vers Video</div><div class="feature-desc">Telechargez votre photo et transformez-la en video animee.</div></div>
+    <div class="feature-card"><div class="feature-icon">&#9889;</div><div class="feature-title">Resultats en Secondes</div><div class="feature-desc">Generation en 30 a 60 secondes. Pas d attente, juste de la creativite.</div></div>
   </section>
   <section class="lp-pricing" id="lpPricing">
     <div class="section-label">Nos offres</div>
     <div class="section-title">Choisissez votre formule</div>
     <div class="pricing-toggle">
       <button class="pricing-toggle-btn active" onclick="setPricingPeriod('monthly',this)">Mensuel</button>
-      <button class="pricing-toggle-btn" onclick="setPricingPeriod('yearly',this)">Annuel <span style="color:#22c55e;font-size:10px">-10%</span></button>
+      <button class="pricing-toggle-btn" onclick="setPricingPeriod('yearly',this)">Annuel</button>
     </div>
     <div id="lpPlansContainer"></div>
   </section>
   <div class="lp-final-cta">
-    <h2>Prêt à créer ?</h2>
-    <p>Rejoignez des milliers de créateurs qui utilisent déjà Limineo AI</p>
-    <button class="btn-hero" style="margin:0 auto;" onclick="hideLanding();openAuth();">✦ Créer un compte gratuit</button>
-    <p style="margin-top:14px;font-size:12px;">Aucune carte bancaire requise · 50 crédits offerts à l'inscription</p>
+    <h2>Pret a creer ?</h2>
+    <p>Rejoignez des milliers de createurs qui utilisent deja Limineo AI</p>
+    <button class="btn-hero" style="margin:0 auto;" onclick="hideLanding();openAuth();">Creer un compte gratuit</button>
+    <p style="margin-top:14px;font-size:12px;">Aucune carte bancaire requise - 50 credits offerts a l inscription</p>
   </div>
 </div>
 
@@ -222,101 +209,98 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
     <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;">Limineo AI</span>
   </div>
   <div class="nav-right">
-    <div class="credits-badge" id="creditsBadge">⚡ <span id="creditsCount">0</span></div>
+    <div class="credits-badge" id="creditsBadge">&#9889; <span id="creditsCount">0</span></div>
     <div class="lang-picker" id="langPicker">
-      <button class="lang-btn" onclick="toggleLangDropdown(event)" id="langBtn">🇫🇷 FR</button>
+      <button class="lang-btn" onclick="toggleLangDropdown(event)" id="langBtn">FR</button>
       <div class="lang-dropdown" id="langDropdown">
-        <div class="lang-option active" onclick="setLang('fr')"><span>🇫🇷</span> Français</div>
-        <div class="lang-option" onclick="setLang('en')"><span>🇬🇧</span> English</div>
-        <div class="lang-option" onclick="setLang('es')"><span>🇪🇸</span> Español</div>
-        <div class="lang-option" onclick="setLang('de')"><span>🇩🇪</span> Deutsch</div>
-        <div class="lang-option" onclick="setLang('pt')"><span>🇵🇹</span> Português</div>
-        <div class="lang-option" onclick="setLang('it')"><span>🇮🇹</span> Italiano</div>
-        <div class="lang-option" onclick="setLang('ar')"><span>🇸🇦</span> العربية</div>
-        <div class="lang-option" onclick="setLang('zh')"><span>🇨🇳</span> 中文</div>
-        <div class="lang-option" onclick="setLang('tr')"><span>🇹🇷</span> Türkçe</div>
+        <div class="lang-option active" onclick="setLang('fr')">Francais</div>
+        <div class="lang-option" onclick="setLang('en')">English</div>
+        <div class="lang-option" onclick="setLang('es')">Espanol</div>
+        <div class="lang-option" onclick="setLang('de')">Deutsch</div>
+        <div class="lang-option" onclick="setLang('pt')">Portugues</div>
+        <div class="lang-option" onclick="setLang('it')">Italiano</div>
       </div>
     </div>
     <button class="auth-btn" id="authBtn" onclick="openAuth()">Connexion</button>
     <div style="position:relative;" id="userMenuWrap">
-      <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserDropdown(event)"><span id="userMenuName"></span> ▾</button>
+      <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserDropdown(event)"><span id="userMenuName"></span></button>
       <div class="user-dropdown" id="userDropdown">
         <div class="user-dropdown-header">
           <div class="user-dropdown-email" id="dropdownEmail"></div>
-          <div class="user-dropdown-credits">⚡ <span id="dropdownCredits">0</span> crédits</div>
+          <div class="user-dropdown-credits">&#9889; <span id="dropdownCredits">0</span> credits</div>
         </div>
-        <div class="dropdown-item" onclick="openPricing();closeUserDropdown();">⚡ Acheter des crédits</div>
-        <div class="dropdown-item danger" onclick="logout()">🚪 Se déconnecter</div>
+        <div class="dropdown-item" onclick="openPricing();closeUserDropdown();">&#9889; Acheter des credits</div>
+        <div class="dropdown-item danger" onclick="logout()">Se deconnecter</div>
       </div>
     </div>
   </div>
 </nav>
 
 <div class="banner" id="banner">
-  <span id="bannerText">✨ Nouveau — Générez des vidéos et images IA réelles !</span>
+  <span>Nouveau - Generez des videos et images IA reelles !</span>
   <button onclick="openPricing()">Commencer</button>
-  <span class="close" onclick="document.getElementById('banner').style.display='none'">✕</span>
+  <span class="close" onclick="document.getElementById('banner').style.display='none'">X</span>
 </div>
 
 <div class="tabs-wrapper">
   <div class="tab active" onclick="setTab(this,'trending')">Tendances</div>
-  <div class="tab" onclick="setTab(this,'mine')">Mes créations</div>
+  <div class="tab" onclick="setTab(this,'mine')">Mes creations</div>
 </div>
 
 <div id="mainContent">
   <div class="filter-bar" id="filterBar" style="display:none;">
     <button class="filter-btn active" onclick="filterMedia('all',this)">Tout</button>
-    <button class="filter-btn" onclick="filterMedia('video',this)">🎬 Vidéos</button>
-    <button class="filter-btn" onclick="filterMedia('image',this)">🖼 Images</button>
+    <button class="filter-btn" onclick="filterMedia('video',this)">Videos</button>
+    <button class="filter-btn" onclick="filterMedia('image',this)">Images</button>
   </div>
   <div class="grid-container" id="grid"></div>
 </div>
 <div class="spacer"></div>
 
 <div class="bottom-nav">
-  <div class="nav-item active" id="navMine" onclick="switchNav('mine')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Mes médias</div>
+  <div class="nav-item active" id="navMine" onclick="switchNav('mine')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Mes medias</div>
   <div class="nav-item" onclick="openCreate()"><div class="nav-create"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
-  <div class="nav-item" id="navCredits" onclick="switchNav('credits')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Crédits</div>
+  <div class="nav-item" id="navCredits" onclick="switchNav('credits')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Credits</div>
 </div>
 
 <div class="modal-backdrop" id="authModal" onclick="closeOutside(event,'authModal')">
   <div class="modal">
     <div class="handle"></div>
-    <h2 id="authTitle">👋 Connexion</h2>
-    <p id="authSubtitle">Connectez-vous pour créer des médias IA</p>
+    <h2 id="authTitle">Connexion</h2>
+    <p id="authSubtitle">Connectez-vous pour creer des medias IA</p>
     <input class="input-field" type="email" id="authEmail" placeholder="Votre email">
     <input class="input-field" type="password" id="authPassword" placeholder="Mot de passe">
     <button class="primary-btn" id="authSubmitBtn" onclick="handleAuth()">Se connecter</button>
-    <div class="toggle-link" onclick="toggleAuthMode()">Pas de compte ? <span>Créer un compte gratuit</span></div>
+    <div class="toggle-link" onclick="toggleAuthMode()">Pas de compte ? <span>Creer un compte gratuit</span></div>
   </div>
 </div>
 
 <div class="modal-backdrop" id="createModal" onclick="closeOutside(event,'createModal')">
   <div class="modal">
     <div class="handle"></div>
-    <h2>✦ Créer un média IA</h2>
-    <p>Décrivez ce que vous voulez générer</p>
+    <h2>Creer un media IA</h2>
+    <p>Decrivez ce que vous voulez generer</p>
     <div class="type-btns">
-      <button class="type-btn active" onclick="setType(this,'image')">🖼 Image</button>
-      <button class="type-btn" onclick="setType(this,'video')">🎬 Vidéo</button>
-      <button class="type-btn" onclick="setType(this,'img2video')">📸 Image→Vidéo</button>
+      <button class="type-btn active" onclick="setType(this,'image')">Image</button>
+      <button class="type-btn" onclick="setType(this,'video')">Video</button>
+      <button class="type-btn" onclick="setType(this,'img2video')">Image-Video</button>
     </div>
-    <div class="credits-info">⚡ <span id="creditsInModal">0</span> crédits · Image = 1 crédit · Vidéo = 5 crédits</div>
+    <div class="credits-info">&#9889; <span id="creditsInModal">0</span> credits - Image = 1 credit - Video = 5 credits</div>
     <div id="promptSection"><textarea class="prompt-area" id="promptText" placeholder="Ex: Un lion majestueux au coucher du soleil..."></textarea></div>
     <div class="img2vid-section" id="img2vidSection" style="display:none;">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">📸 Téléchargez votre photo pour la transformer en vidéo</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Telechargez votre photo pour la transformer en video</p>
       <div class="upload-zone">
         <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
-        <div id="uploadPlaceholder"><div style="font-size:28px;margin-bottom:8px;">📤</div><div style="font-size:13px;color:var(--muted);">Appuyez pour choisir une photo</div></div>
+        <div id="uploadPlaceholder"><div style="font-size:28px;margin-bottom:8px;">&#128228;</div><div style="font-size:13px;color:var(--muted);">Appuyez pour choisir une photo</div></div>
         <img id="uploadPreview" class="upload-preview">
       </div>
-      <textarea class="prompt-area" id="img2vidPrompt" placeholder="Animation souhaitée (facultatif)..." style="height:70px;margin-top:10px;"></textarea>
+      <textarea class="prompt-area" id="img2vidPrompt" placeholder="Animation souhaitee (facultatif)..." style="height:70px;margin-top:10px;"></textarea>
     </div>
-    <button class="primary-btn" onclick="generateMedia()" id="generateBtn" style="margin-top:12px">✦ Générer maintenant</button>
+    <button class="primary-btn" onclick="generateMedia()" id="generateBtn" style="margin-top:12px">Generer maintenant</button>
     <div class="gen-status" id="genStatus">
       <div class="spinner"></div>
-      <div id="genStatusText">Génération en cours...</div>
-      <div style="color:var(--muted);font-size:12px;margin-top:4px">30 à 60 secondes</div>
+      <div id="genStatusText">Generation en cours...</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:4px">30 a 60 secondes</div>
     </div>
   </div>
 </div>
@@ -324,11 +308,11 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
 <div class="modal-backdrop" id="pricingModal" onclick="closeOutside(event,'pricingModal')">
   <div class="modal">
     <div class="handle"></div>
-    <h2>⚡ Acheter des crédits</h2>
-    <p>1 image = 1 crédit · 1 vidéo = 5 crédits</p>
+    <h2>&#9889; Acheter des credits</h2>
+    <p>1 image = 1 credit - 1 video = 5 credits</p>
     <div class="modal-pricing-toggle">
       <button class="modal-pricing-toggle-btn active" onclick="setModalPeriod('monthly',this)">Mensuel</button>
-      <button class="modal-pricing-toggle-btn" onclick="setModalPeriod('yearly',this)">Annuel <span style="color:#22c55e;font-size:10px">-10%</span></button>
+      <button class="modal-pricing-toggle-btn" onclick="setModalPeriod('yearly',this)">Annuel -10%</button>
     </div>
     <div id="pricingModalPlans"></div>
     <button class="primary-btn" id="payBtn" onclick="startPayment()" disabled>Payer maintenant</button>
@@ -336,26 +320,11 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
 </div>
 
 <div class="fullscreen-modal" id="fullscreenModal" onclick="closeFullscreenOutside(event)">
-  <span class="fullscreen-close" onclick="closeFullscreen()">✕</span>
+  <span class="fullscreen-close" onclick="closeFullscreen()">X</span>
   <div id="fullscreenContent"></div>
   <div class="fullscreen-actions" id="fullscreenActions">
-    <button class="fs-action-btn" onclick="downloadCurrent()">⬇ Télécharger</button>
-    <button class="fs-action-btn" onclick="shareCurrent()">↗ Partager</button>
-  </div>
-</div>
-
-<div class="consent-modal-backdrop" id="consentModal">
-  <div class="consent-box">
-    <div class="consent-icon">🛡️</div>
-    <h3>Déclaration de droits sur la photo</h3>
-    <p>Confirmez les points suivants pour protéger les droits de chacun.</p>
-    <label class="consent-check"><input type="checkbox" id="consent1" onchange="checkConsents()"><label for="consent1">Je certifie être l'auteur ou propriétaire de cette image, ou disposer d'une autorisation explicite.</label></label>
-    <label class="consent-check"><input type="checkbox" id="consent2" onchange="checkConsents()"><label for="consent2">Cette image ne représente pas une personne sans son consentement et ne contient pas de contenu protégé sans autorisation.</label></label>
-    <label class="consent-check"><input type="checkbox" id="consent3" onchange="checkConsents()"><label for="consent3">Je comprends que Limineo AI décline toute responsabilité en cas de fausse déclaration.</label></label>
-    <div class="consent-btns">
-      <button class="consent-cancel" onclick="cancelConsent()">Annuler</button>
-      <button class="consent-confirm" id="consentConfirm" onclick="confirmConsent()" disabled>✓ Je confirme</button>
-    </div>
+    <button class="fs-action-btn" onclick="downloadCurrent()">Telecharger</button>
+    <button class="fs-action-btn" onclick="shareCurrent()">Partager</button>
   </div>
 </div>
 
@@ -368,19 +337,17 @@ const STRIPE_PK='pk_live_51TbJgSC8IJGdwt4DColGTyHR0P47uS8j7V2loB43Vec0ScCNE0N3YY
 
 let currentUser=null,userCredits=0,authMode='login',selectedPlan=null,selectedType='image',currentMediaUrl='',currentMediaType='',pendingUploadFile=null,pendingImageBase64=null,currentPricingPeriod='monthly',currentModalPeriod='monthly',currentLang='fr',currentFilter='all',allMyMedia=[];
 
-const LANGS={fr:{flag:'🇫🇷',label:'FR'},en:{flag:'🇬🇧',label:'EN'},es:{flag:'🇪🇸',label:'ES'},de:{flag:'🇩🇪',label:'DE'},pt:{flag:'🇵🇹',label:'PT'},it:{flag:'🇮🇹',label:'IT'},ar:{flag:'🇸🇦',label:'AR'},zh:{flag:'🇨🇳',label:'ZH'},tr:{flag:'🇹🇷',label:'TR'}};
-
 const siteSettings={
   plans:{
     monthly:[
-      {name:'Starter',price:9.90,credits:100,desc:'~100 images ou 20 vidéos',popular:false,planKey:'starter_monthly'},
-      {name:'Pro',price:19.90,credits:225,desc:'~225 images ou 45 vidéos',popular:true,planKey:'pro_monthly'},
-      {name:'Ultra',price:39.90,credits:500,desc:'~500 images ou 100 vidéos',popular:false,planKey:'ultra_monthly'}
+      {name:'Starter',price:9.90,credits:100,desc:'100 images ou 20 videos',popular:false,planKey:'starter_monthly'},
+      {name:'Pro',price:19.90,credits:225,desc:'225 images ou 45 videos',popular:true,planKey:'pro_monthly'},
+      {name:'Ultra',price:39.90,credits:500,desc:'500 images ou 100 videos',popular:false,planKey:'ultra_monthly'}
     ],
     yearly:[
-      {name:'Starter',price:8.90,credits:100,desc:'~100 images ou 20 vidéos/mois',popular:false,planKey:'starter_yearly'},
-      {name:'Pro',price:17.90,credits:225,desc:'~225 images ou 45 vidéos/mois',popular:true,planKey:'pro_yearly'},
-      {name:'Ultra',price:34.90,credits:500,desc:'~500 images ou 100 vidéos/mois',popular:false,planKey:'ultra_yearly'}
+      {name:'Starter',price:8.90,credits:100,desc:'100 images ou 20 videos/mois',popular:false,planKey:'starter_yearly'},
+      {name:'Pro',price:17.90,credits:225,desc:'225 images ou 45 videos/mois',popular:true,planKey:'pro_yearly'},
+      {name:'Ultra',price:34.90,credits:500,desc:'500 images ou 100 videos/mois',popular:false,planKey:'ultra_yearly'}
     ]
   },
   creditCost:{image:1,video:5,img2video:5}
@@ -399,106 +366,96 @@ const defaultMedia=[
 
 function renderLandingPlans(){
   const c=document.getElementById('lpPlansContainer');if(!c)return;
-  c.innerHTML=(siteSettings.plans[currentPricingPeriod]||[]).map(p=>`
-    <div class="lp-plan-card ${p.popular?'popular':''}">
-      ${p.popular?'<span class="popular-tag">⭐ Le plus populaire</span>':''}
-      <div class="lp-plan-name">${p.name}</div>
-      <div class="lp-plan-price-wrap"><span class="lp-plan-price">${p.price.toFixed(2).replace('.',',')}20ac</span><span class="lp-plan-period">/mois</span></div>
-      <div class="lp-plan-desc">${p.credits} crédits · ${p.desc}</div>
-      <ul class="lp-plan-features"><li>${p.credits} crédits inclus</li><li>Génération images IA</li><li>Génération vidéos IA</li><li>Image vers Vidéo IA</li><li>Téléchargement HD</li></ul>
-      <button class="lp-plan-btn ${p.popular?'filled':'outlined'}" onclick="hideLanding();openAuth();">Choisir ${p.name}</button>
-    </div>`).join('');
+  c.innerHTML=(siteSettings.plans[currentPricingPeriod]||[]).map(function(p){
+    return '<div class="lp-plan-card '+(p.popular?'popular':'')+'">'+(p.popular?'<span class="popular-tag">Le plus populaire</span>':'')+
+    '<div class="lp-plan-name">'+p.name+'</div>'+
+    '<div class="lp-plan-price-wrap"><span class="lp-plan-price">'+p.price.toFixed(2).replace('.',',')+'EUR</span><span class="lp-plan-period">/mois</span></div>'+
+    '<div class="lp-plan-desc">'+p.credits+' credits - '+p.desc+'</div>'+
+    '<ul class="lp-plan-features"><li>'+p.credits+' credits inclus</li><li>Images IA</li><li>Videos IA</li><li>Image vers Video</li><li>Telechargement HD</li></ul>'+
+    '<button class="lp-plan-btn '+(p.popular?'filled':'outlined')+'" onclick="hideLanding();openAuth();">Choisir '+p.name+'</button></div>';
+  }).join('');
 }
 
 function renderPricingModal(){
   const c=document.getElementById('pricingModalPlans');if(!c)return;
-  c.innerHTML=(siteSettings.plans[currentModalPeriod]||[]).map(p=>`
-    <div class="plan-card ${p.popular?'popular':''}" onclick="selectPlan(this,'${p.planKey}',${Math.round(p.price*100)})">
-      <div class="plan-header">
-        <span class="plan-name">${p.name}</span>
-        <span class="plan-price">${p.price.toFixed(2).replace('.',',')}20ac</span>
-        ${p.popular?'<span class="popular-badge">⭐ Populaire</span>':''}
-      </div>
-      <div class="plan-credits">${p.credits} crédits · ${p.desc}</div>
-    </div>`).join('');
+  c.innerHTML=(siteSettings.plans[currentModalPeriod]||[]).map(function(p){
+    return '<div class="plan-card '+(p.popular?'popular':'')+'" onclick="selectPlan(this,''+p.planKey+'','+Math.round(p.price*100)+')">'
+    +'<div class="plan-header"><span class="plan-name">'+p.name+'</span><span class="plan-price">'+p.price.toFixed(2).replace('.',',')+'EUR</span>'
+    +(p.popular?'<span class="popular-badge">Populaire</span>':'')+'</div>'
+    +'<div class="plan-credits">'+p.credits+' credits - '+p.desc+'</div></div>';
+  }).join('');
   selectedPlan=null;
   document.getElementById('payBtn').disabled=true;
 }
 
 function setModalPeriod(p,el){
   currentModalPeriod=p;
-  document.querySelectorAll('.modal-pricing-toggle-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderPricingModal();
+  document.querySelectorAll('.modal-pricing-toggle-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');renderPricingModal();
 }
 
 function setPricingPeriod(p,el){
   currentPricingPeriod=p;
-  document.querySelectorAll('.pricing-toggle-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderLandingPlans();
+  document.querySelectorAll('.pricing-toggle-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');renderLandingPlans();
 }
 
-function setLang(lang){
-  currentLang=lang;localStorage.setItem('limineo_lang',lang);
-  document.querySelectorAll('.lang-option').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick').includes("'"+lang+"'")));
-  const b=document.getElementById('langBtn');if(b)b.textContent=LANGS[lang].flag+' '+LANGS[lang].label;
-  closeLangDropdown();
-}
+function setLang(lang){currentLang=lang;localStorage.setItem('limineo_lang',lang);closeLangDropdown();}
 function toggleLangDropdown(e){if(e)e.stopPropagation();document.getElementById('langDropdown').classList.toggle('open');}
 function closeLangDropdown(){document.getElementById('langDropdown').classList.remove('open');}
 function toggleUserDropdown(e){if(e)e.stopPropagation();document.getElementById('userDropdown').classList.toggle('open');}
 function closeUserDropdown(){document.getElementById('userDropdown').classList.remove('open');}
 
-document.addEventListener('click',e=>{
-  const lp=document.getElementById('langPicker');if(lp&&!lp.contains(e.target))closeLangDropdown();
-  const uw=document.getElementById('userMenuWrap');if(uw&&!uw.contains(e.target))closeUserDropdown();
+document.addEventListener('click',function(e){
+  var lp=document.getElementById('langPicker');if(lp&&!lp.contains(e.target))closeLangDropdown();
+  var uw=document.getElementById('userMenuWrap');if(uw&&!uw.contains(e.target))closeUserDropdown();
 });
 
 function showLanding(){document.getElementById('landingPage').classList.add('show');document.body.classList.add('landing-mode');}
 function hideLanding(){document.getElementById('landingPage').classList.remove('show');document.body.classList.remove('landing-mode');}
 
-async function sbFetch(path,options={}){
-  return fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${currentUser?.token||SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
+async function sbFetch(path,options){
+  options=options||{};
+  return fetch(SUPABASE_URL+'/rest/v1/'+path,Object.assign({},options,{headers:Object.assign({'apikey':SUPABASE_KEY,'Authorization':'Bearer '+(currentUser&&currentUser.token?currentUser.token:SUPABASE_KEY),'Content-Type':'application/json','Prefer':'return=representation'},options.headers||{})}));
 }
 async function sbAuth(endpoint,body){
-  const r=await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  var r=await fetch(SUPABASE_URL+'/auth/v1/'+endpoint,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
   return r.json();
 }
 
-function openAuth(){if(currentUser){showToast('Vous êtes déjà connecté !','success');return;}hideLanding();document.getElementById('authModal').classList.add('open');}
+function openAuth(){if(currentUser){showToast('Vous etes deja connecte !','success');return;}hideLanding();document.getElementById('authModal').classList.add('open');}
 function toggleAuthMode(){
   authMode=authMode==='login'?'signup':'login';
-  document.getElementById('authTitle').textContent=authMode==='login'?'👋 Connexion':'🚀 Créer un compte';
-  document.getElementById('authSubtitle').textContent=authMode==='login'?'Connectez-vous pour créer des médias IA':'Rejoignez Limineo AI gratuitement';
-  document.getElementById('authSubmitBtn').textContent=authMode==='login'?'Se connecter':'Créer mon compte';
-  document.querySelector('.toggle-link').innerHTML=authMode==='login'?'Pas de compte ? <span>Créer un compte gratuit</span>':'Déjà un compte ? <span>Se connecter</span>';
+  document.getElementById('authTitle').textContent=authMode==='login'?'Connexion':'Creer un compte';
+  document.getElementById('authSubtitle').textContent=authMode==='login'?'Connectez-vous pour creer des medias IA':'Rejoignez Limineo AI gratuitement';
+  document.getElementById('authSubmitBtn').textContent=authMode==='login'?'Se connecter':'Creer mon compte';
+  document.querySelector('.toggle-link').innerHTML=authMode==='login'?'Pas de compte ? <span>Creer un compte gratuit</span>':'Deja un compte ? <span>Se connecter</span>';
 }
 
 async function handleAuth(){
-  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
+  var email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
   if(!email||!password){showToast('Remplissez tous les champs','error');return;}
-  const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='Chargement...';
-  const data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email,password});
+  var btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='Chargement...';
+  var data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email:email,password:password});
   if(data.access_token){
-    currentUser={email,token:data.access_token,id:data.user.id};
+    currentUser={email:email,token:data.access_token,id:data.user.id};
     localStorage.setItem('limineo_user',JSON.stringify(currentUser));
     document.getElementById('authModal').classList.remove('open');
     showUserMenu(email);hideLanding();await loadCredits();
-    showToast('Bienvenue sur Limineo AI ! 🎉','success');
+    showToast('Bienvenue sur Limineo AI !','success');
     if(authMode==='signup')await initUserCredits();
     loadTrending();
   }else if(data.error==='email_not_confirmed'){
     showToast('Confirmez votre email avant de vous connecter','error');
   }else{showToast(data.error_description||'Erreur de connexion','error');}
-  btn.disabled=false;btn.textContent=authMode==='login'?'Se connecter':'Créer mon compte';
+  btn.disabled=false;btn.textContent=authMode==='login'?'Se connecter':'Creer mon compte';
 }
 
 function showUserMenu(email){
-  const name=email.split('@')[0];
+  var name=email.split('@')[0];
   document.getElementById('authBtn').style.display='none';
-  const btn=document.getElementById('userMenuBtn');btn.style.display='flex';
-  document.getElementById('userMenuName').textContent='👤 '+name;
+  var btn=document.getElementById('userMenuBtn');btn.style.display='flex';
+  document.getElementById('userMenuName').textContent=name;
   document.getElementById('dropdownEmail').textContent=email;
 }
 
@@ -508,8 +465,8 @@ async function initUserCredits(){
 
 async function loadCredits(){
   try{
-    const r=await sbFetch(`user_credits?user_id=eq.${currentUser.id}&select=credits`);
-    const d=await r.json();
+    var r=await sbFetch('user_credits?user_id=eq.'+currentUser.id+'&select=credits');
+    var d=await r.json();
     if(d&&d[0]){userCredits=d[0].credits;}else{await initUserCredits();}
     updateCreditsUI();
   }catch(e){}
@@ -517,26 +474,26 @@ async function loadCredits(){
 
 function updateCreditsUI(){
   document.getElementById('creditsCount').textContent=userCredits;
-  const c=document.getElementById('creditsInModal');if(c)c.textContent=userCredits;
+  var c=document.getElementById('creditsInModal');if(c)c.textContent=userCredits;
   document.getElementById('dropdownCredits').textContent=userCredits;
   document.getElementById('creditsBadge').style.display='flex';
 }
 
 function logout(){
   localStorage.removeItem('limineo_user');currentUser=null;userCredits=0;
-  showToast('Déconnecté avec succès','success');
-  setTimeout(()=>window.location.reload(),1000);
+  showToast('Deconnecte avec succes','success');
+  setTimeout(function(){window.location.reload();},1000);
 }
 
 function switchNav(s){
-  ['mine','credits'].forEach(x=>{const el=document.getElementById('nav'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.classList.remove('active');});
-  const a=document.getElementById('nav'+s.charAt(0).toUpperCase()+s.slice(1));if(a)a.classList.add('active');
+  ['mine','credits'].forEach(function(x){var el=document.getElementById('nav'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.classList.remove('active');});
+  var a=document.getElementById('nav'+s.charAt(0).toUpperCase()+s.slice(1));if(a)a.classList.add('active');
   if(s==='mine')showMyCreations();
   if(s==='credits')openPricing();
 }
 
 function setTab(el,s){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
   el.classList.add('active');
   document.getElementById('filterBar').style.display=s==='mine'?'flex':'none';
   if(s==='mine')showMyCreations();
@@ -544,43 +501,48 @@ function setTab(el,s){
 }
 
 function closeOutside(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
-function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3000);}
+function showToast(msg,type){
+  type=type||'';
+  var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';
+  setTimeout(function(){t.classList.remove('show');},3000);
+}
 
 async function loadTrending(){
-  const grid=document.getElementById('grid');
+  var grid=document.getElementById('grid');
   document.getElementById('filterBar').style.display='none';
   renderGrid(grid,defaultMedia);
 }
 
 function makeCard(m,sizeClass){
-  const card=document.createElement('div');
+  var card=document.createElement('div');
   card.className='card '+sizeClass;
-  if(m.type==='video'||m.type==='img2video'){
-    card.innerHTML=`<video src="${m.url}" autoplay muted loop playsinline></video><div class="badge">🎬 Vidéo</div><div class="overlay"><div class="likes">❤️ —</div><div class="play-btn">▶</div></div>`;
+  var isVid=m.type==='video'||m.type==='img2video';
+  if(isVid){
+    card.innerHTML='<video src="'+m.url+'" autoplay muted loop playsinline></video><div class="badge">Video</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#9654;</div></div>';
   }else{
-    card.innerHTML=`<img src="${m.url}" alt="IA"><div class="badge">🖼 Image</div><div class="overlay"><div class="likes">❤️ —</div><div class="play-btn">⤢</div></div>`;
+    card.innerHTML='<img src="'+m.url+'" alt="IA"><div class="badge">Image</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#10530;</div></div>';
   }
-  card.onclick=()=>openFullscreen(m.url,m.type);
+  card.onclick=function(){openFullscreen(m.url,m.type);};
   return card;
 }
 
 function renderGrid(grid,items){
   grid.innerHTML='';
-  let i=0;
+  var i=0;
   while(i<items.length){
-    const pattern=Math.floor(i/3)%3;
+    var pattern=Math.floor(i/3)%3;
     if(pattern===0){
-      const row1=document.createElement('div');row1.className='grid-row';
+      var row1=document.createElement('div');row1.className='grid-row';
       if(items[i])row1.appendChild(makeCard(items[i],'card-sm'));
       if(items[i+1])row1.appendChild(makeCard(items[i+1],'card-sm'));
       grid.appendChild(row1);
-      if(items[i+2]){const row2=document.createElement('div');row2.className='grid-row grid-row-center';row2.appendChild(makeCard(items[i+2],'card-full'));grid.appendChild(row2);}
+      if(items[i+2]){var row2=document.createElement('div');row2.className='grid-row grid-row-center';row2.appendChild(makeCard(items[i+2],'card-full'));grid.appendChild(row2);}
       i+=3;
     }else if(pattern===1){
-      if(items[i]){const row=document.createElement('div');row.className='grid-row grid-row-center';row.appendChild(makeCard(items[i],'card-full'));grid.appendChild(row);}
+      if(items[i]){var row=document.createElement('div');row.className='grid-row grid-row-center';row.appendChild(makeCard(items[i],'card-full'));grid.appendChild(row);}
       i+=1;
     }else{
-      const row=document.createElement('div');row.className='grid-row';
+      var row=document.createElement('div');row.className='grid-row';
       if(items[i])row.appendChild(makeCard(items[i],'card-sm'));
       if(items[i+1])row.appendChild(makeCard(items[i+1],'card-sm'));
       grid.appendChild(row);i+=2;
@@ -591,45 +553,39 @@ function renderGrid(grid,items){
 async function showMyCreations(){
   if(!currentUser){openAuth();return;}
   document.getElementById('filterBar').style.display='flex';
-  const grid=document.getElementById('grid');
+  var grid=document.getElementById('grid');
   grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Chargement...</div>';
   try{
-    const r=await sbFetch(`user_generations?user_id=eq.${currentUser.id}&order=created_at.desc&select=*`);
-    const data=await r.json();
-    if(!data||data.length===0){
-      grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune création.<br>Appuyez sur + pour créer !</div>';
-      return;
-    }
-    allMyMedia=[...data.filter(d=>d.type==='video'||d.type==='img2video'),...data.filter(d=>d.type==='image')];
+    var r=await sbFetch('user_generations?user_id=eq.'+currentUser.id+'&order=created_at.desc&select=*');
+    var data=await r.json();
+    if(!data||data.length===0){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';return;}
+    allMyMedia=data.filter(function(d){return d.type==='video'||d.type==='img2video';}).concat(data.filter(function(d){return d.type==='image';}));
     renderMyMedia();
-  }catch(e){
-    grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune création.<br>Appuyez sur + pour créer !</div>';
-  }
+  }catch(e){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';}
 }
 
 function filterMedia(f,el){
   currentFilter=f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderMyMedia();
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');renderMyMedia();
 }
 
 function renderMyMedia(){
-  const grid=document.getElementById('grid');grid.innerHTML='';
-  const filtered=currentFilter==='all'?allMyMedia:allMyMedia.filter(m=>{
+  var grid=document.getElementById('grid');grid.innerHTML='';
+  var filtered=currentFilter==='all'?allMyMedia:allMyMedia.filter(function(m){
     if(currentFilter==='video')return m.type==='video'||m.type==='img2video';
     return m.type==='image';
   });
-  if(!filtered.length){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucun média dans cette catégorie.</div>';return;}
-  filtered.forEach(item=>{
-    const card=document.createElement('div');card.className='card';
-    const isVideo=item.type==='video'||item.type==='img2video';
+  if(!filtered.length){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucun media dans cette categorie.</div>';return;}
+  filtered.forEach(function(item){
+    var card=document.createElement('div');card.className='card';
+    var isVideo=item.type==='video'||item.type==='img2video';
     if(isVideo&&item.url){
-      card.innerHTML=`<video src="${item.url}" style="width:100%" autoplay muted loop playsinline></video><div class="badge">🎬 Vidéo</div><div class="overlay"><div class="likes">❤️ 0</div><div class="play-btn">▶</div></div>`;
-      card.onclick=()=>openFullscreen(item.url,'video');
+      card.innerHTML='<video src="'+item.url+'" style="width:100%" autoplay muted loop playsinline></video><div class="badge">Video</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#9654;</div></div>';
+      card.onclick=function(){openFullscreen(item.url,'video');};
     }else if(item.url){
-      card.innerHTML=`<img src="${item.url}" style="width:100%" alt="média"><div class="badge">🖼 Image</div><div class="overlay"><div class="likes">❤️ 0</div><div class="play-btn">⤢</div></div>`;
-      card.onclick=()=>openFullscreen(item.url,'image');
+      card.innerHTML='<img src="'+item.url+'" style="width:100%" alt="media"><div class="badge">Image</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#10530;</div></div>';
+      card.onclick=function(){openFullscreen(item.url,'image');};
     }
     grid.appendChild(card);
   });
@@ -638,164 +594,127 @@ function renderMyMedia(){
 function openCreate(){if(!currentUser){openAuth();return;}document.getElementById('createModal').classList.add('open');updateCreditsUI();}
 
 function setType(btn,type){
-  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedType=type;
+  document.querySelectorAll('.type-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');selectedType=type;
   document.getElementById('promptSection').style.display=type==='img2video'?'none':'block';
   document.getElementById('img2vidSection').style.display=type==='img2video'?'block':'none';
 }
 
 function handleImageUpload(e){
-  const file=e.target.files[0];if(!file)return;
+  var file=e.target.files[0];if(!file)return;
   pendingUploadFile=file;
-  document.getElementById('consentModal').classList.add('open');
-  ['consent1','consent2','consent3'].forEach(id=>document.getElementById(id).checked=false);
-  document.getElementById('consentConfirm').disabled=true;
+  pendingImageBase64=null;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    pendingImageBase64=ev.target.result;
+    var p=document.getElementById('uploadPreview');
+    p.src=ev.target.result;p.style.display='block';
+    document.getElementById('uploadPlaceholder').style.display='none';
+    showToast('Photo chargee !','success');
+  };
+  reader.readAsDataURL(file);
   e.target.value='';
 }
 
-function checkConsents(){
-  document.getElementById('consentConfirm').disabled=!['consent1','consent2','consent3'].every(id=>document.getElementById(id).checked);
-}
-
-function cancelConsent(){
-  document.getElementById('consentModal').classList.remove('open');
-  pendingUploadFile=null;
-  pendingImageBase64=null;
-}
-
-function confirmConsent(){
-  document.getElementById('consentModal').classList.remove('open');
-  if(!pendingUploadFile)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    pendingImageBase64=ev.target.result;
-    const p=document.getElementById('uploadPreview');
-    p.src=ev.target.result;
-    p.style.display='block';
-    document.getElementById('uploadPlaceholder').style.display='none';
-    showToast('Photo acceptée !','success');
-  };
-  reader.readAsDataURL(pendingUploadFile);
-  
-}
-
 async function generateMedia(){
-  const cost=siteSettings.creditCost[selectedType]||1;
-  let prompt='';
-  let imageBase64=null;
-  let imageMimeType=null;
+  var cost=siteSettings.creditCost[selectedType]||1;
+  var prompt='';
+  var imageBase64=null;
+  var imageMimeType=null;
 
   if(selectedType==='img2video'){
-    if(!pendingImageBase64&&!pendingUploadFile){
-      showToast('Téléchargez une image !','error');
-      return;
-    }
+    if(!pendingImageBase64){showToast('Telechargez une image !','error');return;}
     prompt=document.getElementById('img2vidPrompt').value.trim()||'Animate this image with smooth motion';
-    if(pendingImageBase64){
-      imageBase64=pendingImageBase64;
-      imageMimeType=pendingUploadFile?pendingUploadFile.type:'image/jpeg';
-    }else{
-      imageBase64=await new Promise((resolve)=>{
-        const reader=new FileReader();
-        reader.onload=e=>resolve(e.target.result);
-        reader.readAsDataURL(pendingUploadFile);
-      });
-      imageMimeType=pendingUploadFile.type;
-    }
+    imageBase64=pendingImageBase64;
+    imageMimeType=pendingUploadFile?pendingUploadFile.type:'image/jpeg';
   }else{
     prompt=document.getElementById('promptText').value.trim();
     if(!prompt){showToast('Entrez une description !','error');return;}
   }
 
   if(userCredits<cost){
-    showToast(`Crédits insuffisants (besoin de ${cost})`,'error');
-    setTimeout(()=>{document.getElementById('createModal').classList.remove('open');openPricing();},1000);
+    showToast('Credits insuffisants (besoin de '+cost+')','error');
+    setTimeout(function(){document.getElementById('createModal').classList.remove('open');openPricing();},1000);
     return;
   }
 
-  const btn=document.getElementById('generateBtn'),status=document.getElementById('genStatus');
-  btn.disabled=true;btn.textContent='⏳ Génération...';status.classList.add('show');
-  document.getElementById('genStatusText').textContent=selectedType==='img2video'?'Animation en cours... (1-2 min)':'Génération en cours...';
+  var btn=document.getElementById('generateBtn'),status=document.getElementById('genStatus');
+  btn.disabled=true;btn.textContent='Generation...';status.classList.add('show');
+  document.getElementById('genStatusText').textContent=selectedType==='img2video'?'Animation en cours... (1-2 min)':'Generation en cours...';
 
   try{
-    const body={prompt,type:selectedType,userId:currentUser.id};
+    var body={prompt:prompt,type:selectedType,userId:currentUser.id};
     if(imageBase64){body.imageBase64=imageBase64;body.imageMimeType=imageMimeType;}
-    const r=await fetch('/api/generate',{
+    var r=await fetch('/api/generate',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+currentUser.token},
       body:JSON.stringify(body)
     });
-    const data=await r.json();
+    var data=await r.json();
     if(data.url){
       if(data.creditsLeft!==undefined){userCredits=data.creditsLeft;}else{userCredits-=cost;}
       updateCreditsUI();
-      await sbFetch('user_generations',{method:'POST',body:JSON.stringify({user_id:currentUser.id,prompt,type:selectedType,url:data.url})});
+      await sbFetch('user_generations',{method:'POST',body:JSON.stringify({user_id:currentUser.id,prompt:prompt,type:selectedType,url:data.url})});
       document.getElementById('createModal').classList.remove('open');
-      showToast('Média généré ! 🎉','success');
-      pendingUploadFile=null;
-      pendingImageBase64=null;
+      showToast('Media genere !','success');
+      pendingUploadFile=null;pendingImageBase64=null;
       document.getElementById('uploadPreview').style.display='none';
       document.getElementById('uploadPlaceholder').style.display='block';
       showMyCreations();
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
       document.querySelector('.tab:nth-child(2)').classList.add('active');
       document.getElementById('filterBar').style.display='flex';
-    }else{showToast(data.error||'Erreur de génération.','error');}
-  }catch(e){showToast('Erreur réseau.','error');}
+    }else{showToast(data.error||'Erreur de generation.','error');}
+  }catch(e){showToast('Erreur reseau.','error');}
 
-  btn.disabled=false;btn.textContent='✦ Générer maintenant';status.classList.remove('show');
+  btn.disabled=false;btn.textContent='Generer maintenant';status.classList.remove('show');
   document.getElementById('promptText').value='';
 }
 
 function openPricing(){if(!currentUser){openAuth();return;}document.getElementById('pricingModal').classList.add('open');}
 
 function selectPlan(el,planKey,amount){
-  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedPlan={planKey,amount};
+  document.querySelectorAll('.plan-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');selectedPlan={planKey:planKey,amount:amount};
   document.getElementById('payBtn').disabled=false;
 }
 
 async function startPayment(){
   if(!selectedPlan)return;
-  const btn=document.getElementById('payBtn');btn.disabled=true;btn.textContent='Redirection...';
+  var btn=document.getElementById('payBtn');btn.disabled=true;btn.textContent='Redirection...';
   try{
-    const r=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},body:JSON.stringify({plan:selectedPlan.planKey,userId:currentUser.id,email:currentUser.email})});
-    const data=await r.json();
+    var r=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+currentUser.token},body:JSON.stringify({plan:selectedPlan.planKey,userId:currentUser.id,email:currentUser.email})});
+    var data=await r.json();
     if(data.url){window.location.href=data.url;}else{showToast('Erreur paiement.','error');}
-  }catch(e){showToast('Erreur réseau.','error');}
+  }catch(e){showToast('Erreur reseau.','error');}
   btn.disabled=false;btn.textContent='Payer maintenant';
 }
 
 function openFullscreen(url,type){
   currentMediaUrl=url;currentMediaType=type;
-  const c=document.getElementById('fullscreenContent');
-  if(url&&(type==='video'||type==='img2video')){c.innerHTML=`<video src="${url}" controls autoplay style="max-width:95vw;max-height:82vh;border-radius:16px"></video>`;}
-  else if(url){c.innerHTML=`<img src="${url}" style="max-width:95vw;max-height:82vh;border-radius:16px;object-fit:contain">`;}
+  var c=document.getElementById('fullscreenContent');
+  if(url&&(type==='video'||type==='img2video')){c.innerHTML='<video src="'+url+'" controls autoplay style="max-width:95vw;max-height:82vh;border-radius:16px"></video>';}
+  else if(url){c.innerHTML='<img src="'+url+'" style="max-width:95vw;max-height:82vh;border-radius:16px;object-fit:contain">';}
   document.getElementById('fullscreenActions').style.display=url?'flex':'none';
   document.getElementById('fullscreenModal').classList.add('open');
 }
 function closeFullscreen(){document.getElementById('fullscreenModal').classList.remove('open');document.getElementById('fullscreenContent').innerHTML='';}
 function closeFullscreenOutside(e){if(e.target.id==='fullscreenModal')closeFullscreen();}
-function downloadCurrent(){if(!currentMediaUrl)return;const a=document.createElement('a');a.href=currentMediaUrl;a.download='limineo-media.'+(currentMediaType==='video'||currentMediaType==='img2video'?'mp4':'jpg');a.click();}
-function shareCurrent(){if(navigator.share&&currentMediaUrl){navigator.share({title:'Limineo AI',url:currentMediaUrl});}else{navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copié !','success');}}
+function downloadCurrent(){if(!currentMediaUrl)return;var a=document.createElement('a');a.href=currentMediaUrl;a.download='limineo-media.'+(currentMediaType==='video'||currentMediaType==='img2video'?'mp4':'jpg');a.click();}
+function shareCurrent(){if(navigator.share&&currentMediaUrl){navigator.share({title:'Limineo AI',url:currentMediaUrl});}else{navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie !','success');}}
 
-window.addEventListener('load',async()=>{
+window.addEventListener('load',async function(){
   currentLang=localStorage.getItem('limineo_lang')||'fr';
-  const lb=document.getElementById('langBtn');if(lb)lb.textContent=LANGS[currentLang].flag+' '+LANGS[currentLang].label;
-  document.querySelectorAll('.lang-option').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick').includes("'"+currentLang+"'")));
-  renderLandingPlans();
-  renderPricingModal();
-  const saved=localStorage.getItem('limineo_user');
+  renderLandingPlans();renderPricingModal();
+  var saved=localStorage.getItem('limineo_user');
   if(saved){
     try{
       currentUser=JSON.parse(saved);
       showUserMenu(currentUser.email);
-      await loadCredits();
-      loadTrending();
+      await loadCredits();loadTrending();
     }catch(e){localStorage.removeItem('limineo_user');showLanding();}
   }else{showLanding();}
-  const p=new URLSearchParams(window.location.search);
-  if(p.get('success')==='true'){showToast('Paiement réussi ! Crédits ajoutés 🎉','success');if(currentUser)await loadCredits();window.history.replaceState({},'','/');}
+  var p=new URLSearchParams(window.location.search);
+  if(p.get('success')==='true'){showToast('Paiement reussi ! Credits ajoutes','success');if(currentUser)await loadCredits();window.history.replaceState({},'','/');}
 });
 </script>
 </body>
