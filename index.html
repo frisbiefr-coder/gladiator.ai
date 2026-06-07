@@ -672,9 +672,10 @@ function confirmConsent(){
     p.src=ev.target.result;
     p.style.display='block';
     document.getElementById('uploadPlaceholder').style.display='none';
+    showToast('Photo acceptée !','success');
   };
   reader.readAsDataURL(pendingUploadFile);
-  showToast('Photo acceptée !','success');
+  
 }
 
 async function generateMedia(){
