@@ -405,7 +405,9 @@ function showLanding(){document.getElementById('landingPage').classList.add('sho
 function hideLanding(){document.getElementById('landingPage').classList.remove('show');document.body.classList.remove('landing-mode');}
 
 async function sbFetch(path,options={}){
-  return fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${currentUser?.token||SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${currentUser?.token||SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
+  if(r.status===401){logout();showToast('Session expiree, reconnectez-vous','error');}
+  return r;
 }
 async function sbAuth(endpoint,body){
   const r=await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
