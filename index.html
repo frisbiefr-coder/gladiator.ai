@@ -325,8 +325,21 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   <span class="fullscreen-close" onclick="closeFullscreen()">&#10005;</span>
   <div id="fullscreenContent"></div>
   <div class="fullscreen-actions" id="fullscreenActions">
-    <button class="fs-action-btn" onclick="downloadCurrent()">Telecharger</button>
-    <button class="fs-action-btn" onclick="shareCurrent()">Partager</button>
+    <button class="fs-action-btn" onclick="downloadCurrent()">&#11015; Telecharger</button>
+    <button class="fs-action-btn" onclick="openShareMenu()">&#128279; Partager</button>
+    <button class="fs-action-btn" onclick="deleteCurrent()" style="border-color:rgba(239,68,68,0.4);color:#fca5a5;">&#128465; Supprimer</button>
+  </div>
+  <div id="shareMenu" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a28;border-top:1px solid rgba(124,58,237,0.4);border-radius:24px 24px 0 0;padding:20px;z-index:500;">
+    <div style="width:36px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin:0 auto 16px;"></div>
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#f0f0f8;margin-bottom:16px;">Partager sur...</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button onclick="shareToApp('whatsapp')" style="flex:1;min-width:120px;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">WhatsApp</button>
+      <button onclick="shareToApp('instagram')" style="flex:1;min-width:120px;background:rgba(236,72,153,0.15);border:1px solid rgba(236,72,153,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Instagram</button>
+      <button onclick="shareToApp('tiktok')" style="flex:1;min-width:120px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">TikTok</button>
+      <button onclick="shareToApp('twitter')" style="flex:1;min-width:120px;background:rgba(29,155,240,0.15);border:1px solid rgba(29,155,240,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Twitter/X</button>
+      <button onclick="shareToApp('copy')" style="flex:1;min-width:120px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Copier lien</button>
+    </div>
+    <button onclick="closeShareMenu()" style="width:100%;margin-top:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--muted);border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Annuler</button>
   </div>
 </div>
 
@@ -716,8 +729,41 @@ function openFullscreen(url,type){
 }
 function closeFullscreen(){document.getElementById('fullscreenModal').classList.remove('open');document.getElementById('fullscreenContent').innerHTML='';}
 function closeFullscreenOutside(e){if(e.target.id==='fullscreenModal')closeFullscreen();}
-function downloadCurrent(){if(!currentMediaUrl)return;const a=document.createElement('a');a.href=currentMediaUrl;a.download='limineo-media.'+(currentMediaType==='video'||currentMediaType==='img2video'?'mp4':'jpg');a.click();}
-function shareCurrent(){if(navigator.share&&currentMediaUrl){navigator.share({title:'Limineo AI',url:currentMediaUrl});}else{navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie !','success');}}
+function downloadCurrent(){
+  if(!currentMediaUrl)return;
+  const a=document.createElement('a');
+  a.href=currentMediaUrl;
+  a.download='limineo-media.'+(currentMediaType==='video'||currentMediaType==='img2video'?'mp4':'jpg');
+  a.target='_blank';
+  a.click();
+}
+function openShareMenu(){document.getElementById('shareMenu').style.display='block';}
+function closeShareMenu(){document.getElementById('shareMenu').style.display='none';}
+function shareToApp(platform){
+  if(!currentMediaUrl)return;
+  const url=encodeURIComponent(currentMediaUrl);
+  const text=encodeURIComponent('Cree avec Limineo AI ✨');
+  if(platform==='whatsapp'){window.open(`https://wa.me/?text=${text}%20${url}`);}
+  else if(platform==='twitter'){window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`);}
+  else if(platform==='instagram'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie ! Collez-le dans Instagram','success');}
+  else if(platform==='tiktok'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie ! Collez-le dans TikTok','success');}
+  else if(platform==='copy'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie !','success');}
+  closeShareMenu();
+}
+async function deleteCurrent(){
+  if(!currentMediaUrl||!currentUser)return;
+  if(!confirm('Supprimer ce media ?'))return;
+  try{
+    const item=allMyMedia.find(m=>m.url===currentMediaUrl);
+    if(item&&item.id){
+      await sbFetch(`user_generations?id=eq.${item.id}`,{method:'DELETE'});
+    }
+    allMyMedia=allMyMedia.filter(m=>m.url!==currentMediaUrl);
+    closeFullscreen();
+    renderMyMedia();
+    showToast('Media supprime !','success');
+  }catch(e){showToast('Erreur suppression','error');}
+}
 
 window.addEventListener('load',async()=>{
   currentLang=localStorage.getItem('limineo_lang')||'fr';
