@@ -673,7 +673,7 @@ async function pollVideo(requestId,userId){
   let attempts=0;
   const interval=setInterval(async()=>{
     attempts++;
-    if(attempts>24){clearInterval(interval);showToast('Video trop longue, verifie tes creations plus tard','error');return;}
+    if(attempts>60){clearInterval(interval);showToast('Video trop longue, verifie tes creations plus tard','error');return;}
     try{
       const r=await fetch('/api/check-video',{
         method:'POST',
