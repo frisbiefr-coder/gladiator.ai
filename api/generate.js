@@ -15,7 +15,6 @@ module.exports = async (req, res) => {
 
   const creditCost = type === 'video' ? 5 : type === 'img2video' ? 5 : 1;
 
-  // Vérifier et déduire les crédits
   const getRes = await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}&select=credits`, {
     headers: {
       'apikey': SUPABASE_SERVICE_KEY,
@@ -26,10 +25,9 @@ module.exports = async (req, res) => {
   const current = data?.[0]?.credits || 0;
 
   if (current < creditCost) {
-    return res.status(402).json({ error: 'Crédits insuffisants' });
+    return res.status(402).json({ error: 'Credits insuffisants' });
   }
 
-  // Déduire les crédits
   await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}`, {
     method: 'PATCH',
     headers: {
@@ -41,7 +39,6 @@ module.exports = async (req, res) => {
   });
 
   try {
-    // Traduire le prompt
     let enhancedPrompt = prompt || 'Animate this image with smooth motion';
     try {
       const transRes = await fetch('https://translate.argosopentech.com/translate', {
@@ -61,36 +58,39 @@ module.exports = async (req, res) => {
     let falUrl, falBody;
 
     if (type === 'img2video') {
-      // Image → Vidéo via base64
       falUrl = 'https://fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video';
-      
-      // Upload l'image sur fal storage d'abord
-      let imageUrl = null;
-      if (imageBase64) {
-        const mime = imageMimeType || 'image/jpeg';
-        const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
-        const binaryData = Buffer.from(base64Data, 'base64');
-        
-        const uploadRes = await fetch('https://fal.run/fal-ai/upload', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Key ' + FAL_KEY,
-            'Content-Type': mime
-          },
-          body: binaryData
-        });
-        const uploadData = await uploadRes.json();
-        imageUrl = uploadData.url;
-      }
 
-      if (!imageUrl) {
-        // Rembourser si pas d'image
+      if (!imageBase64) {
         await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}`, {
           method: 'PATCH',
           headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ credits: current })
         });
-        return res.status(400).json({ error: 'Image requise pour Image→Vidéo' });
+        return res.status(400).json({ error: 'imageBase64 manquant dans la requete' });
+      }
+
+      const mime = imageMimeType || 'image/jpeg';
+      const base64Data = imageBase64.replace(/^data:[^;]+;base64,/, '');
+      const binaryData = Buffer.from(base64Data, 'base64');
+
+      const uploadRes = await fetch('https://fal.run/fal-ai/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Key ' + FAL_KEY,
+          'Content-Type': mime
+        },
+        body: binaryData
+      });
+      const uploadData = await uploadRes.json();
+      const imageUrl = uploadData.url || uploadData.image_url || uploadData.file_url || null;
+
+      if (!imageUrl) {
+        await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}`, {
+          method: 'PATCH',
+          headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credits: current })
+        });
+        return res.status(400).json({ error: 'Upload image echoue', uploadResponse: uploadData });
       }
 
       falBody = {
@@ -127,7 +127,6 @@ module.exports = async (req, res) => {
     return res.status(200).json({ url, creditsLeft: current - creditCost });
 
   } catch(e) {
-    // Rembourser si erreur
     await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}`, {
       method: 'PATCH',
       headers: {
