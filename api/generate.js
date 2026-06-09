@@ -100,7 +100,7 @@ module.exports = async (req, res) => {
       url = result.images ? result.images[0].url : result.url;
     }
 
-    if (!url) return res.status(500).json({ error: 'Pas URL', raw: result });
+    if (!url) return res.status(500).json({ error: 'Pas URL', raw: JSON.stringify(result) });
     return res.status(200).json({ url, creditsLeft: current - creditCost });
 
   } catch(e) {
