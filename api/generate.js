@@ -59,36 +59,19 @@ module.exports = async (req, res) => {
     if (type === 'img2video') {
       if (!imageBase64) { await refund(); return res.status(400).json({ error: 'imageBase64 manquant' }); }
 
-      // Convertir base64 en File et uploader via fal.storage
+      // Upload image via fal.storage
       const mimeType = imageMimeType || 'image/jpeg';
       const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
       const imageBuffer = Buffer.from(base64Data, 'base64');
       const imageFile = new File([imageBuffer], 'input.jpg', { type: mimeType });
-
       const publicImageUrl = await fal.storage.upload(imageFile);
 
-      // Soumettre job async
+      // Soumettre job async — retour immédiat avec request_id
       const { request_id } = await fal.queue.submit('fal-ai/minimax/hailuo-02/standard/image-to-video', {
         input: { image_url: publicImageUrl, prompt: enhancedPrompt, duration: 6, resolution: '768P' }
       });
 
-      // Polling max 240s
-      let videoUrl = null;
-      for (let i = 0; i < 48; i++) {
-        await new Promise(r => setTimeout(r, 5000));
-        const status = await fal.queue.status('fal-ai/minimax/hailuo-02/standard/image-to-video', { requestId: request_id });
-        if (status.status === 'COMPLETED') {
-          const result = await fal.queue.result('fal-ai/minimax/hailuo-02/standard/image-to-video', { requestId: request_id });
-          videoUrl = result.data?.video?.url || result.data?.url;
-          break;
-        } else if (status.status === 'FAILED') {
-          await refund();
-          return res.status(500).json({ error: 'Job vidéo échoué' });
-        }
-      }
-
-      if (!videoUrl) { await refund(); return res.status(500).json({ error: 'Timeout génération vidéo' }); }
-      return res.status(200).json({ url: videoUrl, creditsLeft: current - creditCost });
+      return res.status(200).json({ status: 'processing', request_id, creditsLeft: current - creditCost });
 
     } else if (type === 'video') {
       const response = await fetch('https://fal.run/fal-ai/minimax/hailuo-02/standard/text-to-video', {
