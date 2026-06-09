@@ -404,36 +404,8 @@ document.addEventListener('click',e=>{
 function showLanding(){document.getElementById('landingPage').classList.add('show');document.body.classList.add('landing-mode');}
 function hideLanding(){document.getElementById('landingPage').classList.remove('show');document.body.classList.remove('landing-mode');}
 
-async function refreshSession(){
-  try{
-    const saved=localStorage.getItem('limineo_user');
-    if(!saved)return false;
-    const u=JSON.parse(saved);
-    if(!u.refresh_token)return false;
-    const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,{
-      method:'POST',
-      headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({refresh_token:u.refresh_token})
-    });
-    const d=await r.json();
-    if(d.access_token){
-      currentUser={...currentUser,token:d.access_token,refresh_token:d.refresh_token||u.refresh_token};
-      localStorage.setItem('limineo_user',JSON.stringify(currentUser));
-      return true;
-    }
-    return false;
-  }catch(e){return false;}
-}
-
 async function sbFetch(path,options={}){
-  const makeReq=()=>fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${currentUser?.token||SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
-  let r=await makeReq();
-  if(r.status===401){
-    const refreshed=await refreshSession();
-    if(refreshed){r=await makeReq();}
-    else{logout();showToast('Session expiree, reconnectez-vous','error');throw new Error('Session expiree');}
-  }
-  return r;
+  return fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${currentUser?.token||SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
 }
 async function sbAuth(endpoint,body){
   const r=await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -455,7 +427,7 @@ async function handleAuth(){
   const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='Chargement...';
   const data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email,password});
   if(data.access_token){
-    currentUser={email,token:data.access_token,refresh_token:data.refresh_token,id:data.user.id};
+    currentUser={email,token:data.access_token,id:data.user.id};
     localStorage.setItem('limineo_user',JSON.stringify(currentUser));
     document.getElementById('authModal').classList.remove('open');
     showUserMenu(email);hideLanding();await loadCredits();
@@ -574,13 +546,10 @@ async function showMyCreations(){
   try{
     const r=await sbFetch(`user_generations?user_id=eq.${currentUser.id}&order=created_at.desc&select=*`);
     const data=await r.json();
-    if(data&&data.message){grid.innerHTML=`<div style="text-align:center;padding:40px;color:#fca5a5">Erreur: ${data.message}</div>`;return;}
     if(!data||data.length===0){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';return;}
     allMyMedia=[...data.filter(d=>d.type==='video'||d.type==='img2video'),...data.filter(d=>d.type==='image')];
     renderMyMedia();
-  }catch(e){
-    if(e.message!=='Session expiree')grid.innerHTML=`<div style="text-align:center;padding:40px;color:#fca5a5">Erreur: ${e.message}</div>`;
-  }
+  }catch(e){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';}
 }
 
 function filterMedia(f,el){
@@ -670,9 +639,9 @@ async function generateMedia(){
     if(data.url){
       if(data.creditsLeft!==undefined){userCredits=data.creditsLeft;}else{userCredits-=cost;}
       updateCreditsUI();
-      try{await sbFetch('user_generations',{method:'POST',body:JSON.stringify({user_id:currentUser.id,prompt,type:selectedType,url:data.url})});}catch(e){}
+      try{await sbFetch('user_generations',{method:'POST',body:JSON.stringify({user_id:currentUser.id,prompt,type:selectedType,url:data.url,status:'done'})});}catch(e){}
       document.getElementById('createModal').classList.remove('open');
-      showToast('Media genere !','success');
+      showToast('Image generee !','success');
       pendingUploadFile=null;pendingImageBase64=null;
       document.getElementById('uploadPreview').style.display='none';
       document.getElementById('uploadPlaceholder').style.display='block';
@@ -680,11 +649,42 @@ async function generateMedia(){
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
       document.querySelector('.tab:nth-child(2)').classList.add('active');
       document.getElementById('filterBar').style.display='flex';
+    }else if(data.status==='processing'&&data.request_id){
+      if(data.creditsLeft!==undefined){userCredits=data.creditsLeft;}else{userCredits-=cost;}
+      updateCreditsUI();
+      document.getElementById('createModal').classList.remove('open');
+      pendingUploadFile=null;pendingImageBase64=null;
+      document.getElementById('uploadPreview').style.display='none';
+      document.getElementById('uploadPlaceholder').style.display='block';
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelector('.tab:nth-child(2)').classList.add('active');
+      document.getElementById('filterBar').style.display='flex';
+      showToast('Video en cours... (1-3 min)','success');
+      showMyCreations();
+      pollVideo(data.request_id,currentUser.id);
     }else{showToast(data.error||'Erreur de generation.','error');}
   }catch(e){showToast('Erreur reseau.','error');}
 
   btn.disabled=false;btn.textContent='Generer maintenant';status.classList.remove('show');
   document.getElementById('promptText').value='';
+}
+
+async function pollVideo(requestId,userId){
+  let attempts=0;
+  const interval=setInterval(async()=>{
+    attempts++;
+    if(attempts>24){clearInterval(interval);showToast('Video trop longue, verifie tes creations plus tard','error');return;}
+    try{
+      const r=await fetch('/api/check-video',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},
+        body:JSON.stringify({requestId,userId})
+      });
+      const d=await r.json();
+      if(d.status==='done'){clearInterval(interval);showToast('Video prete !','success');showMyCreations();}
+      else if(d.status==='failed'){clearInterval(interval);showToast('Erreur generation video','error');}
+    }catch(e){}
+  },10000);
 }
 
 function openPricing(){if(!currentUser){openAuth();return;}document.getElementById('pricingModal').classList.add('open');}
