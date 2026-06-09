@@ -1,3 +1,5 @@
+const { fal } = require('@fal-ai/client');
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -12,6 +14,8 @@ module.exports = async (req, res) => {
   const FAL_KEY = process.env.FAL_KEY;
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+  fal.config({ credentials: FAL_KEY });
 
   const creditCost = type === 'video' ? 5 : type === 'img2video' ? 5 : 1;
 
@@ -55,35 +59,31 @@ module.exports = async (req, res) => {
     if (type === 'img2video') {
       if (!imageBase64) { await refund(); return res.status(400).json({ error: 'imageBase64 manquant' }); }
 
+      // Convertir base64 en File et uploader via fal.storage
       const mimeType = imageMimeType || 'image/jpeg';
-      // Construire le data URI proprement
-      const dataUri = imageBase64.startsWith('data:') ? imageBase64 : `data:${mimeType};base64,${imageBase64}`;
+      const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
+      const imageBuffer = Buffer.from(base64Data, 'base64');
+      const imageFile = new File([imageBuffer], 'input.jpg', { type: mimeType });
 
-      // Soumettre en async via queue
-      const submitRes = await fetch('https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video', {
-        method: 'POST',
-        headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image_url: dataUri, prompt: enhancedPrompt, duration: 6, resolution: '768P' })
+      const publicImageUrl = await fal.storage.upload(imageFile);
+
+      // Soumettre job async
+      const { request_id } = await fal.queue.submit('fal-ai/minimax/hailuo-02/standard/image-to-video', {
+        input: { image_url: publicImageUrl, prompt: enhancedPrompt, duration: 6, resolution: '768P' }
       });
-      const submitData = await submitRes.json();
-      if (!submitData.request_id) { await refund(); return res.status(500).json({ error: 'Soumission job échouée', details: submitData }); }
 
       // Polling max 240s
-      const requestId = submitData.request_id;
-      const statusUrl = `https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video/requests/${requestId}/status`;
-      const resultUrl  = `https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video/requests/${requestId}`;
-
       let videoUrl = null;
       for (let i = 0; i < 48; i++) {
         await new Promise(r => setTimeout(r, 5000));
-        const st = await (await fetch(statusUrl, { headers: { 'Authorization': 'Key ' + FAL_KEY } })).json();
-        if (st.status === 'COMPLETED') {
-          const rd = await (await fetch(resultUrl, { headers: { 'Authorization': 'Key ' + FAL_KEY } })).json();
-          videoUrl = rd.video?.url || rd.url;
+        const status = await fal.queue.status('fal-ai/minimax/hailuo-02/standard/image-to-video', { requestId: request_id });
+        if (status.status === 'COMPLETED') {
+          const result = await fal.queue.result('fal-ai/minimax/hailuo-02/standard/image-to-video', { requestId: request_id });
+          videoUrl = result.data?.video?.url || result.data?.url;
           break;
-        } else if (st.status === 'FAILED') {
+        } else if (status.status === 'FAILED') {
           await refund();
-          return res.status(500).json({ error: 'Job vidéo échoué', details: st });
+          return res.status(500).json({ error: 'Job vidéo échoué' });
         }
       }
 
