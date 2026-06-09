@@ -198,7 +198,7 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
     <h2>Pret a creer ?</h2>
     <p>Rejoignez des milliers de createurs qui utilisent deja Limineo AI</p>
     <button class="btn-hero" style="margin:0 auto;" onclick="hideLanding();openAuth();">Creer un compte gratuit</button>
-    <p style="margin-top:14px;font-size:12px;">Aucune carte bancaire requise - 50 credits offerts a l inscription</p>
+    <p style="margin-top:14px;font-size:12px;">Aucune carte bancaire requise - 8 credits offerts a l inscription</p>
   </div>
 </div>
 
@@ -461,7 +461,7 @@ function showUserMenu(email){
 }
 
 async function initUserCredits(){
-  try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:50,email:currentUser.email})});userCredits=50;updateCreditsUI();}catch(e){}
+  try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:8,email:currentUser.email})});userCredits=8;updateCreditsUI();}catch(e){}
 }
 
 async function loadCredits(){
