@@ -73,7 +73,7 @@ module.exports = async (req, res) => {
       const base64Data = imageBase64.replace(/^data:[^;]+;base64,/, '');
       const binaryData = Buffer.from(base64Data, 'base64');
 
-      const uploadRes = await fetch('https://fal.run/fal-ai/upload', {
+      const uploadRes = await fetch('https://fal.run/storage/upload', {
         method: 'POST',
         headers: {
           'Authorization': 'Key ' + FAL_KEY,
