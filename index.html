@@ -546,10 +546,12 @@ async function showMyCreations(){
   try{
     const r=await sbFetch(`user_generations?user_id=eq.${currentUser.id}&order=created_at.desc&select=*`);
     const data=await r.json();
+    console.log('Generations data:', data);
+    if(data&&data.message){grid.innerHTML=`<div style="text-align:center;padding:40px;color:#fca5a5">Erreur: ${data.message}</div>`;return;}
     if(!data||data.length===0){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';return;}
     allMyMedia=[...data.filter(d=>d.type==='video'||d.type==='img2video'),...data.filter(d=>d.type==='image')];
     renderMyMedia();
-  }catch(e){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';}
+  }catch(e){grid.innerHTML=`<div style="text-align:center;padding:40px;color:#fca5a5">Erreur reseau: ${e.message}</div>`;}
 }
 
 function filterMedia(f,el){
