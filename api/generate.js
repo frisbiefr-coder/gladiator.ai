@@ -55,8 +55,6 @@ module.exports = async (req, res) => {
       }
     } catch(e) {}
 
-    let falUrl, falBody;
-
     if (type === 'img2video') {
       if (!imageBase64) {
         await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}`, {
@@ -67,30 +65,36 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: 'imageBase64 manquant' });
       }
 
-      // 1) Upload base64 → fal.ai storage pour obtenir une URL publique
+      // 1) Upload image vers fal.ai storage
       const mimeType = imageMimeType || 'image/jpeg';
       const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
       const imageBuffer = Buffer.from(base64Data, 'base64');
 
-      const uploadRes = await fetch('https://fal.run/fal-ai/storage/upload/initiate', {
+      // Multipart form upload vers fal storage
+      const boundary = '----FormBoundary' + Math.random().toString(36).slice(2);
+      const header = Buffer.from(
+        `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="input.jpg"\r\nContent-Type: ${mimeType}\r\n\r\n`
+      );
+      const footer = Buffer.from(`\r\n--${boundary}--\r\n`);
+      const formBody = Buffer.concat([header, imageBuffer, footer]);
+
+      const uploadRes = await fetch('https://fal.run/storage/upload', {
         method: 'POST',
-        headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file_name: 'input.jpg', content_type: mimeType })
+        headers: {
+          'Authorization': 'Key ' + FAL_KEY,
+          'Content-Type': `multipart/form-data; boundary=${boundary}`,
+          'Content-Length': formBody.length
+        },
+        body: formBody
       });
       const uploadData = await uploadRes.json();
-      if (!uploadData.upload_url) {
-        return res.status(500).json({ error: 'Impossible d\'initier upload fal storage', details: uploadData });
+      if (!uploadData.url) {
+        return res.status(500).json({ error: 'Upload fal storage échoué', details: uploadData });
       }
 
-      await fetch(uploadData.upload_url, {
-        method: 'PUT',
-        headers: { 'Content-Type': mimeType },
-        body: imageBuffer
-      });
+      const publicImageUrl = uploadData.url;
 
-      const publicImageUrl = uploadData.file_url;
-
-      // 2) Soumettre le job img2video de façon asynchrone
+      // 2) Soumettre le job img2video (async queue)
       const submitRes = await fetch('https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video', {
         method: 'POST',
         headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
@@ -112,8 +116,7 @@ module.exports = async (req, res) => {
       const resultUrl = `https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video/requests/${requestId}`;
 
       let videoUrl = null;
-      const maxAttempts = 48; // 48 x 5s = 240s
-      for (let i = 0; i < maxAttempts; i++) {
+      for (let i = 0; i < 48; i++) {
         await new Promise(r => setTimeout(r, 5000));
         const statusRes = await fetch(statusUrl, { headers: { 'Authorization': 'Key ' + FAL_KEY } });
         const statusData = await statusRes.json();
@@ -134,31 +137,33 @@ module.exports = async (req, res) => {
       return res.status(200).json({ url: videoUrl, creditsLeft: current - creditCost });
 
     } else if (type === 'video') {
-      falUrl = 'https://fal.run/fal-ai/minimax/hailuo-02/standard/text-to-video';
+      const falUrl = 'https://fal.run/fal-ai/minimax/hailuo-02/standard/text-to-video';
+      const falBody = { prompt: enhancedPrompt, duration: 6, resolution: '768P' };
+      const response = await fetch(falUrl, {
+        method: 'POST',
+        headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify(falBody)
+      });
+      const result = await response.json();
+      if (!response.ok) return res.status(500).json({ error: 'Erreur FAL', details: result });
+      const url = result.video ? result.video.url : result.url;
+      if (!url) return res.status(500).json({ error: 'Pas URL', raw: result });
+      return res.status(200).json({ url, creditsLeft: current - creditCost });
 
-      falBody = { prompt: enhancedPrompt, duration: 6, resolution: '768P' };
     } else {
-      falUrl = 'https://fal.run/fal-ai/flux/schnell';
-      falBody = { prompt: enhancedPrompt, image_size: 'portrait_4_3', num_images: 1 };
+      const falUrl = 'https://fal.run/fal-ai/flux/schnell';
+      const falBody = { prompt: enhancedPrompt, image_size: 'portrait_4_3', num_images: 1 };
+      const response = await fetch(falUrl, {
+        method: 'POST',
+        headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify(falBody)
+      });
+      const result = await response.json();
+      if (!response.ok) return res.status(500).json({ error: 'Erreur FAL', details: result });
+      const url = result.images ? result.images[0].url : result.url;
+      if (!url) return res.status(500).json({ error: 'Pas URL', raw: result });
+      return res.status(200).json({ url, creditsLeft: current - creditCost });
     }
-
-    const response = await fetch(falUrl, {
-      method: 'POST',
-      headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify(falBody)
-    });
-    const result = await response.json();
-    if (!response.ok) return res.status(500).json({ error: 'Erreur FAL', details: result });
-
-    let url = null;
-    if (type === 'video' || type === 'img2video') {
-      url = result.video ? result.video.url : result.url;
-    } else {
-      url = result.images ? result.images[0].url : result.url;
-    }
-
-    if (!url) return res.status(500).json({ error: 'Pas URL', raw: result });
-    return res.status(200).json({ url, creditsLeft: current - creditCost });
 
   } catch(e) {
     await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}`, {
