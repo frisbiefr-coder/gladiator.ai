@@ -65,36 +65,42 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: 'imageBase64 manquant' });
       }
 
-      // 1) Upload image vers fal.ai storage
       const mimeType = imageMimeType || 'image/jpeg';
       const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
       const imageBuffer = Buffer.from(base64Data, 'base64');
 
-      // Multipart form upload vers fal storage
+      // Étape 1 : obtenir un token de upload fal storage
+      const tokenRes = await fetch('https://rest.alpha.fal.ai/storage/auth/token?storage_type=fal-cdn-v3', {
+        method: 'POST',
+        headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' }
+      });
+      const tokenData = await tokenRes.json();
+      if (!tokenData.token || !tokenData.base_url) {
+        return res.status(500).json({ error: 'Token fal storage échoué', details: tokenData });
+      }
+
+      // Étape 2 : uploader le fichier
       const boundary = '----FormBoundary' + Math.random().toString(36).slice(2);
-      const header = Buffer.from(
-        `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="input.jpg"\r\nContent-Type: ${mimeType}\r\n\r\n`
-      );
+      const header = Buffer.from(`--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="input.jpg"\r\nContent-Type: ${mimeType}\r\n\r\n`);
       const footer = Buffer.from(`\r\n--${boundary}--\r\n`);
       const formBody = Buffer.concat([header, imageBuffer, footer]);
 
-      const uploadRes = await fetch('https://fal.run/storage/upload', {
+      const uploadRes = await fetch(`${tokenData.base_url}/files/upload`, {
         method: 'POST',
         headers: {
-          'Authorization': 'Key ' + FAL_KEY,
+          'Authorization': `Bearer ${tokenData.token}`,
           'Content-Type': `multipart/form-data; boundary=${boundary}`,
           'Content-Length': formBody.length
         },
         body: formBody
       });
       const uploadData = await uploadRes.json();
-      if (!uploadData.url) {
-        return res.status(500).json({ error: 'Upload fal storage échoué', details: uploadData });
+      const publicImageUrl = uploadData.access_url || uploadData.url;
+      if (!publicImageUrl) {
+        return res.status(500).json({ error: 'Upload image échoué', details: uploadData });
       }
 
-      const publicImageUrl = uploadData.url;
-
-      // 2) Soumettre le job img2video (async queue)
+      // Étape 3 : soumettre le job async
       const submitRes = await fetch('https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video', {
         method: 'POST',
         headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
@@ -110,7 +116,7 @@ module.exports = async (req, res) => {
         return res.status(500).json({ error: 'Erreur soumission job video', details: submitData });
       }
 
-      // 3) Polling jusqu'à completion (max 240s)
+      // Étape 4 : polling (max 240s)
       const requestId = submitData.request_id;
       const statusUrl = `https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video/requests/${requestId}/status`;
       const resultUrl = `https://queue.fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video/requests/${requestId}`;
