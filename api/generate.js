@@ -58,6 +58,7 @@ module.exports = async (req, res) => {
     let falUrl, falBody;
 
     if (type === 'img2video') {
+      // Passe le base64 directement — fal.ai accepte les data URI nativement
       falUrl = 'https://fal.run/fal-ai/minimax/hailuo-02/standard/image-to-video';
 
       if (!imageBase64) {
@@ -66,35 +67,11 @@ module.exports = async (req, res) => {
           headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ credits: current })
         });
-        return res.status(400).json({ error: 'imageBase64 manquant dans la requete' });
-      }
-
-      const mime = imageMimeType || 'image/jpeg';
-      const base64Data = imageBase64.replace(/^data:[^;]+;base64,/, '');
-      const binaryData = Buffer.from(base64Data, 'base64');
-
-      const uploadRes = await fetch('https://fal.run/storage/upload', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Key ' + FAL_KEY,
-          'Content-Type': mime
-        },
-        body: binaryData
-      });
-      const uploadData = await uploadRes.json();
-      const imageUrl = uploadData.url || uploadData.image_url || uploadData.file_url || null;
-
-      if (!imageUrl) {
-        await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}`, {
-          method: 'PATCH',
-          headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ credits: current })
-        });
-        return res.status(400).json({ error: 'Upload image echoue', uploadResponse: uploadData });
+        return res.status(400).json({ error: 'imageBase64 manquant' });
       }
 
       falBody = {
-        image_url: imageUrl,
+        image_url: imageBase64,
         prompt: enhancedPrompt,
         duration: 6,
         resolution: '768P'
