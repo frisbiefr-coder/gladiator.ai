@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
   const FAL_KEY = process.env.FAL_KEY;
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+  const APP_URL = 'https://gladiator-ai-rho.vercel.app';
 
   fal.config({ credentials: FAL_KEY });
 
@@ -56,34 +57,31 @@ module.exports = async (req, res) => {
       }
     } catch(e) {}
 
+    const webhookUrl = `${APP_URL}/api/webhook-fal?userId=${userId}&type=${type}`;
+
     if (type === 'img2video') {
       if (!imageBase64) { await refund(); return res.status(400).json({ error: 'imageBase64 manquant' }); }
 
-      // Upload image via fal.storage
       const mimeType = imageMimeType || 'image/jpeg';
       const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
       const imageBuffer = Buffer.from(base64Data, 'base64');
       const imageFile = new File([imageBuffer], 'input.jpg', { type: mimeType });
       const publicImageUrl = await fal.storage.upload(imageFile);
 
-      // Soumettre job async — retour immédiat avec request_id
       const { request_id } = await fal.queue.submit('fal-ai/minimax/hailuo-02/standard/image-to-video', {
-        input: { image_url: publicImageUrl, prompt: enhancedPrompt, duration: 6, resolution: '768P' }
+        input: { image_url: publicImageUrl, prompt: enhancedPrompt, duration: 6, resolution: '768P' },
+        webhookUrl
       });
 
       return res.status(200).json({ status: 'processing', request_id, creditsLeft: current - creditCost });
 
     } else if (type === 'video') {
-      const response = await fetch('https://fal.run/fal-ai/minimax/hailuo-02/standard/text-to-video', {
-        method: 'POST',
-        headers: { 'Authorization': 'Key ' + FAL_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: enhancedPrompt, duration: 6, resolution: '768P' })
+      const { request_id } = await fal.queue.submit('fal-ai/minimax/hailuo-02/standard/text-to-video', {
+        input: { prompt: enhancedPrompt, duration: 6, resolution: '768P' },
+        webhookUrl
       });
-      const result = await response.json();
-      if (!response.ok) { await refund(); return res.status(500).json({ error: 'Erreur FAL', details: result }); }
-      const url = result.video?.url || result.url;
-      if (!url) { await refund(); return res.status(500).json({ error: 'Pas URL', raw: result }); }
-      return res.status(200).json({ url, creditsLeft: current - creditCost });
+
+      return res.status(200).json({ status: 'processing', request_id, creditsLeft: current - creditCost });
 
     } else {
       const response = await fetch('https://fal.run/fal-ai/flux/schnell', {
