@@ -5,6 +5,7 @@
   "functions": {
     "api/generate.js": { "maxDuration": 300 },
     "api/check-video.js": { "maxDuration": 30 },
+    "api/webhook-fal.js": { "maxDuration": 30 },
     "api/create-checkout.js": { "maxDuration": 60 },
     "api/webhook.js": { "maxDuration": 60 }
   }
