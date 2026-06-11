@@ -401,7 +401,7 @@ function renderLandingPlans(){
   const feats=lang.planFeatures||TRANSLATIONS['fr'].planFeatures;
   c.innerHTML=(PLANS[currentPricingPeriod]||[]).map(p=>`
     <div class="lp-plan-card ${p.popular?'popular':''}">
-      ${p.popular?`<span class="popular-tag">${lang.popularTag||'Le plus populaire'}</span>`:''}
+      ${p.popular?'<span class="popular-tag">'+( lang.popularTag||'Le plus populaire')+'</span>':''}
       <div class="lp-plan-name">${p.name}</div>
       <div class="lp-plan-price-wrap"><span class="lp-plan-price">${p.price.toFixed(2).replace('.',',')}EUR</span><span class="lp-plan-period">${lang.mois||'/mois'}</span></div>
       <div class="lp-plan-desc">${p.credits} ${lang.dropdownCredits||'credits'} - ${p.desc}</div>
@@ -415,7 +415,7 @@ function renderPricingModal(){
   const lang=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
   c.innerHTML=(PLANS[currentModalPeriod]||[]).map(p=>`
     <div class="plan-card ${p.popular?'popular':''}" onclick="selectPlan(this,'${p.planKey}',${Math.round(p.price*100)})">
-      <div class="plan-header"><span class="plan-name">${p.name}</span><span class="plan-price">${p.price.toFixed(2).replace('.',',')}EUR</span>${p.popular?`<span class="popular-badge">${lang.popularBadge||'Populaire'}</span>`:''}</div>
+      <div class="plan-header"><span class="plan-name">${p.name}</span><span class="plan-price">${p.price.toFixed(2).replace('.',',')}EUR</span>${p.popular?'<span class="popular-badge">'+(lang.popularBadge||'Populaire')+'</span>':''}</div>
       <div class="plan-credits">${p.credits} ${lang.dropdownCredits||'credits'} - ${p.desc}</div>
     </div>`).join('');
   selectedPlan=null;document.getElementById('payBtn').disabled=true;
@@ -1349,5 +1349,4 @@ function shareToApp(platform){
   else if(platform==='instagram'){navigator.clipboard.writeText(currentMediaUrl);showToast(langS.toastLienIG,'success');}
   else if(platform==='tiktok'){navigator.clipboard.writeText(currentMediaUrl);showToast(langS.toastLienTT,'success');}
   else if(platform==='copy'){navigator.clipboard.writeText(currentMediaUrl);showToast(langS.toastLienCopie,'success');}
-  closeShareMenu();
-}
+  closeShareMen
