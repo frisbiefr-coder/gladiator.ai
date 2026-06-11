@@ -102,7 +102,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .fullscreen-close{position:absolute;top:20px;right:20px;color:white;font-size:28px;cursor:pointer;}
 .fullscreen-actions{display:flex;gap:12px;}
 .fs-action-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;border-radius:12px;padding:10px 20px;font-size:13px;cursor:pointer;}
-.lp-gallery-inner{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:16px 0 8px;margin:0 -20px;padding-left:20px;scrollbar-width:none;position:relative;z-index:2;}.lp-gallery-inner::-webkit-scrollbar{display:none;}.lp-gcard{flex:0 0 110px;scroll-snap-align:start;border-radius:12px;overflow:hidden;position:relative;height:150px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.06);}.lp-gcard img{width:100%;height:100%;object-fit:cover;display:block;}.lp-gbadge{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:2px 7px;font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;}.img2vid-section{background:rgba(124,58,237,0.08);border:1px dashed rgba(124,58,237,0.4);border-radius:14px;padding:16px;margin-top:14px;}
+.lp-gallery-scroll::-webkit-scrollbar{display:none;}.lp-gcard{flex:0 0 160px;scroll-snap-align:start;border-radius:14px;overflow:hidden;position:relative;height:220px;background:#1a1a2e;}.lp-gcard.tall{flex:0 0 140px;height:240px;}.lp-gcard img{width:100%;height:100%;object-fit:cover;display:block;}.lp-gbadge{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:3px 9px;font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;letter-spacing:0.03em;}.img2vid-section{background:rgba(124,58,237,0.08);border:1px dashed rgba(124,58,237,0.4);border-radius:14px;padding:16px;margin-top:14px;}
 .upload-zone{border:2px dashed rgba(124,58,237,0.4);border-radius:12px;padding:20px;text-align:center;cursor:pointer;position:relative;}
 .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
 .upload-preview{width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover;display:none;}
@@ -112,16 +112,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 #landingPage{display:none;padding-top:54px;}
 #landingPage.show{display:block;}
 body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mainContent,body.landing-mode .spacer,body.landing-mode .bottom-nav{display:none !important;}
-.lp-hero{position:relative;display:flex;flex-direction:column;align-items:center;padding:40px 20px;text-align:center;background:linear-gradient(160deg,#1a0533 0%,#0d0d1a 40%,#0a1628 100%);overflow:hidden;}
-.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.2;pointer-events:none;}
+.lp-hero{position:relative;display:flex;flex-direction:column;align-items:center;padding:40px 20px 30px;text-align:center;background:linear-gradient(160deg,#1a0533 0%,#0d0d1a 40%,#0a1628 100%);overflow:hidden;}.lp-hero-bg{position:absolute;inset:0;display:flex;gap:0;overflow:hidden;z-index:0;}.lp-hero-bg-item{flex:1;overflow:hidden;position:relative;}.lp-hero-bg-item img,.lp-hero-bg-item video{width:100%;height:100%;object-fit:cover;display:block;opacity:0.35;}.lp-hero-overlay{position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,5,51,0.7) 0%,rgba(13,13,26,0.65) 40%,rgba(10,22,40,0.7) 100%);z-index:1;}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.15;pointer-events:none;z-index:2;}
 .orb-1{width:300px;height:300px;background:#7c3aed;top:-60px;left:-80px;}
 .orb-2{width:220px;height:220px;background:#ec4899;bottom:60px;right:-60px;}
-.lp-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.5);border-radius:30px;padding:6px 14px;font-size:11px;font-weight:600;color:#c4b5fd;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:18px;position:relative;z-index:2;}
+.lp-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.5);border-radius:30px;padding:6px 14px;font-size:11px;font-weight:600;color:#c4b5fd;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:18px;position:relative;z-index:3;}
 .eyebrow-dot{width:6px;height:6px;background:#7c3aed;border-radius:50%;}
-.lp-title{font-family:'Syne',sans-serif;font-size:clamp(32px,9vw,68px);font-weight:800;line-height:1.1;letter-spacing:-0.02em;margin-bottom:16px;position:relative;z-index:2;}
+.lp-title{position:relative;z-index:3;font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;line-height:1.35;letter-spacing:0;margin-bottom:12px;position:relative;z-index:2;}
 .lp-title .grad{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.lp-subtitle{font-size:15px;color:rgba(240,240,248,0.7);max-width:340px;line-height:1.6;margin-bottom:28px;position:relative;z-index:2;}
-.lp-cta-group{display:flex;gap:10px;flex-direction:column;align-items:center;position:relative;z-index:2;}
+.lp-subtitle{font-size:15px;color:rgba(240,240,248,0.85);max-width:340px;line-height:1.6;margin-bottom:28px;position:relative;z-index:3;}
+.lp-cta-group{display:flex;gap:10px;flex-direction:column;align-items:center;position:relative;z-index:3;}
 .btn-hero{background:var(--gradient);border:none;color:white;border-radius:14px;padding:14px 28px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:240px;box-shadow:0 8px 24px rgba(124,58,237,0.4);}
 .btn-ghost{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(240,240,248,0.7);border-radius:14px;padding:13px 28px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;width:240px;}
 .lp-stats{display:flex;justify-content:center;padding:20px 16px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
@@ -165,14 +165,24 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   <section class="lp-hero">
     <div class="orb orb-1"></div><div class="orb orb-2"></div>
     <div class="lp-eyebrow"><span class="eyebrow-dot"></span>IA Generation - Nouvelle Ere</div>
+    <div style="display:flex;gap:8px;width:100%;margin:16px 0 12px;position:relative;z-index:3;border-radius:16px;overflow:hidden;height:180px;">
+      <div style="flex:1;overflow:hidden;border-radius:14px;"><img src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/dd7d7ed852d15576.png" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div style="flex:1;overflow:hidden;border-radius:14px;"><video src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_2.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video></div>
+      <div style="flex:1;overflow:hidden;border-radius:14px;"><img src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fdf70ad5e98f691c.png" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    </div>
     <h1 class="lp-title">Creez des medias<br><span class="grad">extraordinaires</span><br>en secondes</h1>
     <p class="lp-subtitle">Transformez vos idees en images et videos epoustouflantes grace a l intelligence artificielle.</p>
-    <div class="lp-gallery-inner">
-      <div class="lp-gcard"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=360&auto=format&fit=crop&q=80" alt="" loading="lazy"><div class="lp-gbadge">Portrait</div></div>
-      <div class="lp-gcard"><img src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=300&h=360&auto=format&fit=crop&q=80" alt="" loading="lazy"><div class="lp-gbadge">Animal</div></div>
-      <div class="lp-gcard"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300&h=360&auto=format&fit=crop&q=80" alt="" loading="lazy"><div class="lp-gbadge">Cinéma</div></div>
-      <div class="lp-gcard"><img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=300&h=360&auto=format&fit=crop&q=80" alt="" loading="lazy"><div class="lp-gbadge">Nature</div></div>
-      <div class="lp-gcard"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=360&auto=format&fit=crop&q=80" alt="" loading="lazy"><div class="lp-gbadge">Portrait</div></div>
+    <div style="width:100%;overflow:hidden;margin:16px 0;position:relative;z-index:2;">
+      <div id="autoScroll" style="display:flex;flex-direction:row;flex-wrap:nowrap;gap:10px;overflow-x:hidden;padding:4px 0 8px;width:max-content;">
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Portrait</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Animal</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Cinema</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Nature</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Portrait</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Animal</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Portrait</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Animal</div></div>
+      </div>
     </div>
     <div class="lp-cta-group">
       <button class="btn-hero" onclick="hideLanding();openAuth();">Commencer gratuitement</button>
@@ -786,6 +796,24 @@ window.addEventListener('load',async()=>{
   const p=new URLSearchParams(window.location.search);
   if(p.get('success')==='true'){showToast('Paiement reussi ! Credits ajoutes','success');if(currentUser)await loadCredits();window.history.replaceState({},'','/');}
 });
+
+// Auto-scroll gallery
+(function(){
+  const el = document.getElementById('autoScroll');
+  if(!el) return;
+  let pos = 0;
+  let paused = false;
+  el.addEventListener('touchstart', () => { paused = true; });
+  el.addEventListener('touchend', () => { setTimeout(() => { paused = false; }, 2000); });
+  setInterval(() => {
+    if(paused) return;
+    pos += 0.5;
+    const maxScroll = el.scrollWidth / 2;
+    if(pos >= maxScroll) pos = 0;
+    el.parentElement.scrollLeft = pos;
+    el.style.transform = 'translateX(-' + pos + 'px)';
+  }, 16);
+})();
 </script>
 </body>
 </html>
