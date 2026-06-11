@@ -3,14 +3,36 @@ export default async function handler(req, res) {
 
   const {text, voiceId, language} = req.body;
 
-  if (!text || !voiceId) return res.status(400).json({error: 'Texte et voix requis'});
+  if (!text) return res.status(400).json({error: 'Texte requis'});
   if (text.length > 500) return res.status(400).json({error: 'Texte trop long (max 500 caractères)'});
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) return res.status(500).json({error: 'Clé API manquante'});
 
+  // Voix disponibles sur plan gratuit ElevenLabs
+  const FREE_VOICES = {
+    'rachel': 'EXAVITQu4vr4xnSDxMaL',
+    'bella': 'EXAVITQu4vr4xnSDxMaL',
+    'default': 'EXAVITQu4vr4xnSDxMaL'
+  };
+
+  // Sur plan gratuit, utiliser la première voix disponible via /voices
   try {
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    // D'abord récupérer les voix disponibles pour ce compte
+    const voicesResp = await fetch('https://api.elevenlabs.io/v1/voices', {
+      headers: {'xi-api-key': apiKey}
+    });
+    const voicesData = await voicesResp.json();
+    const voices = voicesData.voices || [];
+    
+    // Prendre la première voix disponible du compte
+    let selectedVoiceId = voices.length > 0 ? voices[0].voice_id : voiceId;
+
+    // Si l'ID demandé est dans les voix du compte, l'utiliser
+    const requested = voices.find(v => v.voice_id === voiceId);
+    if (requested) selectedVoiceId = voiceId;
+
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`, {
       method: 'POST',
       headers: {
         'xi-api-key': apiKey,
@@ -23,7 +45,7 @@ export default async function handler(req, res) {
         voice_settings: {
           stability: 0.5,
           similarity_boost: 0.75,
-          style: 0.3,
+          style: 0.2,
           use_speaker_boost: true
         }
       })
@@ -31,7 +53,8 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      return res.status(response.status).json({error: err.detail?.message || 'Erreur ElevenLabs'});
+      const msg = err.detail?.message || err.detail || 'Erreur ElevenLabs';
+      return res.status(response.status).json({error: msg});
     }
 
     const audioBuffer = await response.arrayBuffer();
