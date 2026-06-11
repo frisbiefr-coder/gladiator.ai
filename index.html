@@ -558,21 +558,44 @@ function toggleAuthMode(){
 
 async function handleAuth(){
   const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
-  if(!email||!password){showToast('Remplissez tous les champs','error');return;}
-  const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='Chargement...';
+  const L=TRANSLATIONS[currentLang]||TRANSLATIONS.fr;
+  if(!email||!password){showToast(L.toastFields,'error');return;}
+  const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='...';
   const data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email,password});
-  if(data.access_token){
-    currentUser={email,token:data.access_token,id:data.user.id};
-    localStorage.setItem('limineo_user',JSON.stringify(currentUser));
-    document.getElementById('authModal').classList.remove('open');
-    showUserMenu(email);hideLanding();await loadCredits();
-    showToast('Bienvenue sur Limineo AI !','success');
-    if(authMode==='signup')await initUserCredits();
-    loadTrending();
-  }else if(data.error==='email_not_confirmed'){
-    showToast('Confirmez votre email avant de vous connecter','error');
-  }else{showToast(data.error_description||'Erreur de connexion','error');}
-  btn.disabled=false;btn.textContent=authMode==='login'?'Se connecter':'Creer mon compte';
+  if(authMode==='signup'){
+    // Signup: Supabase renvoie user mais pas access_token si confirmation requise
+    if(data.user&&!data.access_token){
+      // Email de confirmation envoyé
+      showToast('📧 Verifiez votre email pour activer votre compte !','success');
+      document.getElementById('authModal').classList.remove('open');
+    }else if(data.access_token){
+      // Cas rare: confirmation desactivee
+      currentUser={email,token:data.access_token,id:data.user.id};
+      localStorage.setItem('limineo_user',JSON.stringify(currentUser));
+      document.getElementById('authModal').classList.remove('open');
+      showUserMenu(email);hideLanding();await loadCredits();
+      await initUserCredits();
+      showToast(L.toastWelcome,'success');
+      loadTrending();
+    }else{
+      showToast(data.error_description||L.toastErrLogin,'error');
+    }
+  }else{
+    // Login normal
+    if(data.access_token){
+      currentUser={email,token:data.access_token,id:data.user.id};
+      localStorage.setItem('limineo_user',JSON.stringify(currentUser));
+      document.getElementById('authModal').classList.remove('open');
+      showUserMenu(email);hideLanding();await loadCredits();
+      showToast(L.toastWelcome,'success');
+      loadTrending();
+    }else if(data.error==='email_not_confirmed'){
+      showToast(L.toastConfirmEmail,'error');
+    }else{
+      showToast(data.error_description||L.toastErrLogin,'error');
+    }
+  }
+  btn.disabled=false;btn.textContent=authMode==='login'?L.authSubmit:L.signupSubmit;
 }
 
 function showUserMenu(email){
