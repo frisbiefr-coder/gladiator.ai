@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limineo Studio - Donnez une voix à vos photos</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131a;
+  --border:#1e1e2e;
+  --accent:#7c3aed;
+  --pink:#ec4899;
+  --gradient:linear-gradient(135deg,#7c3aed,#ec4899);
+  --text:#f1f0f7;
+  --muted:#6b6b8a;
+  --card:#16161f;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(10px);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-icon{width:36px;height:36px;background:var(--gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.back-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;}
+
+/* HERO */
+.hero{text-align:center;padding:40px 20px 30px;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:6px 14px;font-size:12px;color:#c4b5fd;margin-bottom:16px;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;line-height:1.2;margin-bottom:12px;}
+.hero h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:var(--muted);font-size:14px;line-height:1.6;max-width:320px;margin:0 auto;}
+
+/* STEPS */
+.steps{display:flex;justify-content:center;gap:0;padding:20px;overflow-x:auto;}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:70px;}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+.step-num.inactive{background:var(--surface);border:1px solid var(--border);color:var(--muted);}
+.step-line{width:40px;height:2px;background:var(--border);margin-top:-18px;margin-bottom:0;}
+.step-line.done{background:var(--gradient);}
+.step-label{font-size:10px;color:var(--muted);text-align:center;}
+.step-label.active{color:#c4b5fd;}
+
+/* MAIN CARD */
+.main-card{background:var(--card);border:1px solid var(--border);border-radius:20px;margin:0 16px 20px;overflow:hidden;}
+.card-section{padding:20px;border-bottom:1px solid var(--border);}
+.card-section:last-child{border-bottom:none;}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.section-label span{font-size:14px;}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:30px 20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(124,58,237,0.05);}
+.upload-zone.has-image{border-style:solid;border-color:var(--accent);padding:0;}
+.upload-icon{font-size:32px;margin-bottom:8px;}
+.upload-title{font-size:14px;font-weight:600;margin-bottom:4px;}
+.upload-sub{font-size:12px;color:var(--muted);}
+.upload-img{width:100%;max-height:220px;object-fit:cover;border-radius:12px;display:none;}
+.upload-img.visible{display:block;}
+.change-img-btn{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.7);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:10px;font-size:12px;cursor:pointer;}
+#fileInput{display:none;}
+
+/* VOICE OPTIONS */
+.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.voice-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s;}
+.voice-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.1);}
+.voice-emoji{font-size:22px;margin-bottom:4px;}
+.voice-name{font-size:13px;font-weight:600;}
+.voice-desc{font-size:11px;color:var(--muted);}
+
+/* LANGUAGE SELECT */
+.lang-select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;cursor:pointer;}
+
+/* TEXT INPUT */
+.text-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;resize:none;height:100px;line-height:1.5;}
+.text-input:focus{outline:none;border-color:var(--accent);}
+.text-input::placeholder{color:var(--muted);}
+.char-count{text-align:right;font-size:11px;color:var(--muted);margin-top:4px;}
+
+/* PRESETS */
+.preset-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.preset-chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all 0.2s;}
+.preset-chip:hover{border-color:var(--accent);color:#c4b5fd;}
+
+/* GENERATE BTN */
+.generate-section{padding:20px 16px;}
+.credits-info{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--muted);margin-bottom:14px;}
+.credits-badge{background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
+.generate-btn{width:100%;padding:16px;background:var(--gradient);border:none;border-radius:14px;color:white;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;}
+.generate-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* PROGRESS */
+.progress-section{display:none;padding:24px 20px;text-align:center;}
+.progress-section.visible{display:block;}
+.progress-anim{width:60px;height:60px;margin:0 auto 16px;position:relative;}
+.progress-ring{width:60px;height:60px;animation:spin 1.5s linear infinite;}
+.progress-ring circle{stroke:url(#grad);stroke-width:4;fill:none;stroke-dasharray:130;stroke-dashoffset:30;stroke-linecap:round;}
+@keyframes spin{100%{transform:rotate(360deg);}}
+.progress-step{font-size:14px;font-weight:600;margin-bottom:6px;}
+.progress-sub{font-size:12px;color:var(--muted);}
+.progress-bar-wrap{background:var(--border);border-radius:10px;height:4px;margin-top:16px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--gradient);border-radius:10px;transition:width 0.5s ease;width:0%;}
+
+/* RESULT */
+.result-section{display:none;padding:20px;}
+.result-section.visible{display:block;}
+.result-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:14px;text-align:center;}
+.result-video{width:100%;border-radius:14px;background:#000;max-height:300px;}
+.result-audio{width:100%;margin-top:12px;border-radius:10px;}
+.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.result-btn{padding:12px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;border:none;}
+.result-btn.primary{background:var(--gradient);color:white;}
+.result-btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);}
+.new-btn{width:100%;margin-top:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;}
+
+/* EXAMPLES */
+.examples-section{padding:0 16px 30px;}
+.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:16px;text-align:center;}
+.examples-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.example-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;}
+.example-img{width:100%;height:110px;object-fit:cover;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-size:40px;}
+.example-info{padding:10px;}
+.example-name{font-size:12px;font-weight:600;}
+.example-voice{font-size:11px;color:var(--muted);}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e1e2e;border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:12px;font-size:13px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:var(--accent);}
+.toast.error{border-color:#ef4444;color:#fca5a5;}
+
+/* NOTE BANNER */
+.note-banner{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:12px 16px;margin:0 16px 16px;font-size:12px;color:#c4b5fd;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- HEADER -->
+<div class="header">
+  <a href="/" class="logo">
+    <div class="logo-icon">🎙</div>
+    <span class="logo-text">Limineo Studio</span>
+  </a>
+  <a href="/" class="back-btn">← Limineo AI</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">✨ Nouveau — Beta</div>
+  <h1>Donnez une <span>voix</span> à vos photos</h1>
+  <p>Uploadez une photo, choisissez une voix et un texte — l'IA génère l'audio en quelques secondes.</p>
+</div>
+
+<!-- NOTE -->
+<div class="note-banner">
+  💡 <strong>Beta :</strong> Pour l'instant Limineo Studio génère la voix IA depuis votre photo. Le lip sync vidéo arrive bientôt.
+</div>
+
+<!-- MAIN CARD -->
+<div class="main-card">
+
+  <!-- STEP 1: PHOTO -->
+  <div class="card-section">
+    <div class="section-label"><span>📸</span> Étape 1 — Choisir une photo</div>
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div id="uploadPlaceholder">
+        <div class="upload-icon">🐾</div>
+        <div class="upload-title">Appuyez pour choisir une photo</div>
+        <div class="upload-sub">Animal, personne, personnage...</div>
+      </div>
+      <img id="uploadedImg" class="upload-img" alt="Photo uploadée"/>
+      <button class="change-img-btn" id="changeImgBtn" style="display:none" onclick="event.stopPropagation();document.getElementById('fileInput').click()">✎ Changer</button>
+    </div>
+    <input type="file" id="fileInput" accept="image/*"/>
+  </div>
+
+  <!-- STEP 2: VOICE -->
+  <div class="card-section">
+    <div class="section-label"><span>🎙</span> Étape 2 — Choisir une voix</div>
+    <div class="voice-grid">
+      <div class="voice-card selected" onclick="selectVoice(this,'21m00Tcm4TlvDq8ikWAM')">
+        <div class="voice-emoji">👦</div>
+        <div class="voice-name">Rachel</div>
+        <div class="voice-desc">Douce, naturelle</div>
+      </div>
+      <div class="voice-card" onclick="selectVoice(this,'AZnzlk1XvdvUeBnXmlld')">
+        <div class="voice-emoji">🧔</div>
+        <div class="voice-name">Domi</div>
+        <div class="voice-desc">Forte, expressive</div>
+      </div>
+      <div class="voice-card" onclick="selectVoice(this,'EXAVITQu4vr4xnSDxMaL')">
+        <div class="voice-emoji">👩</div>
+        <div class="voice-name">Bella</div>
+        <div class="voice-desc">Douce, calme</div>
+      </div>
+      <div class="voice-card" onclick="selectVoice(this,'ErXwobaYiN019PkySvjV')">
+        <div class="voice-emoji">🎭</div>
+        <div class="voice-name">Antoni</div>
+        <div class="voice-desc">Chaleureux, doux</div>
+      </div>
+      <div class="voice-card" onclick="selectVoice(this,'MF3mGyEYCl7XYWbV9V6O')">
+        <div class="voice-emoji">🦁</div>
+        <div class="voice-name">Elli</div>
+        <div class="voice-desc">Jeune, énergique</div>
+      </div>
+      <div class="voice-card" onclick="selectVoice(this,'TxGEqnHWrfWFTfGW9XjX')">
+        <div class="voice-emoji">🐻</div>
+        <div class="voice-name">Josh</div>
+        <div class="voice-desc">Profonde, grave</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: LANGUAGE -->
+  <div class="card-section">
+    <div class="section-label"><span>🌍</span> Étape 3 — Langue</div>
+    <select class="lang-select" id="langSelect">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇵🇹 Português</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="tr">🇹🇷 Türkçe</option>
+    </select>
+  </div>
+
+  <!-- STEP 4: TEXT -->
+  <div class="card-section">
+    <div class="section-label"><span>✍️</span> Étape 4 — Ce que dit votre personnage</div>
+    <textarea class="text-input" id="studioText" placeholder="Ex: Bonjour ! Je suis le petit chat le plus mignon du monde et aujourd'hui je vais vous raconter mon aventure..." maxlength="500" oninput="updateCount()"></textarea>
+    <div class="char-count"><span id="charCount">0</span>/500</div>
+    <div class="preset-chips">
+      <div class="preset-chip" onclick="usePreset(this)">🐱 Chat drôle</div>
+      <div class="preset-chip" onclick="usePreset(this)">🐶 Chien sage</div>
+      <div class="preset-chip" onclick="usePreset(this)">🦜 Perroquet</div>
+      <div class="preset-chip" onclick="usePreset(this)">🦁 Lion roi</div>
+      <div class="preset-chip" onclick="usePreset(this)">🐧 Pingouin</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section" id="progressSection">
+    <div class="progress-anim">
+      <svg class="progress-ring" viewBox="0 0 60 60">
+        <circle cx="30" cy="30" r="26"/>
+      </svg>
+    </div>
+    <div class="progress-step" id="progressStep">Génération de la voix...</div>
+    <div class="progress-sub" id="progressSub">ElevenLabs IA • quelques secondes</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-section" id="resultSection">
+    <div class="result-title">🎉 Votre audio est prêt !</div>
+    <audio id="resultAudio" class="result-audio" controls></audio>
+    <div class="result-actions">
+      <button class="result-btn primary" onclick="downloadAudio()">⬇ Télécharger</button>
+      <button class="result-btn secondary" onclick="shareAudio()">🔗 Partager</button>
+    </div>
+    <button class="new-btn" onclick="resetStudio()">+ Créer un nouveau</button>
+  </div>
+
+</div>
+
+<!-- GENERATE -->
+<div class="generate-section" id="generateSection">
+  <div class="credits-info">
+    ⚡ <span class="credits-badge">2 crédits</span> par génération audio
+  </div>
+  <button class="generate-btn" id="generateBtn" onclick="generateVoice()">
+    🎙 Générer la voix IA
+  </button>
+</div>
+
+<!-- EXAMPLES -->
+<div class="examples-section">
+  <div class="section-title">Idées de créations</div>
+  <div class="examples-grid">
+    <div class="example-card" onclick="fillExample('chat')">
+      <div class="example-img">🐱</div>
+      <div class="example-info">
+        <div class="example-name">Chat philosophe</div>
+        <div class="example-voice">Voix douce • FR</div>
+      </div>
+    </div>
+    <div class="example-card" onclick="fillExample('chien')">
+      <div class="example-img">🐶</div>
+      <div class="example-info">
+        <div class="example-name">Chien motivateur</div>
+        <div class="example-voice">Voix énergique • FR</div>
+      </div>
+    </div>
+    <div class="example-card" onclick="fillExample('lion')">
+      <div class="example-img">🦁</div>
+      <div class="example-info">
+        <div class="example-name">Lion discours</div>
+        <div class="example-voice">Voix grave • FR</div>
+      </div>
+    </div>
+    <div class="example-card" onclick="fillExample('perroquet')">
+      <div class="example-img">🦜</div>
+      <div class="example-info">
+        <div class="example-name">Perroquet comique</div>
+        <div class="example-voice">Voix jeune • FR</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedVoiceId = '21m00Tcm4TlvDq8ikWAM';
+let uploadedImageFile = null;
+let generatedAudioBlob = null;
+let generatedAudioUrl = null;
+
+const PRESETS = {
+  '🐱 Chat drôle': "Miaou ! Je suis le chat le plus philosophe du quartier. Aujourd'hui j'ai médité 12 heures devant mon bol vide. La vie est une illusion. Mais les croquettes, elles, sont bien réelles.",
+  '🐶 Chien sage': "Bonjour tout le monde ! C'est moi, le meilleur chien du monde ! Aujourd'hui j'ai appris une leçon importante : si tu cours assez vite, tu rattraperas ta queue. Pas encore réussi, mais je suis confiant !",
+  '🦜 Perroquet': "Coucou coucou ! Polly veut un gâteau ! Non pas un gâteau, je veux des nouvelles. Pourquoi tu me regardes comme ça ? J'ai quelque chose dans les plumes ?",
+  '🦁 Lion roi': "Je suis le roi de la savane. Chaque matin je me lève, je rugis, et tout le monde fuit. C'est une vie solitaire. Mais au moins j'ai la paix pour manger mon petit-déjeuner.",
+  '🐧 Pingouin': "Bonjour depuis l'Antarctique ! Il fait moins 40 degrés et je porte un smoking. Je suis toujours le mieux habillé à la fête. La vie est belle quand on a du style."
+};
+
+const EXAMPLES = {
+  chat: {text: "Miaou ! Je suis le chat le plus philosophe du quartier. Aujourd'hui j'ai médité 12 heures devant mon bol vide. La vie est une illusion.", voice: '21m00Tcm4TlvDq8ikWAM'},
+  chien: {text: "Bonjour ! C'est moi, le meilleur chien du monde ! Aujourd'hui j'ai appris une leçon importante : toujours agiter la queue en premier, poser des questions ensuite.", voice: 'MF3mGyEYCl7XYWbV9V6O'},
+  lion: {text: "Je suis le roi de la savane. Mon rugissement fait trembler la terre. Mais entre nous... j'ai un peu peur des souris. Chut, ne le dites à personne.", voice: 'TxGEqnHWrfWFTfGW9XjX'},
+  perroquet: {text: "Coucou ! Polly veut parler ! J'ai entendu que tu as dit quelque chose d'intéressant hier. Je vais le répéter à tout le monde. C'est mon métier.", voice: 'MF3mGyEYCl7XYWbV9V6O'}
+};
+
+function selectVoice(el, voiceId) {
+  document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedVoiceId = voiceId;
+}
+
+function updateCount() {
+  const t = document.getElementById('studioText');
+  document.getElementById('charCount').textContent = t.value.length;
+}
+
+function usePreset(el) {
+  const text = PRESETS[el.textContent];
+  if (text) {
+    document.getElementById('studioText').value = text;
+    updateCount();
+  }
+}
+
+function fillExample(type) {
+  const ex = EXAMPLES[type];
+  if (!ex) return;
+  document.getElementById('studioText').value = ex.text;
+  updateCount();
+  // select voice
+  document.querySelectorAll('.voice-card').forEach((c, i) => {
+    c.classList.remove('selected');
+    if (c.getAttribute('onclick') && c.getAttribute('onclick').includes(ex.voice)) {
+      c.classList.add('selected');
+      selectedVoiceId = ex.voice;
+    }
+  });
+  showToast('Exemple chargé — ajoutez une photo et générez !', 'success');
+}
+
+// File upload
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  uploadedImageFile = file;
+  const url = URL.createObjectURL(file);
+  const img = document.getElementById('uploadedImg');
+  img.src = url;
+  img.classList.add('visible');
+  document.getElementById('uploadPlaceholder').style.display = 'none';
+  document.getElementById('changeImgBtn').style.display = 'block';
+  document.getElementById('uploadZone').classList.add('has-image');
+});
+
+// Drag and drop
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    document.getElementById('fileInput').files = e.dataTransfer.files;
+    document.getElementById('fileInput').dispatchEvent(new Event('change'));
+  }
+});
+
+async function generateVoice() {
+  const text = document.getElementById('studioText').value.trim();
+  if (!text) { showToast('Écrivez ce que doit dire votre personnage', 'error'); return; }
+  if (text.length < 5) { showToast('Le texte est trop court', 'error'); return; }
+
+  // Show progress
+  document.getElementById('generateSection').style.display = 'none';
+  document.getElementById('progressSection').classList.add('visible');
+  document.getElementById('resultSection').classList.remove('visible');
+
+  animateProgress();
+
+  try {
+    const response = await fetch('/api/generate-voice', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        text: text,
+        voiceId: selectedVoiceId,
+        language: document.getElementById('langSelect').value
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || 'Erreur génération');
+    }
+
+    const audioBlob = await response.blob();
+    generatedAudioBlob = audioBlob;
+    generatedAudioUrl = URL.createObjectURL(audioBlob);
+
+    document.getElementById('resultAudio').src = generatedAudioUrl;
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('resultSection').classList.add('visible');
+    document.getElementById('generateSection').style.display = 'none';
+    showToast('Voix générée avec succès !', 'success');
+
+  } catch(e) {
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('generateSection').style.display = 'block';
+    showToast(e.message || 'Erreur de génération', 'error');
+  }
+}
+
+function animateProgress() {
+  const steps = [
+    {text: 'Analyse du texte...', sub: 'Préparation • quelques secondes', pct: 20},
+    {text: 'Génération de la voix IA...', sub: 'ElevenLabs • synthèse vocale', pct: 60},
+    {text: 'Finalisation audio...', sub: 'Presque prêt !', pct: 90},
+  ];
+  let i = 0;
+  const bar = document.getElementById('progressBar');
+  bar.style.width = '5%';
+  const interval = setInterval(() => {
+    if (i >= steps.length) { clearInterval(interval); return; }
+    document.getElementById('progressStep').textContent = steps[i].text;
+    document.getElementById('progressSub').textContent = steps[i].sub;
+    bar.style.width = steps[i].pct + '%';
+    i++;
+  }, 1200);
+}
+
+function downloadAudio() {
+  if (!generatedAudioBlob) return;
+  const a = document.createElement('a');
+  a.href = generatedAudioUrl;
+  a.download = 'limineo-studio-' + Date.now() + '.mp3';
+  a.click();
+  showToast('Téléchargement démarré', 'success');
+}
+
+function shareAudio() {
+  if (navigator.share && generatedAudioBlob) {
+    const file = new File([generatedAudioBlob], 'limineo-studio.mp3', {type: 'audio/mpeg'});
+    navigator.share({files: [file], title: 'Limineo Studio', text: 'Créé avec Limineo Studio ✨'})
+      .catch(() => copyLink());
+  } else {
+    copyLink();
+  }
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href);
+  showToast('Lien copié !', 'success');
+}
+
+function resetStudio() {
+  document.getElementById('studioText').value = '';
+  updateCount();
+  document.getElementById('resultSection').classList.remove('visible');
+  document.getElementById('generateSection').style.display = 'block';
+  generatedAudioBlob = null;
+  generatedAudioUrl = null;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
