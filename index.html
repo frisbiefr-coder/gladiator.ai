@@ -397,610 +397,30 @@ const DEFAULT_MEDIA=[
 
 function renderLandingPlans(){
   const c=document.getElementById('lpPlansContainer');if(!c)return;
-  const lang=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
-  const feats=lang.planFeatures||TRANSLATIONS['fr'].planFeatures;
   c.innerHTML=(PLANS[currentPricingPeriod]||[]).map(p=>`
     <div class="lp-plan-card ${p.popular?'popular':''}">
-      ${p.popular?'<span class="popular-tag">'+( lang.popularTag||'Le plus populaire')+'</span>':''}
+      ${p.popular?'<span class="popular-tag">Le plus populaire</span>':''}
       <div class="lp-plan-name">${p.name}</div>
-      <div class="lp-plan-price-wrap"><span class="lp-plan-price">${p.price.toFixed(2).replace('.',',')}EUR</span><span class="lp-plan-period">${lang.mois||'/mois'}</span></div>
-      <div class="lp-plan-desc">${p.credits} ${lang.dropdownCredits||'credits'} - ${p.desc}</div>
-      <ul class="lp-plan-features"><li>${p.credits} ${feats[0]}</li><li>${feats[1]}</li><li>${feats[2]}</li><li>${feats[3]}</li><li>${feats[4]}</li></ul>
-      <button class="lp-plan-btn ${p.popular?'filled':'outlined'}" onclick="hideLanding();openAuth();">${lang.choisir||'Choisir'} ${p.name}</button>
+      <div class="lp-plan-price-wrap"><span class="lp-plan-price">${p.price.toFixed(2).replace('.',',')}EUR</span><span class="lp-plan-period">/mois</span></div>
+      <div class="lp-plan-desc">${p.credits} credits - ${p.desc}</div>
+      <ul class="lp-plan-features"><li>${p.credits} credits inclus</li><li>Images IA</li><li>Videos IA</li><li>Image vers Video</li><li>Telechargement HD</li></ul>
+      <button class="lp-plan-btn ${p.popular?'filled':'outlined'}" onclick="hideLanding();openAuth();">Choisir ${p.name}</button>
     </div>`).join('');
 }
 
 function renderPricingModal(){
   const c=document.getElementById('pricingModalPlans');if(!c)return;
-  const lang=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
   c.innerHTML=(PLANS[currentModalPeriod]||[]).map(p=>`
     <div class="plan-card ${p.popular?'popular':''}" onclick="selectPlan(this,'${p.planKey}',${Math.round(p.price*100)})">
-      <div class="plan-header"><span class="plan-name">${p.name}</span><span class="plan-price">${p.price.toFixed(2).replace('.',',')}EUR</span>${p.popular?'<span class="popular-badge">'+(lang.popularBadge||'Populaire')+'</span>':''}</div>
-      <div class="plan-credits">${p.credits} ${lang.dropdownCredits||'credits'} - ${p.desc}</div>
+      <div class="plan-header"><span class="plan-name">${p.name}</span><span class="plan-price">${p.price.toFixed(2).replace('.',',')}EUR</span>${p.popular?'<span class="popular-badge">Populaire</span>':''}</div>
+      <div class="plan-credits">${p.credits} credits - ${p.desc}</div>
     </div>`).join('');
   selectedPlan=null;document.getElementById('payBtn').disabled=true;
 }
 
 function setModalPeriod(p,el){currentModalPeriod=p;document.querySelectorAll('.modal-pricing-toggle-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderPricingModal();}
 function setPricingPeriod(p,el){currentPricingPeriod=p;document.querySelectorAll('.pricing-toggle-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderLandingPlans();}
-const TRANSLATIONS={
-  fr:{
-    langBtn:'&#127467;&#127479; FR',
-    connexion:'Connexion',
-    tendances:'Tendances',mesCreations:'Mes creations',mesMedias:'Mes medias',credits:'Credits',
-    banner:'&#10024; Nouveau - Generez des videos et images IA reelles !',bannerBtn:'Commencer',
-    commencer:'Commencer gratuitement',voirOffres:'Voir les offres',
-    eyebrow:'IA Generation - Nouvelle Ere',
-    heroTitle:'Creez des medias <span class="grad">extraordinaires</span> en quelques secondes',
-    heroSub:'Transformez vos idees en images et videos epoustouflantes grace a l intelligence artificielle.',
-    statCreateurs:'Createurs',statMedias:'Medias crees',statTemps:'Temps moyen',
-    whyLabel:'Pourquoi Limineo AI',whyTitle:'Tout ce dont vous avez besoin',
-    f1title:'Images IA Ultra-realistes',f1desc:'Generez des images de qualite professionnelle a partir d un simple texte.',
-    f2title:'Videos IA Cinematiques',f2desc:'Donnez vie a vos idees avec des videos fluides et realistes.',
-    f3title:'Image vers Video',f3desc:'Telechargez votre photo et transformez-la en video animee.',
-    f4title:'Resultats en quelques secondes',f4desc:'Generation en 30 a 60 secondes. Pas d attente, juste de la creativite.',
-    offresLabel:'Nos offres',offresTitle:'Choisissez votre formule',
-    mensuel:'Mensuel',annuel:'Annuel -10%',
-    planFeatures:['credits inclus','Images IA','Videos IA','Image vers Video','Telechargement HD'],
-    ctaTitle:'Pret a creer ?',ctaSub:'Rejoignez des milliers de createurs qui utilisent deja Limineo AI',
-    ctaBtn:'Creer un compte gratuit',ctaNote:'Aucune carte bancaire requise - 8 credits offerts a l inscription',
-    authTitle:'Connexion',authSub:'Connectez-vous pour creer des medias IA',
-    authEmail:'Votre email',authPwd:'Mot de passe',authSubmit:'Se connecter',
-    authToggle:'Pas de compte ? <span>Creer un compte gratuit</span>',
-    signupTitle:'Creer un compte',signupSub:'Rejoignez Limineo AI gratuitement',signupSubmit:'Creer mon compte',
-    signupToggle:'Deja un compte ? <span>Se connecter</span>',
-    createTitle:'Creer un media IA',createSub:'Decrivez ce que vous voulez generer',
-    typeImage:'&#128444; Image',typeVideo:'&#127916; Video',typeImg2vid:'&#128247; Image-Video',
-    generateBtn:'Generer maintenant',genStatus:'Generation en cours...',genTime:'30 a 60 secondes',
-    uploadLabel:'Appuyez pour choisir une photo',uploadPrompt:'Animation souhaitee (facultatif)...',
-    promptPlaceholder:'Ex: Un lion majestueux au coucher du soleil...',
-    pricingTitle:'&#9889; Acheter des credits',pricingNote:'1 image = 1 credit - 1 video = 5 credits',
-    payBtn:'Payer maintenant',payRedirect:'Redirection...',
-    acheterCredits:'&#9889; Acheter des credits',deconnecter:'Se deconnecter',
-    telecharger:'&#11015; Telecharger',partager:'&#128279; Partager',supprimer:'&#128465; Supprimer',
-    partagerSur:'Partager sur...',annuler:'Annuler',copierLien:'Copier lien',
-    filterTout:'Tout',filterVideos:'&#127916; Videos',filterImages:'&#128444; Images',
-    toastWelcome:'Bienvenue sur Limineo AI !',toastLogout:'Deconnecte avec succes',
-    toastPayOk:'Paiement reussi ! Credits ajoutes',toastErrPay:'Erreur paiement.',
-    toastErrNet:'Erreur reseau.',toastLienCopie:'Lien copie !',
-    toastLienIG:'Lien copie ! Collez-le dans Instagram',toastLienTT:'Lien copie ! Collez-le dans TikTok',
-    toastDelOk:'Media supprime !',toastDelErr:'Erreur suppression',
-    toastFillFields:'Remplissez tous les champs',toastAlreadyLogged:'Vous etes deja connecte !',
-    toastConfirmEmail:'Confirmez votre email avant de vous connecter',
-    toastErrLogin:'Erreur de connexion',toastNoCredits:'Credits insuffisants',
-    confirmDelete:'Supprimer ce media ?',
-    emptyMine:'Aucune creation pour l instant',emptyMineBtn:'Creer mon premier media',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> credits - Image = 1 credit - Video = 5 credits',
-    dropdownCredits:'credits',popularBadge:'Populaire',popularTag:'Le plus populaire',
-    choisir:'Choisir',mois:'/mois',
-    genErrNoImg:'Veuillez choisir une image',genErrNoPrompt:'Decrivez votre media'
-  },
-  en:{
-    langBtn:'&#127468;&#127463; EN',
-    connexion:'Login',
-    tendances:'Trending',mesCreations:'My creations',mesMedias:'My media',credits:'Credits',
-    banner:'&#10024; New - Generate real AI videos and images!',bannerBtn:'Start',
-    commencer:'Start for free',voirOffres:'See plans',
-    eyebrow:'AI Generation - New Era',
-    heroTitle:'Create <span class="grad">extraordinary</span> media in seconds',
-    heroSub:'Transform your ideas into stunning images and videos with artificial intelligence.',
-    statCreateurs:'Creators',statMedias:'Media created',statTemps:'Avg time',
-    whyLabel:'Why Limineo AI',whyTitle:'Everything you need',
-    f1title:'Ultra-realistic AI Images',f1desc:'Generate professional-quality images from simple text.',
-    f2title:'Cinematic AI Videos',f2desc:'Bring your ideas to life with smooth, realistic videos.',
-    f3title:'Image to Video',f3desc:'Upload your photo and transform it into an animated video.',
-    f4title:'Results in seconds',f4desc:'Generation in 30 to 60 seconds. No waiting, just creativity.',
-    offresLabel:'Our plans',offresTitle:'Choose your plan',
-    mensuel:'Monthly',annuel:'Yearly -10%',
-    planFeatures:['credits included','AI Images','AI Videos','Image to Video','HD Download'],
-    ctaTitle:'Ready to create?',ctaSub:'Join thousands of creators already using Limineo AI',
-    ctaBtn:'Create a free account',ctaNote:'No credit card required - 8 free credits on signup',
-    authTitle:'Login',authSub:'Sign in to create AI media',
-    authEmail:'Your email',authPwd:'Password',authSubmit:'Sign in',
-    authToggle:'No account? <span>Create a free account</span>',
-    signupTitle:'Create account',signupSub:'Join Limineo AI for free',signupSubmit:'Create my account',
-    signupToggle:'Already have an account? <span>Sign in</span>',
-    createTitle:'Create AI media',createSub:'Describe what you want to generate',
-    typeImage:'&#128444; Image',typeVideo:'&#127916; Video',typeImg2vid:'&#128247; Img-Video',
-    generateBtn:'Generate now',genStatus:'Generating...',genTime:'30 to 60 seconds',
-    uploadLabel:'Tap to choose a photo',uploadPrompt:'Desired animation (optional)...',
-    promptPlaceholder:'Ex: A majestic lion at sunset...',
-    pricingTitle:'&#9889; Buy credits',pricingNote:'1 image = 1 credit - 1 video = 5 credits',
-    payBtn:'Pay now',payRedirect:'Redirecting...',
-    acheterCredits:'&#9889; Buy credits',deconnecter:'Sign out',
-    telecharger:'&#11015; Download',partager:'&#128279; Share',supprimer:'&#128465; Delete',
-    partagerSur:'Share to...',annuler:'Cancel',copierLien:'Copy link',
-    filterTout:'All',filterVideos:'&#127916; Videos',filterImages:'&#128444; Images',
-    toastWelcome:'Welcome to Limineo AI!',toastLogout:'Signed out successfully',
-    toastPayOk:'Payment successful! Credits added',toastErrPay:'Payment error.',
-    toastErrNet:'Network error.',toastLienCopie:'Link copied!',
-    toastLienIG:'Link copied! Paste it in Instagram',toastLienTT:'Link copied! Paste it in TikTok',
-    toastDelOk:'Media deleted!',toastDelErr:'Delete error',
-    toastFillFields:'Please fill all fields',toastAlreadyLogged:'You are already logged in!',
-    toastConfirmEmail:'Please confirm your email before signing in',
-    toastErrLogin:'Login error',toastNoCredits:'Not enough credits',
-    confirmDelete:'Delete this media?',
-    emptyMine:'No creations yet',emptyMineBtn:'Create my first media',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> credits - Image = 1 credit - Video = 5 credits',
-    dropdownCredits:'credits',popularBadge:'Popular',popularTag:'Most popular',
-    choisir:'Choose',mois:'/month',
-    genErrNoImg:'Please choose an image',genErrNoPrompt:'Describe your media'
-  },
-  es:{
-    langBtn:'&#127466;&#127480; ES',
-    connexion:'Iniciar sesion',
-    tendances:'Tendencias',mesCreations:'Mis creaciones',mesMedias:'Mis medias',credits:'Creditos',
-    banner:'&#10024; Nuevo - Genera videos e imagenes IA reales!',bannerBtn:'Empezar',
-    commencer:'Empezar gratis',voirOffres:'Ver planes',
-    eyebrow:'Generacion IA - Nueva Era',
-    heroTitle:'Crea medios <span class="grad">extraordinarios</span> en segundos',
-    heroSub:'Transforma tus ideas en imagenes y videos impresionantes con inteligencia artificial.',
-    statCreateurs:'Creadores',statMedias:'Medios creados',statTemps:'Tiempo medio',
-    whyLabel:'Por que Limineo AI',whyTitle:'Todo lo que necesitas',
-    f1title:'Imagenes IA ultra-realistas',f1desc:'Genera imagenes de calidad profesional desde texto simple.',
-    f2title:'Videos IA cinematicos',f2desc:'Da vida a tus ideas con videos fluidos y realistas.',
-    f3title:'Imagen a Video',f3desc:'Sube tu foto y transformala en un video animado.',
-    f4title:'Resultados en segundos',f4desc:'Generacion en 30 a 60 segundos. Sin esperas.',
-    offresLabel:'Nuestros planes',offresTitle:'Elige tu plan',
-    mensuel:'Mensual',annuel:'Anual -10%',
-    planFeatures:['creditos incluidos','Imagenes IA','Videos IA','Imagen a Video','Descarga HD'],
-    ctaTitle:'Listo para crear?',ctaSub:'Unete a miles de creadores que ya usan Limineo AI',
-    ctaBtn:'Crear cuenta gratis',ctaNote:'Sin tarjeta de credito - 8 creditos gratis al registrarse',
-    authTitle:'Iniciar sesion',authSub:'Inicia sesion para crear medios IA',
-    authEmail:'Tu email',authPwd:'Contrasena',authSubmit:'Iniciar sesion',
-    authToggle:'Sin cuenta? <span>Crear cuenta gratis</span>',
-    signupTitle:'Crear cuenta',signupSub:'Unete a Limineo AI gratis',signupSubmit:'Crear mi cuenta',
-    signupToggle:'Ya tienes cuenta? <span>Iniciar sesion</span>',
-    createTitle:'Crear medio IA',createSub:'Describe lo que quieres generar',
-    typeImage:'&#128444; Imagen',typeVideo:'&#127916; Video',typeImg2vid:'&#128247; Img-Video',
-    generateBtn:'Generar ahora',genStatus:'Generando...',genTime:'30 a 60 segundos',
-    uploadLabel:'Toca para elegir una foto',uploadPrompt:'Animacion deseada (opcional)...',
-    promptPlaceholder:'Ej: Un leon majestuoso al atardecer...',
-    pricingTitle:'&#9889; Comprar creditos',pricingNote:'1 imagen = 1 credito - 1 video = 5 creditos',
-    payBtn:'Pagar ahora',payRedirect:'Redirigiendo...',
-    acheterCredits:'&#9889; Comprar creditos',deconnecter:'Cerrar sesion',
-    telecharger:'&#11015; Descargar',partager:'&#128279; Compartir',supprimer:'&#128465; Eliminar',
-    partagerSur:'Compartir en...',annuler:'Cancelar',copierLien:'Copiar enlace',
-    filterTout:'Todo',filterVideos:'&#127916; Videos',filterImages:'&#128444; Imagenes',
-    toastWelcome:'Bienvenido a Limineo AI!',toastLogout:'Sesion cerrada',
-    toastPayOk:'Pago exitoso! Creditos anadidos',toastErrPay:'Error de pago.',
-    toastErrNet:'Error de red.',toastLienCopie:'Enlace copiado!',
-    toastLienIG:'Enlace copiado! Pegalo en Instagram',toastLienTT:'Enlace copiado! Pegalo en TikTok',
-    toastDelOk:'Media eliminado!',toastDelErr:'Error al eliminar',
-    toastFillFields:'Rellena todos los campos',toastAlreadyLogged:'Ya has iniciado sesion!',
-    toastConfirmEmail:'Confirma tu email antes de iniciar sesion',
-    toastErrLogin:'Error de inicio de sesion',toastNoCredits:'Creditos insuficientes',
-    confirmDelete:'Eliminar este media?',
-    emptyMine:'Sin creaciones aun',emptyMineBtn:'Crear mi primer media',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> creditos - Imagen = 1 - Video = 5',
-    dropdownCredits:'creditos',popularBadge:'Popular',popularTag:'El mas popular',
-    choisir:'Elegir',mois:'/mes',
-    genErrNoImg:'Por favor elige una imagen',genErrNoPrompt:'Describe tu media'
-  },
-  de:{
-    langBtn:'&#127465;&#127466; DE',
-    connexion:'Anmelden',
-    tendances:'Trends',mesCreations:'Meine Kreationen',mesMedias:'Meine Medien',credits:'Credits',
-    banner:'&#10024; Neu - Echte KI-Videos und Bilder generieren!',bannerBtn:'Starten',
-    commencer:'Kostenlos starten',voirOffres:'Angebote sehen',
-    eyebrow:'KI-Generierung - Neue Ara',
-    heroTitle:'Erstelle <span class="grad">aussergewohnliche</span> Medien in Sekunden',
-    heroSub:'Verwandle deine Ideen in atemberaubende Bilder und Videos mit kunstlicher Intelligenz.',
-    statCreateurs:'Kreative',statMedias:'Erstellte Medien',statTemps:'Durchschnittszeit',
-    whyLabel:'Warum Limineo AI',whyTitle:'Alles was du brauchst',
-    f1title:'Ultra-realistische KI-Bilder',f1desc:'Generiere professionelle Bilder aus einfachem Text.',
-    f2title:'Cinematische KI-Videos',f2desc:'Erwecke deine Ideen mit flussigen, realistischen Videos zum Leben.',
-    f3title:'Bild zu Video',f3desc:'Lade dein Foto hoch und verwandle es in ein animiertes Video.',
-    f4title:'Ergebnisse in Sekunden',f4desc:'Generierung in 30 bis 60 Sekunden. Kein Warten.',
-    offresLabel:'Unsere Angebote',offresTitle:'Wahle deinen Plan',
-    mensuel:'Monatlich',annuel:'Jahrlich -10%',
-    planFeatures:['Credits inklusive','KI-Bilder','KI-Videos','Bild zu Video','HD-Download'],
-    ctaTitle:'Bereit zum Erstellen?',ctaSub:'Schliesse dich Tausenden von Kreativen an',
-    ctaBtn:'Kostenloses Konto erstellen',ctaNote:'Keine Kreditkarte erforderlich - 8 gratis Credits',
-    authTitle:'Anmelden',authSub:'Melde dich an um KI-Medien zu erstellen',
-    authEmail:'Deine E-Mail',authPwd:'Passwort',authSubmit:'Anmelden',
-    authToggle:'Kein Konto? <span>Kostenloses Konto erstellen</span>',
-    signupTitle:'Konto erstellen',signupSub:'Trete Limineo AI kostenlos bei',signupSubmit:'Mein Konto erstellen',
-    signupToggle:'Bereits ein Konto? <span>Anmelden</span>',
-    createTitle:'KI-Medium erstellen',createSub:'Beschreibe was du generieren mochtest',
-    typeImage:'&#128444; Bild',typeVideo:'&#127916; Video',typeImg2vid:'&#128247; Bild-Video',
-    generateBtn:'Jetzt generieren',genStatus:'Wird generiert...',genTime:'30 bis 60 Sekunden',
-    uploadLabel:'Tippe um ein Foto auszuwahlen',uploadPrompt:'Gewunschte Animation (optional)...',
-    promptPlaceholder:'Bsp: Ein majestatatischer Lowe bei Sonnenuntergang...',
-    pricingTitle:'&#9889; Credits kaufen',pricingNote:'1 Bild = 1 Credit - 1 Video = 5 Credits',
-    payBtn:'Jetzt bezahlen',payRedirect:'Weiterleitung...',
-    acheterCredits:'&#9889; Credits kaufen',deconnecter:'Abmelden',
-    telecharger:'&#11015; Herunterladen',partager:'&#128279; Teilen',supprimer:'&#128465; Loschen',
-    partagerSur:'Teilen auf...',annuler:'Abbrechen',copierLien:'Link kopieren',
-    filterTout:'Alle',filterVideos:'&#127916; Videos',filterImages:'&#128444; Bilder',
-    toastWelcome:'Willkommen bei Limineo AI!',toastLogout:'Erfolgreich abgemeldet',
-    toastPayOk:'Zahlung erfolgreich! Credits hinzugefugt',toastErrPay:'Zahlungsfehler.',
-    toastErrNet:'Netzwerkfehler.',toastLienCopie:'Link kopiert!',
-    toastLienIG:'Link kopiert! In Instagram einfugen',toastLienTT:'Link kopiert! In TikTok einfugen',
-    toastDelOk:'Medium geloscht!',toastDelErr:'Loschfehler',
-    toastFillFields:'Bitte alle Felder ausfullen',toastAlreadyLogged:'Du bist bereits angemeldet!',
-    toastConfirmEmail:'Bitte bestatige deine E-Mail',
-    toastErrLogin:'Anmeldefehler',toastNoCredits:'Nicht genug Credits',
-    confirmDelete:'Dieses Medium loschen?',
-    emptyMine:'Noch keine Kreationen',emptyMineBtn:'Erstes Medium erstellen',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> Credits - Bild = 1 - Video = 5',
-    dropdownCredits:'Credits',popularBadge:'Beliebt',popularTag:'Am beliebtesten',
-    choisir:'Wahlen',mois:'/Monat',
-    genErrNoImg:'Bitte wahle ein Bild',genErrNoPrompt:'Beschreibe dein Medium'
-  },
-  pt:{
-    langBtn:'&#127477;&#127481; PT',
-    connexion:'Entrar',
-    tendances:'Tendencias',mesCreations:'Minhas criacoes',mesMedias:'Meus medias',credits:'Creditos',
-    banner:'&#10024; Novo - Gere videos e imagens IA reais!',bannerBtn:'Comecar',
-    commencer:'Comecar gratis',voirOffres:'Ver planos',
-    eyebrow:'Geracao IA - Nova Era',
-    heroTitle:'Crie midias <span class="grad">extraordinarias</span> em segundos',
-    heroSub:'Transforme suas ideias em imagens e videos impressionantes com inteligencia artificial.',
-    statCreateurs:'Criadores',statMedias:'Midias criadas',statTemps:'Tempo medio',
-    whyLabel:'Por que Limineo AI',whyTitle:'Tudo que voce precisa',
-    f1title:'Imagens IA ultra-realistas',f1desc:'Gere imagens de qualidade profissional a partir de texto.',
-    f2title:'Videos IA cinematicos',f2desc:'De vida as suas ideias com videos fluidos e realistas.',
-    f3title:'Imagem para Video',f3desc:'Envie sua foto e transforme-a em um video animado.',
-    f4title:'Resultados em segundos',f4desc:'Geracao em 30 a 60 segundos. Sem espera.',
-    offresLabel:'Nossos planos',offresTitle:'Escolha seu plano',
-    mensuel:'Mensal',annuel:'Anual -10%',
-    planFeatures:['creditos incluidos','Imagens IA','Videos IA','Imagem para Video','Download HD'],
-    ctaTitle:'Pronto para criar?',ctaSub:'Junte-se a milhares de criadores que ja usam Limineo AI',
-    ctaBtn:'Criar conta gratis',ctaNote:'Sem cartao de credito - 8 creditos gratis no cadastro',
-    authTitle:'Entrar',authSub:'Entre para criar midias IA',
-    authEmail:'Seu email',authPwd:'Senha',authSubmit:'Entrar',
-    authToggle:'Sem conta? <span>Criar conta gratis</span>',
-    signupTitle:'Criar conta',signupSub:'Entre no Limineo AI de graca',signupSubmit:'Criar minha conta',
-    signupToggle:'Ja tem conta? <span>Entrar</span>',
-    createTitle:'Criar midia IA',createSub:'Descreva o que voce quer gerar',
-    typeImage:'&#128444; Imagem',typeVideo:'&#127916; Video',typeImg2vid:'&#128247; Img-Video',
-    generateBtn:'Gerar agora',genStatus:'Gerando...',genTime:'30 a 60 segundos',
-    uploadLabel:'Toque para escolher uma foto',uploadPrompt:'Animacao desejada (opcional)...',
-    promptPlaceholder:'Ex: Um leao majestoso ao por do sol...',
-    pricingTitle:'&#9889; Comprar creditos',pricingNote:'1 imagem = 1 credito - 1 video = 5 creditos',
-    payBtn:'Pagar agora',payRedirect:'Redirecionando...',
-    acheterCredits:'&#9889; Comprar creditos',deconnecter:'Sair',
-    telecharger:'&#11015; Baixar',partager:'&#128279; Compartilhar',supprimer:'&#128465; Excluir',
-    partagerSur:'Compartilhar em...',annuler:'Cancelar',copierLien:'Copiar link',
-    filterTout:'Tudo',filterVideos:'&#127916; Videos',filterImages:'&#128444; Imagens',
-    toastWelcome:'Bem-vindo ao Limineo AI!',toastLogout:'Desconectado com sucesso',
-    toastPayOk:'Pagamento bem-sucedido! Creditos adicionados',toastErrPay:'Erro no pagamento.',
-    toastErrNet:'Erro de rede.',toastLienCopie:'Link copiado!',
-    toastLienIG:'Link copiado! Cole no Instagram',toastLienTT:'Link copiado! Cole no TikTok',
-    toastDelOk:'Midia excluida!',toastDelErr:'Erro ao excluir',
-    toastFillFields:'Preencha todos os campos',toastAlreadyLogged:'Voce ja esta conectado!',
-    toastConfirmEmail:'Confirme seu email antes de entrar',
-    toastErrLogin:'Erro de login',toastNoCredits:'Creditos insuficientes',
-    confirmDelete:'Excluir esta midia?',
-    emptyMine:'Sem criacoes ainda',emptyMineBtn:'Criar minha primeira midia',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> creditos - Imagem = 1 - Video = 5',
-    dropdownCredits:'creditos',popularBadge:'Popular',popularTag:'O mais popular',
-    choisir:'Escolher',mois:'/mes',
-    genErrNoImg:'Por favor escolha uma imagem',genErrNoPrompt:'Descreva sua midia'
-  },
-  it:{
-    langBtn:'&#127470;&#127481; IT',
-    connexion:'Accedi',
-    tendances:'Tendenze',mesCreations:'Le mie creazioni',mesMedias:'I miei media',credits:'Crediti',
-    banner:'&#10024; Nuovo - Genera video e immagini IA reali!',bannerBtn:'Inizia',
-    commencer:'Inizia gratis',voirOffres:'Vedi piani',
-    eyebrow:'Generazione IA - Nuova Era',
-    heroTitle:'Crea media <span class="grad">straordinari</span> in pochi secondi',
-    heroSub:'Trasforma le tue idee in immagini e video straordinari con l intelligenza artificiale.',
-    statCreateurs:'Creatori',statMedias:'Media creati',statTemps:'Tempo medio',
-    whyLabel:'Perche Limineo AI',whyTitle:'Tutto cio di cui hai bisogno',
-    f1title:'Immagini IA ultra-realistiche',f1desc:'Genera immagini di qualita professionale da semplice testo.',
-    f2title:'Video IA cinematici',f2desc:'Dai vita alle tue idee con video fluidi e realistici.',
-    f3title:'Immagine in Video',f3desc:'Carica la tua foto e trasformala in un video animato.',
-    f4title:'Risultati in secondi',f4desc:'Generazione in 30-60 secondi. Nessuna attesa.',
-    offresLabel:'I nostri piani',offresTitle:'Scegli il tuo piano',
-    mensuel:'Mensile',annuel:'Annuale -10%',
-    planFeatures:['crediti inclusi','Immagini IA','Video IA','Immagine in Video','Download HD'],
-    ctaTitle:'Pronto a creare?',ctaSub:'Unisciti a migliaia di creatori che usano Limineo AI',
-    ctaBtn:'Crea account gratis',ctaNote:'Nessuna carta richiesta - 8 crediti gratis alla registrazione',
-    authTitle:'Accedi',authSub:'Accedi per creare media IA',
-    authEmail:'La tua email',authPwd:'Password',authSubmit:'Accedi',
-    authToggle:'Nessun account? <span>Crea account gratis</span>',
-    signupTitle:'Crea account',signupSub:'Unisciti a Limineo AI gratuitamente',signupSubmit:'Crea il mio account',
-    signupToggle:'Hai gia un account? <span>Accedi</span>',
-    createTitle:'Crea media IA',createSub:'Descrivi cosa vuoi generare',
-    typeImage:'&#128444; Immagine',typeVideo:'&#127916; Video',typeImg2vid:'&#128247; Img-Video',
-    generateBtn:'Genera ora',genStatus:'Generazione in corso...',genTime:'30-60 secondi',
-    uploadLabel:'Tocca per scegliere una foto',uploadPrompt:'Animazione desiderata (opzionale)...',
-    promptPlaceholder:'Es: Un leone maestoso al tramonto...',
-    pricingTitle:'&#9889; Acquista crediti',pricingNote:'1 immagine = 1 credito - 1 video = 5 crediti',
-    payBtn:'Paga ora',payRedirect:'Reindirizzamento...',
-    acheterCredits:'&#9889; Acquista crediti',deconnecter:'Esci',
-    telecharger:'&#11015; Scarica',partager:'&#128279; Condividi',supprimer:'&#128465; Elimina',
-    partagerSur:'Condividi su...',annuler:'Annulla',copierLien:'Copia link',
-    filterTout:'Tutto',filterVideos:'&#127916; Video',filterImages:'&#128444; Immagini',
-    toastWelcome:'Benvenuto su Limineo AI!',toastLogout:'Disconnesso con successo',
-    toastPayOk:'Pagamento riuscito! Crediti aggiunti',toastErrPay:'Errore pagamento.',
-    toastErrNet:'Errore di rete.',toastLienCopie:'Link copiato!',
-    toastLienIG:'Link copiato! Incollalo in Instagram',toastLienTT:'Link copiato! Incollalo in TikTok',
-    toastDelOk:'Media eliminato!',toastDelErr:'Errore eliminazione',
-    toastFillFields:'Compila tutti i campi',toastAlreadyLogged:'Sei gia connesso!',
-    toastConfirmEmail:'Conferma la tua email prima di accedere',
-    toastErrLogin:'Errore di accesso',toastNoCredits:'Crediti insufficienti',
-    confirmDelete:'Eliminare questo media?',
-    emptyMine:'Nessuna creazione ancora',emptyMineBtn:'Crea il mio primo media',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> crediti - Immagine = 1 - Video = 5',
-    dropdownCredits:'crediti',popularBadge:'Popolare',popularTag:'Il piu popolare',
-    choisir:'Scegli',mois:'/mese',
-    genErrNoImg:'Scegli un immagine',genErrNoPrompt:'Descrivi il tuo media'
-  },
-  ar:{
-    langBtn:'&#127480;&#127462; AR',
-    connexion:'تسجيل الدخول',
-    tendances:'الرائج',mesCreations:'إبداعاتي',mesMedias:'وسائطي',credits:'رصيد',
-    banner:'&#10024; جديد - أنشئ مقاطع فيديو وصوراً بالذكاء الاصطناعي!',bannerBtn:'ابدأ',
-    commencer:'ابدأ مجاناً',voirOffres:'عرض الخطط',
-    eyebrow:'توليد الذكاء الاصطناعي - عصر جديد',
-    heroTitle:'أنشئ وسائط <span class="grad">استثنائية</span> في ثوانٍ',
-    heroSub:'حوّل أفكارك إلى صور ومقاطع فيديو مذهلة بالذكاء الاصطناعي.',
-    statCreateurs:'منشئ',statMedias:'وسائط منشأة',statTemps:'متوسط الوقت',
-    whyLabel:'لماذا Limineo AI',whyTitle:'كل ما تحتاجه',
-    f1title:'صور ذكاء اصطناعي فائقة الواقعية',f1desc:'أنشئ صوراً احترافية من نص بسيط.',
-    f2title:'مقاطع فيديو سينمائية بالذكاء الاصطناعي',f2desc:'أحيِ أفكارك بمقاطع فيديو سلسة وواقعية.',
-    f3title:'صورة إلى فيديو',f3desc:'ارفع صورتك وحوّلها إلى فيديو متحرك.',
-    f4title:'نتائج في ثوانٍ',f4desc:'توليد في 30-60 ثانية. بدون انتظار.',
-    offresLabel:'خططنا',offresTitle:'اختر خطتك',
-    mensuel:'شهري',annuel:'سنوي -10%',
-    planFeatures:['رصيد مشمول','صور ذكاء اصطناعي','فيديوهات ذكاء اصطناعي','صورة إلى فيديو','تحميل HD'],
-    ctaTitle:'مستعد للإبداع؟',ctaSub:'انضم إلى آلاف المبدعين الذين يستخدمون Limineo AI',
-    ctaBtn:'إنشاء حساب مجاني',ctaNote:'لا بطاقة ائتمان - 8 رصيد مجاني عند التسجيل',
-    authTitle:'تسجيل الدخول',authSub:'سجّل دخولك لإنشاء وسائط ذكاء اصطناعي',
-    authEmail:'بريدك الإلكتروني',authPwd:'كلمة المرور',authSubmit:'دخول',
-    authToggle:'لا حساب؟ <span>إنشاء حساب مجاني</span>',
-    signupTitle:'إنشاء حساب',signupSub:'انضم إلى Limineo AI مجاناً',signupSubmit:'إنشاء حسابي',
-    signupToggle:'لديك حساب؟ <span>تسجيل الدخول</span>',
-    createTitle:'إنشاء وسائط ذكاء اصطناعي',createSub:'صف ما تريد توليده',
-    typeImage:'&#128444; صورة',typeVideo:'&#127916; فيديو',typeImg2vid:'&#128247; صورة-فيديو',
-    generateBtn:'توليد الآن',genStatus:'جاري التوليد...',genTime:'30-60 ثانية',
-    uploadLabel:'اضغط لاختيار صورة',uploadPrompt:'الحركة المطلوبة (اختياري)...',
-    promptPlaceholder:'مثال: أسد مهيب عند الغروب...',
-    pricingTitle:'&#9889; شراء رصيد',pricingNote:'1 صورة = 1 رصيد - 1 فيديو = 5 رصيد',
-    payBtn:'ادفع الآن',payRedirect:'جاري التحويل...',
-    acheterCredits:'&#9889; شراء رصيد',deconnecter:'تسجيل الخروج',
-    telecharger:'&#11015; تحميل',partager:'&#128279; مشاركة',supprimer:'&#128465; حذف',
-    partagerSur:'مشاركة على...',annuler:'إلغاء',copierLien:'نسخ الرابط',
-    filterTout:'الكل',filterVideos:'&#127916; فيديوهات',filterImages:'&#128444; صور',
-    toastWelcome:'مرحباً بك في Limineo AI!',toastLogout:'تم تسجيل الخروج',
-    toastPayOk:'تمت الدفعة! تمت إضافة الرصيد',toastErrPay:'خطأ في الدفع.',
-    toastErrNet:'خطأ في الشبكة.',toastLienCopie:'تم نسخ الرابط!',
-    toastLienIG:'تم نسخ الرابط! الصقه في Instagram',toastLienTT:'تم نسخ الرابط! الصقه في TikTok',
-    toastDelOk:'تم حذف الوسائط!',toastDelErr:'خطأ في الحذف',
-    toastFillFields:'يرجى ملء جميع الحقول',toastAlreadyLogged:'أنت مسجّل دخولك بالفعل!',
-    toastConfirmEmail:'يرجى تأكيد بريدك الإلكتروني',
-    toastErrLogin:'خطأ في تسجيل الدخول',toastNoCredits:'رصيد غير كافٍ',
-    confirmDelete:'حذف هذا الوسائط؟',
-    emptyMine:'لا إبداعات بعد',emptyMineBtn:'إنشاء أول وسائط لي',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> رصيد - صورة = 1 - فيديو = 5',
-    dropdownCredits:'رصيد',popularBadge:'شائع',popularTag:'الأكثر شعبية',
-    choisir:'اختر',mois:'/شهر',
-    genErrNoImg:'يرجى اختيار صورة',genErrNoPrompt:'صف وسائطك'
-  },
-  zh:{
-    langBtn:'&#127464;&#127475; 中文',
-    connexion:'登录',
-    tendances:'热门',mesCreations:'我的作品',mesMedias:'我的媒体',credits:'积分',
-    banner:'&#10024; 新功能 - 生成真实AI视频和图片！',bannerBtn:'开始',
-    commencer:'免费开始',voirOffres:'查看方案',
-    eyebrow:'AI生成 - 新时代',
-    heroTitle:'在几秒钟内创作<span class="grad">非凡</span>媒体',
-    heroSub:'借助人工智能，将您的想法转化为令人叹为观止的图像和视频。',
-    statCreateurs:'创作者',statMedias:'已创建媒体',statTemps:'平均时间',
-    whyLabel:'为什么选择Limineo AI',whyTitle:'您所需的一切',
-    f1title:'超真实AI图像',f1desc:'从简单文字生成专业品质的图像。',
-    f2title:'电影级AI视频',f2desc:'用流畅逼真的视频让您的创意栩栩如生。',
-    f3title:'图片转视频',f3desc:'上传您的照片，将其转换为动画视频。',
-    f4title:'秒级生成结果',f4desc:'30至60秒内完成生成，无需等待。',
-    offresLabel:'我们的方案',offresTitle:'选择您的套餐',
-    mensuel:'月付',annuel:'年付 -10%',
-    planFeatures:['包含积分','AI图像','AI视频','图片转视频','高清下载'],
-    ctaTitle:'准备好创作了吗？',ctaSub:'加入已在使用Limineo AI的数千名创作者',
-    ctaBtn:'创建免费账户',ctaNote:'无需信用卡 - 注册即送8积分',
-    authTitle:'登录',authSub:'登录以创建AI媒体',
-    authEmail:'您的邮箱',authPwd:'密码',authSubmit:'登录',
-    authToggle:'没有账户？<span>创建免费账户</span>',
-    signupTitle:'创建账户',signupSub:'免费加入Limineo AI',signupSubmit:'创建我的账户',
-    signupToggle:'已有账户？<span>登录</span>',
-    createTitle:'创建AI媒体',createSub:'描述您想生成的内容',
-    typeImage:'&#128444; 图像',typeVideo:'&#127916; 视频',typeImg2vid:'&#128247; 图转视频',
-    generateBtn:'立即生成',genStatus:'生成中...',genTime:'30至60秒',
-    uploadLabel:'点击选择照片',uploadPrompt:'所需动画（可选）...',
-    promptPlaceholder:'例如：日落时分雄伟的狮子...',
-    pricingTitle:'&#9889; 购买积分',pricingNote:'1张图片 = 1积分 - 1个视频 = 5积分',
-    payBtn:'立即付款',payRedirect:'跳转中...',
-    acheterCredits:'&#9889; 购买积分',deconnecter:'退出登录',
-    telecharger:'&#11015; 下载',partager:'&#128279; 分享',supprimer:'&#128465; 删除',
-    partagerSur:'分享到...',annuler:'取消',copierLien:'复制链接',
-    filterTout:'全部',filterVideos:'&#127916; 视频',filterImages:'&#128444; 图像',
-    toastWelcome:'欢迎来到Limineo AI！',toastLogout:'已成功退出',
-    toastPayOk:'支付成功！积分已添加',toastErrPay:'支付错误。',
-    toastErrNet:'网络错误。',toastLienCopie:'链接已复制！',
-    toastLienIG:'链接已复制！粘贴到Instagram',toastLienTT:'链接已复制！粘贴到TikTok',
-    toastDelOk:'媒体已删除！',toastDelErr:'删除错误',
-    toastFillFields:'请填写所有字段',toastAlreadyLogged:'您已登录！',
-    toastConfirmEmail:'登录前请确认您的邮箱',
-    toastErrLogin:'登录错误',toastNoCredits:'积分不足',
-    confirmDelete:'删除此媒体？',
-    emptyMine:'暂无作品',emptyMineBtn:'创建我的第一个媒体',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> 积分 - 图像 = 1 - 视频 = 5',
-    dropdownCredits:'积分',popularBadge:'热门',popularTag:'最受欢迎',
-    choisir:'选择',mois:'/月',
-    genErrNoImg:'请选择一张图片',genErrNoPrompt:'请描述您的媒体'
-  },
-  tr:{
-    langBtn:'&#127481;&#127479; TR',
-    connexion:'Giris yap',
-    tendances:'Trendler',mesCreations:'Yaratimlarim',mesMedias:'Medyalarim',credits:'Kredi',
-    banner:'&#10024; Yeni - Gercek AI video ve gorsel olusturun!',bannerBtn:'Baslat',
-    commencer:'Ucretsiz baslat',voirOffres:'Planlari gor',
-    eyebrow:'AI Uretimi - Yeni Cag',
-    heroTitle:'Saniyeler icinde <span class="grad">olaganustu</span> medya olustur',
-    heroSub:'Yapay zeka ile fikirlerinizi etkileyici gorsel ve videolara donusturun.',
-    statCreateurs:'Yaraticlar',statMedias:'Olusturulan medya',statTemps:'Ort. sure',
-    whyLabel:'Neden Limineo AI',whyTitle:'Ihtiyaciniz olan her sey',
-    f1title:'Ultra-gercekci AI Gorseller',f1desc:'Basit metinden profesyonel kalitede gorsel olusturun.',
-    f2title:'Sinematik AI Videolar',f2desc:'Fikirlerinizi akici ve gercekci videolarla hayata gecirin.',
-    f3title:'Gorsel den Video',f3desc:'Fotografinizi yukleyin ve animasyonlu videoya donusturun.',
-    f4title:'Saniyeler icinde sonuc',f4desc:'30-60 saniyede uretim. Bekleme yok.',
-    offresLabel:'Planlarimiz',offresTitle:'Planinizi secin',
-    mensuel:'Aylik',annuel:'Yillik -10%',
-    planFeatures:['kredi dahil','AI Gorseller','AI Videolar','Gorsel den Video','HD Indirme'],
-    ctaTitle:'Olusturmaya hazir misiniz?',ctaSub:'Limineo AI kullanan binlerce yaraticiya katilin',
-    ctaBtn:'Ucretsiz hesap olustur',ctaNote:'Kredi karti gerekmez - Kayit olunca 8 ucretsiz kredi',
-    authTitle:'Giris yap',authSub:'AI medya olusturmak icin giris yapin',
-    authEmail:'E-postaniz',authPwd:'Sifre',authSubmit:'Giris yap',
-    authToggle:'Hesabiniz yok mu? <span>Ucretsiz hesap olustur</span>',
-    signupTitle:'Hesap olustur',signupSub:'Limineo AI ye ucretsiz katilin',signupSubmit:'Hesabimi olustur',
-    signupToggle:'Zaten hesabiniz var mi? <span>Giris yap</span>',
-    createTitle:'AI medya olustur',createSub:'Ne olusturmak istediginizi aciklayin',
-    typeImage:'&#128444; Gorsel',typeVideo:'&#127916; Video',typeImg2vid:'&#128247; Gorsel-Video',
-    generateBtn:'Simdi olustur',genStatus:'Olusturuluyor...',genTime:'30-60 saniye',
-    uploadLabel:'Foto secmek icin tiklayin',uploadPrompt:'Istenen animasyon (istege bagli)...',
-    promptPlaceholder:'Orn: Gunbatiminda gorkemli bir aslan...',
-    pricingTitle:'&#9889; Kredi satin al',pricingNote:'1 gorsel = 1 kredi - 1 video = 5 kredi',
-    payBtn:'Simdi ode',payRedirect:'Yonlendiriliyor...',
-    acheterCredits:'&#9889; Kredi satin al',deconnecter:'Cikis yap',
-    telecharger:'&#11015; Indir',partager:'&#128279; Paylas',supprimer:'&#128465; Sil',
-    partagerSur:'Paylas...',annuler:'Iptal',copierLien:'Baglantiy kopyala',
-    filterTout:'Tumum',filterVideos:'&#127916; Videolar',filterImages:'&#128444; Gorseller',
-    toastWelcome:'Limineo AI ye hosgeldiniz!',toastLogout:'Basariyla cikis yapildi',
-    toastPayOk:'Odeme basarili! Kredi eklendi',toastErrPay:'Odeme hatasi.',
-    toastErrNet:'Ag hatasi.',toastLienCopie:'Baglanti kopyalandi!',
-    toastLienIG:'Baglanti kopyalandi! Instagram a yapistirin',toastLienTT:'Baglanti kopyalandi! TikTok a yapistirin',
-    toastDelOk:'Medya silindi!',toastDelErr:'Silme hatasi',
-    toastFillFields:'Lutfen tum alanlari doldurun',toastAlreadyLogged:'Zaten giris yaptiniz!',
-    toastConfirmEmail:'Giris yapmadan once e-postanizi onaylayin',
-    toastErrLogin:'Giris hatasi',toastNoCredits:'Yeterli kredi yok',
-    confirmDelete:'Bu medyayi sil?',
-    emptyMine:'Henuz yaratim yok',emptyMineBtn:'Ilk medyami olustur',
-    creditsInfo:'&#9889; <span id="creditsInModal">0</span> kredi - Gorsel = 1 - Video = 5',
-    dropdownCredits:'kredi',popularBadge:'Populer',popularTag:'En populer',
-    choisir:'Sec',mois:'/ay',
-    genErrNoImg:'Lutfen bir gorsel secin',genErrNoPrompt:'Medyanizi aciklayin'
-  }
-};
-
-function t(key){const lang=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];return lang[key]!==undefined?lang[key]:(TRANSLATIONS['fr'][key]||'');}
-
-function applyTranslations(){
-  const lang=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
-  // Nav
-  const lb=document.getElementById('langBtn');if(lb)lb.innerHTML=lang.langBtn;
-  const ab=document.getElementById('authBtn');if(ab)ab.textContent=lang.connexion;
-  // Update active lang option
-  document.querySelectorAll('.lang-option').forEach(o=>{
-    o.classList.remove('active');
-    const codes={fr:'Francais',en:'English',es:'Espanol',de:'Deutsch',pt:'Portugues',it:'Italiano',ar:'Arabic',zh:'Chinese',tr:'Turkce'};
-    const match=Object.entries(codes).find(([k])=>k===currentLang);
-    if(match&&o.textContent.includes(match[1]))o.classList.add('active');
-  });
-  // Tabs
-  const tabs=document.querySelectorAll('.tab');
-  if(tabs[0])tabs[0].textContent=lang.tendances;
-  if(tabs[1])tabs[1].textContent=lang.mesCreations;
-  // Bottom nav
-  const navItems=document.querySelectorAll('.nav-item');
-  if(navItems[0])navItems[0].childNodes[navItems[0].childNodes.length-1].textContent=lang.mesMedias;
-  if(navItems[2])navItems[2].childNodes[navItems[2].childNodes.length-1].textContent=lang.credits;
-  // Banner
-  const banner=document.getElementById('banner');
-  if(banner){
-    const sp=banner.querySelector('span:first-child');if(sp)sp.innerHTML=lang.banner;
-    const btn=banner.querySelector('button');if(btn)btn.textContent=lang.bannerBtn;
-  }
-  // Dropdown user
-  const ddCredEls=document.querySelectorAll('.dropdown-item');
-  if(ddCredEls[0])ddCredEls[0].innerHTML='&#9889; '+lang.acheterCredits.replace('&#9889; ','');
-  if(ddCredEls[1])ddCredEls[1].textContent=lang.deconnecter;
-  // Auth modal
-  const authMode2=authMode||'login';
-  const at=document.getElementById('authTitle');if(at)at.textContent=authMode2==='login'?lang.authTitle:lang.signupTitle;
-  const as=document.getElementById('authSubtitle');if(as)as.textContent=authMode2==='login'?lang.authSub:lang.signupSub;
-  const ae=document.getElementById('authEmail');if(ae)ae.placeholder=lang.authEmail;
-  const ap=document.getElementById('authPassword');if(ap)ap.placeholder=lang.authPwd;
-  const asb=document.getElementById('authSubmitBtn');if(asb)asb.textContent=authMode2==='login'?lang.authSubmit:lang.signupSubmit;
-  const tl=document.querySelector('.toggle-link');if(tl)tl.innerHTML=authMode2==='login'?lang.authToggle:lang.signupToggle;
-  // Create modal
-  const ct=document.querySelector('#createModal h2');if(ct)ct.textContent=lang.createTitle;
-  const cs=document.querySelector('#createModal p');if(cs)cs.textContent=lang.createSub;
-  const typeBtns=document.querySelectorAll('.type-btn');
-  if(typeBtns[0])typeBtns[0].innerHTML=lang.typeImage;
-  if(typeBtns[1])typeBtns[1].innerHTML=lang.typeVideo;
-  if(typeBtns[2])typeBtns[2].innerHTML=lang.typeImg2vid;
-  const ci=document.querySelector('.credits-info');if(ci){ci.innerHTML=lang.creditsInfo;const cim=document.getElementById('creditsInModal');if(cim)cim.textContent=userCredits;}
-  const pt=document.getElementById('promptText');if(pt)pt.placeholder=lang.promptPlaceholder;
-  const gb=document.getElementById('generateBtn');if(gb)gb.textContent=lang.generateBtn;
-  const gst=document.getElementById('genStatusText');if(gst)gst.textContent=lang.genStatus;
-  const upl=document.getElementById('uploadPlaceholder');if(upl)upl.innerHTML='<div style="font-size:28px;margin-bottom:8px;">&#128228;</div><div style="font-size:13px;color:var(--muted);">'+lang.uploadLabel+'</div>';
-  const i2vp=document.getElementById('img2vidPrompt');if(i2vp)i2vp.placeholder=lang.uploadPrompt;
-  // Pricing modal
-  const pmt=document.querySelector('#pricingModal h2');if(pmt)pmt.innerHTML=lang.pricingTitle;
-  const pmp=document.querySelector('#pricingModal p');if(pmp)pmp.textContent=lang.pricingNote;
-  const mpBtns=document.querySelectorAll('.modal-pricing-toggle-btn');
-  if(mpBtns[0])mpBtns[0].textContent=lang.mensuel;
-  if(mpBtns[1])mpBtns[1].textContent=lang.annuel;
-  const pb=document.getElementById('payBtn');if(pb&&!pb.textContent.includes(lang.payRedirect.substring(0,3)))pb.textContent=lang.payBtn;
-  // Fullscreen actions
-  const fsActions=document.querySelectorAll('.fs-action-btn');
-  if(fsActions[0])fsActions[0].innerHTML=lang.telecharger;
-  if(fsActions[1])fsActions[1].innerHTML=lang.partager;
-  if(fsActions[2])fsActions[2].innerHTML=lang.supprimer;
-  // Share menu
-  const smTitle=document.querySelector('#shareMenu div[style*="font-family"]');if(smTitle)smTitle.textContent=lang.partagerSur;
-  const smBtns=document.querySelectorAll('#shareMenu button');
-  if(smBtns[4])smBtns[4].textContent=lang.copierLien;
-  if(smBtns[5])smBtns[5].textContent=lang.annuler;
-  // Filter bar
-  const fbBtns=document.querySelectorAll('.filter-btn');
-  if(fbBtns[0])fbBtns[0].textContent=lang.filterTout;
-  if(fbBtns[1])fbBtns[1].innerHTML=lang.filterVideos;
-  if(fbBtns[2])fbBtns[2].innerHTML=lang.filterImages;
-  // Landing page
-  const lpEyebrow=document.querySelector('.lp-eyebrow');if(lpEyebrow){const dot=lpEyebrow.querySelector('.eyebrow-dot');lpEyebrow.innerHTML='';if(dot)lpEyebrow.appendChild(dot);lpEyebrow.append(lang.eyebrow);}
-  const lpTitle=document.querySelector('.lp-title');if(lpTitle)lpTitle.innerHTML=lang.heroTitle;
-  const lpSub=document.querySelector('.lp-subtitle');if(lpSub)lpSub.textContent=lang.heroSub;
-  const btnHeros=document.querySelectorAll('.btn-hero');if(btnHeros[0])btnHeros[0].textContent=lang.commencer;if(btnHeros[1])btnHeros[1].textContent=lang.ctaBtn;
-  const btnGhost=document.querySelector('.btn-ghost');if(btnGhost)btnGhost.textContent=lang.voirOffres;
-  const statLabels=document.querySelectorAll('.stat-label');
-  if(statLabels[0])statLabels[0].textContent=lang.statCreateurs;
-  if(statLabels[1])statLabels[1].textContent=lang.statMedias;
-  if(statLabels[2])statLabels[2].textContent=lang.statTemps;
-  const sectionLabels=document.querySelectorAll('.section-label');
-  if(sectionLabels[0])sectionLabels[0].textContent=lang.whyLabel;
-  if(sectionLabels[1])sectionLabels[1].textContent=lang.offresLabel;
-  const sectionTitles=document.querySelectorAll('.section-title');
-  if(sectionTitles[0])sectionTitles[0].textContent=lang.whyTitle;
-  if(sectionTitles[1])sectionTitles[1].textContent=lang.offresTitle;
-  const ftitles=document.querySelectorAll('.feature-title');
-  if(ftitles[0])ftitles[0].textContent=lang.f1title;
-  if(ftitles[1])ftitles[1].textContent=lang.f2title;
-  if(ftitles[2])ftitles[2].textContent=lang.f3title;
-  if(ftitles[3])ftitles[3].textContent=lang.f4title;
-  const fdescs=document.querySelectorAll('.feature-desc');
-  if(fdescs[0])fdescs[0].textContent=lang.f1desc;
-  if(fdescs[1])fdescs[1].textContent=lang.f2desc;
-  if(fdescs[2])fdescs[2].textContent=lang.f3desc;
-  if(fdescs[3])fdescs[3].textContent=lang.f4desc;
-  const lpToggleBtns=document.querySelectorAll('.pricing-toggle-btn');
-  if(lpToggleBtns[0])lpToggleBtns[0].textContent=lang.mensuel;
-  if(lpToggleBtns[1])lpToggleBtns[1].textContent=lang.annuel;
-  const ctaSection=document.querySelector('.lp-final-cta');
-  if(ctaSection){
-    const h2=ctaSection.querySelector('h2');if(h2)h2.textContent=lang.ctaTitle;
-    const ps=ctaSection.querySelectorAll('p');if(ps[0])ps[0].textContent=lang.ctaSub;if(ps[1])ps[1].textContent=lang.ctaNote;
-  }
-  // Dropdown credits label
-  const dc=document.querySelector('.user-dropdown-credits');if(dc)dc.innerHTML='&#9889; <span id="dropdownCredits">'+userCredits+'</span> '+lang.dropdownCredits;
-  // Re-render plans with new lang
-  renderLandingPlans();renderPricingModal();
-}
-
-function setLang(lang){currentLang=lang;localStorage.setItem('limineo_lang',lang);closeLangDropdown();applyTranslations();}
+function setLang(lang){currentLang=lang;localStorage.setItem('limineo_lang',lang);closeLangDropdown();}
 function toggleLangDropdown(e){if(e)e.stopPropagation();document.getElementById('langDropdown').classList.toggle('open');}
 function closeLangDropdown(){document.getElementById('langDropdown').classList.remove('open');}
 function toggleUserDropdown(e){if(e)e.stopPropagation();document.getElementById('userDropdown').classList.toggle('open');}
@@ -1022,34 +442,32 @@ async function sbAuth(endpoint,body){
   return r.json();
 }
 
-function openAuth(){if(currentUser){const langOA=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];showToast(langOA.toastAlreadyLogged,'success');return;}hideLanding();document.getElementById('authModal').classList.add('open');}
+function openAuth(){if(currentUser){showToast('Vous etes deja connecte !','success');return;}hideLanding();document.getElementById('authModal').classList.add('open');}
 function toggleAuthMode(){
   authMode=authMode==='login'?'signup':'login';
-  const lang=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
-  document.getElementById('authTitle').textContent=authMode==='login'?lang.authTitle:lang.signupTitle;
-  document.getElementById('authSubtitle').textContent=authMode==='login'?lang.authSub:lang.signupSub;
-  document.getElementById('authSubmitBtn').textContent=authMode==='login'?lang.authSubmit:lang.signupSubmit;
-  document.querySelector('.toggle-link').innerHTML=authMode==='login'?lang.authToggle:lang.signupToggle;
+  document.getElementById('authTitle').textContent=authMode==='login'?'Connexion':'Creer un compte';
+  document.getElementById('authSubtitle').textContent=authMode==='login'?'Connectez-vous pour creer des medias IA':'Rejoignez Limineo AI gratuitement';
+  document.getElementById('authSubmitBtn').textContent=authMode==='login'?'Se connecter':'Creer mon compte';
+  document.querySelector('.toggle-link').innerHTML=authMode==='login'?'Pas de compte ? <span>Creer un compte gratuit</span>':'Deja un compte ? <span>Se connecter</span>';
 }
 
 async function handleAuth(){
   const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
-  const lang2=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
-  if(!email||!password){showToast(lang2.toastFillFields,'error');return;}
-  const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='...';
+  if(!email||!password){showToast('Remplissez tous les champs','error');return;}
+  const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='Chargement...';
   const data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email,password});
   if(data.access_token){
     currentUser={email,token:data.access_token,id:data.user.id};
     localStorage.setItem('limineo_user',JSON.stringify(currentUser));
     document.getElementById('authModal').classList.remove('open');
     showUserMenu(email);hideLanding();await loadCredits();
-    showToast(lang2.toastWelcome,'success');
+    showToast('Bienvenue sur Limineo AI !','success');
     if(authMode==='signup')await initUserCredits();
     loadTrending();
   }else if(data.error==='email_not_confirmed'){
-    showToast(lang2.toastConfirmEmail,'error');
-  }else{showToast(data.error_description||lang2.toastErrLogin,'error');}
-  btn.disabled=false;btn.textContent=authMode==='login'?lang2.authSubmit:lang2.signupSubmit;
+    showToast('Confirmez votre email avant de vous connecter','error');
+  }else{showToast(data.error_description||'Erreur de connexion','error');}
+  btn.disabled=false;btn.textContent=authMode==='login'?'Se connecter':'Creer mon compte';
 }
 
 function showUserMenu(email){
@@ -1085,7 +503,7 @@ function updateCreditsUI(){
 
 function logout(){
   localStorage.removeItem('limineo_user');currentUser=null;userCredits=0;
-  const langL=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];showToast(langL.toastLogout,'success');
+  showToast('Deconnecte avec succes','success');
   setTimeout(()=>window.location.reload(),1000);
 }
 
@@ -1309,14 +727,13 @@ function selectPlan(el,planKey,amount){
 
 async function startPayment(){
   if(!selectedPlan)return;
-  const langP=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
-  const btn=document.getElementById('payBtn');btn.disabled=true;btn.textContent=langP.payRedirect;
+  const btn=document.getElementById('payBtn');btn.disabled=true;btn.textContent='Redirection...';
   try{
     const r=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},body:JSON.stringify({plan:selectedPlan.planKey,userId:currentUser.id,email:currentUser.email})});
     const data=await r.json();
-    if(data.url){window.location.href=data.url;}else{showToast(langP.toastErrPay,'error');}
-  }catch(e){showToast(langP.toastErrNet,'error');}
-  btn.disabled=false;btn.textContent=langP.payBtn;
+    if(data.url){window.location.href=data.url;}else{showToast('Erreur paiement.','error');}
+  }catch(e){showToast('Erreur reseau.','error');}
+  btn.disabled=false;btn.textContent='Payer maintenant';
 }
 
 function openFullscreen(url,type){
@@ -1341,12 +758,62 @@ function openShareMenu(){document.getElementById('shareMenu').style.display='blo
 function closeShareMenu(){document.getElementById('shareMenu').style.display='none';}
 function shareToApp(platform){
   if(!currentMediaUrl)return;
-  const langS=TRANSLATIONS[currentLang]||TRANSLATIONS['fr'];
   const url=encodeURIComponent(currentMediaUrl);
   const text=encodeURIComponent('Cree avec Limineo AI ✨');
   if(platform==='whatsapp'){window.open(`https://wa.me/?text=${text}%20${url}`);}
   else if(platform==='twitter'){window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`);}
-  else if(platform==='instagram'){navigator.clipboard.writeText(currentMediaUrl);showToast(langS.toastLienIG,'success');}
-  else if(platform==='tiktok'){navigator.clipboard.writeText(currentMediaUrl);showToast(langS.toastLienTT,'success');}
-  else if(platform==='copy'){navigator.clipboard.writeText(currentMediaUrl);showToast(langS.toastLienCopie,'success');}
-  closeShareMen
+  else if(platform==='instagram'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie ! Collez-le dans Instagram','success');}
+  else if(platform==='tiktok'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie ! Collez-le dans TikTok','success');}
+  else if(platform==='copy'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie !','success');}
+  closeShareMenu();
+}
+async function deleteCurrent(){
+  if(!currentMediaUrl||!currentUser)return;
+  if(!confirm('Supprimer ce media ?'))return;
+  try{
+    const item=allMyMedia.find(m=>m.url===currentMediaUrl);
+    if(item&&item.id){
+      await sbFetch(`user_generations?id=eq.${item.id}`,{method:'DELETE'});
+    }
+    allMyMedia=allMyMedia.filter(m=>m.url!==currentMediaUrl);
+    closeFullscreen();
+    renderMyMedia();
+    showToast('Media supprime !','success');
+  }catch(e){showToast('Erreur suppression','error');}
+}
+
+window.addEventListener('load',async()=>{
+  currentLang=localStorage.getItem('limineo_lang')||'fr';
+  renderLandingPlans();renderPricingModal();
+  const saved=localStorage.getItem('limineo_user');
+  if(saved){
+    try{
+      currentUser=JSON.parse(saved);
+      showUserMenu(currentUser.email);
+      await loadCredits();loadTrending();
+    }catch(e){localStorage.removeItem('limineo_user');showLanding();}
+  }else{showLanding();}
+  const p=new URLSearchParams(window.location.search);
+  if(p.get('success')==='true'){showToast('Paiement reussi ! Credits ajoutes','success');if(currentUser)await loadCredits();window.history.replaceState({},'','/');}
+});
+
+// Auto-scroll gallery
+(function(){
+  const el = document.getElementById('autoScroll');
+  if(!el) return;
+  let pos = 0;
+  let paused = false;
+  el.addEventListener('touchstart', () => { paused = true; });
+  el.addEventListener('touchend', () => { setTimeout(() => { paused = false; }, 2000); });
+  setInterval(() => {
+    if(paused) return;
+    pos += 0.5;
+    const maxScroll = el.scrollWidth / 2;
+    if(pos >= maxScroll) pos = 0;
+    el.parentElement.scrollLeft = pos;
+    el.style.transform = 'translateX(-' + pos + 'px)';
+  }, 16);
+})();
+</script>
+</body>
+</html>
