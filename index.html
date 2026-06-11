@@ -561,39 +561,53 @@ async function handleAuth(){
   const L=TRANSLATIONS[currentLang]||TRANSLATIONS.fr;
   if(!email||!password){showToast(L.toastFields,'error');return;}
   const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='...';
-  const data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email,password});
-  if(authMode==='signup'){
-    // Signup: Supabase renvoie user mais pas access_token si confirmation requise
-    if(data.user&&!data.access_token){
-      // Email de confirmation envoyé
-      showToast('📧 Verifiez votre email pour activer votre compte !','success');
-      document.getElementById('authModal').classList.remove('open');
-    }else if(data.access_token){
-      // Cas rare: confirmation desactivee
-      currentUser={email,token:data.access_token,id:data.user.id};
-      localStorage.setItem('limineo_user',JSON.stringify(currentUser));
-      document.getElementById('authModal').classList.remove('open');
-      showUserMenu(email);hideLanding();await loadCredits();
-      await initUserCredits();
-      showToast(L.toastWelcome,'success');
-      loadTrending();
+  try{
+    const data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email,password});
+    if(authMode==='signup'){
+      if(data.error||data.msg){
+        // Erreur explicite de Supabase
+        var msg=data.error_description||data.msg||L.toastErrLogin;
+        if(msg.toLowerCase().includes('already')||msg.toLowerCase().includes('existe')){
+          showToast('Cet email est deja utilise','error');
+        }else{
+          showToast(msg,'error');
+        }
+      }else if(data.user&&data.user.identities&&data.user.identities.length===0){
+        // Email deja enregistre - Supabase ne le dit pas clairement
+        showToast('Cet email est deja utilise','error');
+      }else if(data.user&&!data.access_token){
+        // Nouveau compte cree - email de confirmation envoye
+        showToast('📧 Verifiez votre email pour activer votre compte !','success');
+        document.getElementById('authModal').classList.remove('open');
+      }else if(data.access_token){
+        // Confirmation desactivee - connexion directe
+        currentUser={email,token:data.access_token,id:data.user.id};
+        localStorage.setItem('limineo_user',JSON.stringify(currentUser));
+        document.getElementById('authModal').classList.remove('open');
+        showUserMenu(email);hideLanding();await loadCredits();
+        await initUserCredits();
+        showToast(L.toastWelcome,'success');
+        loadTrending();
+      }else{
+        showToast(L.toastErrLogin,'error');
+      }
     }else{
-      showToast(data.error_description||L.toastErrLogin,'error');
+      // Login normal
+      if(data.access_token){
+        currentUser={email,token:data.access_token,id:data.user.id};
+        localStorage.setItem('limineo_user',JSON.stringify(currentUser));
+        document.getElementById('authModal').classList.remove('open');
+        showUserMenu(email);hideLanding();await loadCredits();
+        showToast(L.toastWelcome,'success');
+        loadTrending();
+      }else if(data.error==='email_not_confirmed'){
+        showToast(L.toastConfirmEmail,'error');
+      }else{
+        showToast(data.error_description||L.toastErrLogin,'error');
+      }
     }
-  }else{
-    // Login normal
-    if(data.access_token){
-      currentUser={email,token:data.access_token,id:data.user.id};
-      localStorage.setItem('limineo_user',JSON.stringify(currentUser));
-      document.getElementById('authModal').classList.remove('open');
-      showUserMenu(email);hideLanding();await loadCredits();
-      showToast(L.toastWelcome,'success');
-      loadTrending();
-    }else if(data.error==='email_not_confirmed'){
-      showToast(L.toastConfirmEmail,'error');
-    }else{
-      showToast(data.error_description||L.toastErrLogin,'error');
-    }
+  }catch(e){
+    showToast(L.toastErrNet,'error');
   }
   btn.disabled=false;btn.textContent=authMode==='login'?L.authSubmit:L.signupSubmit;
 }
