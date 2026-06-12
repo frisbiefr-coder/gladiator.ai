@@ -399,6 +399,7 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (!file) return;
   uploadedImageFile = file;
+  console.log('Image uploaded:', file.name, file.size);
   const url = URL.createObjectURL(file);
   const img = document.getElementById('uploadedImg');
   img.src = url;
@@ -406,6 +407,8 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
   document.getElementById('uploadPlaceholder').style.display = 'none';
   document.getElementById('changeImgBtn').style.display = 'block';
   document.getElementById('uploadZone').classList.add('has-image');
+  // Show confirmation
+  showToast('Photo choisie : ' + file.name, 'success');
 });
 
 // Drag and drop
@@ -426,7 +429,11 @@ async function generateAll() {
   // Validate
   const text = document.getElementById('studioText').value.trim();
   if (!text) { showToast('Ecrivez ce que doit dire votre personnage', 'error'); return; }
-  if (!uploadedImageFile) { showToast('Uploadez une photo pour la vidéo lip sync', 'error'); return; }
+  if (!uploadedImageFile) {
+    showToast('Uploadez une photo (Etape 1) pour la vidéo lip sync', 'error');
+    document.getElementById('uploadZone').scrollIntoView({behavior:'smooth'});
+    return;
+  }
 
   document.getElementById('generateSection').style.display = 'none';
   document.getElementById('progressSection').classList.add('visible');
