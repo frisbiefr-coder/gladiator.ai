@@ -434,6 +434,11 @@ async function generateAll() {
   // Validate
   const text = document.getElementById('studioText').value.trim();
   if (!text) { showToast('Ecrivez ce que doit dire votre personnage', 'error'); return; }
+  // Read image from fileInput directly (more reliable than variable on mobile)
+  const fileInputEl = document.getElementById('fileInput');
+  if (fileInputEl.files && fileInputEl.files[0]) {
+    uploadedImageFile = fileInputEl.files[0];
+  }
   if (!uploadedImageFile) {
     showToast('Uploadez une photo (Etape 1) pour la vidéo lip sync', 'error');
     document.getElementById('uploadZone').scrollIntoView({behavior:'smooth'});
