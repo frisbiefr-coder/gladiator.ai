@@ -258,6 +258,31 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
       <button class="result-btn primary" onclick="downloadAudio()">⬇ Télécharger</button>
       <button class="result-btn secondary" onclick="shareAudio()">🔗 Partager</button>
     </div>
+    <!-- LIP SYNC VIDEO -->
+    <div id="lipsyncSection" style="margin-top:16px;display:none;">
+      <div style="background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.15));border:1px solid rgba(124,58,237,0.3);border-radius:14px;padding:16px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:6px;">🎬</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;">Lip Sync Video</div>
+        <div style="font-size:12px;color:#9998b8;margin-bottom:12px;">Animez votre photo avec cette voix — 30 à 60 secondes</div>
+        <button class="result-btn primary" onclick="generateLipsync()" id="lipsyncBtn" style="width:100%;justify-content:center;">🎬 Générer la vidéo lip sync</button>
+      </div>
+    </div>
+    <!-- LIP SYNC PROGRESS -->
+    <div id="lipsyncProgress" style="display:none;margin-top:16px;text-align:center;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;">
+      <div style="font-size:28px;margin-bottom:8px;">⏳</div>
+      <div style="font-weight:600;margin-bottom:4px;" id="lipsyncProgressText">Génération lip sync en cours...</div>
+      <div style="font-size:12px;color:var(--muted);">Cela peut prendre 1 à 2 minutes</div>
+      <div style="background:var(--border);border-radius:10px;height:4px;margin-top:12px;overflow:hidden;"><div id="lipsyncBar" style="height:100%;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:10px;width:0%;transition:width 0.5s;"></div></div>
+    </div>
+    <!-- LIP SYNC RESULT -->
+    <div id="lipsyncResult" style="display:none;margin-top:16px;">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:10px;text-align:center;">🎬 Votre vidéo est prête !</div>
+      <video id="lipsyncVideo" controls style="width:100%;border-radius:14px;background:#000;max-height:300px;"></video>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+        <button class="result-btn primary" onclick="downloadVideo()">⬇ Télécharger</button>
+        <button class="result-btn secondary" onclick="shareVideo()">🔗 Partager</button>
+      </div>
+    </div>
     <button class="new-btn" onclick="resetStudio()">+ Créer un nouveau</button>
   </div>
 
@@ -266,7 +291,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <!-- GENERATE -->
 <div class="generate-section" id="generateSection">
   <div class="credits-info">
-    ⚡ <span class="credits-badge">2 crédits</span> par génération audio
+    ⚡ <span class="credits-badge">2 crédits</span> audio · <span class="credits-badge">10 crédits</span> vidéo lip sync
   </div>
   <button class="generate-btn" id="generateBtn" onclick="generateVoice()">
     🎙 Générer la voix IA
@@ -428,6 +453,12 @@ async function generateVoice() {
     document.getElementById('progressSection').classList.remove('visible');
     document.getElementById('resultSection').classList.add('visible');
     document.getElementById('generateSection').style.display = 'none';
+    // Show lipsync option if image was uploaded
+    if (uploadedImageFile) {
+      document.getElementById('lipsyncSection').style.display = 'block';
+      document.getElementById('lipsyncProgress').style.display = 'none';
+      document.getElementById('lipsyncResult').style.display = 'none';
+    }
     showToast('Voix générée avec succès !', 'success');
 
   } catch(e) {
@@ -484,8 +515,99 @@ function resetStudio() {
   updateCount();
   document.getElementById('resultSection').classList.remove('visible');
   document.getElementById('generateSection').style.display = 'block';
+  document.getElementById('lipsyncSection').style.display = 'none';
+  document.getElementById('lipsyncProgress').style.display = 'none';
+  document.getElementById('lipsyncResult').style.display = 'none';
   generatedAudioBlob = null;
   generatedAudioUrl = null;
+  lipsyncVideoUrl = null;
+}
+
+async function generateLipsync() {
+  if (!uploadedImageFile) { showToast('Vous devez avoir une photo pour le lip sync', 'error'); return; }
+  if (!generatedAudioBlob) { showToast('Générez d abord la voix', 'error'); return; }
+
+  document.getElementById('lipsyncSection').style.display = 'none';
+  document.getElementById('lipsyncProgress').style.display = 'block';
+  document.getElementById('lipsyncResult').style.display = 'none';
+
+  // Animate progress bar
+  let pct = 0;
+  const bar = document.getElementById('lipsyncBar');
+  const steps = ['Préparation des fichiers...', 'Upload vers fal.ai...', 'Génération lip sync en cours...', 'Finalisation de la vidéo...'];
+  let si = 0;
+  const interval = setInterval(() => {
+    pct = Math.min(pct + 2, 88);
+    bar.style.width = pct + '%';
+    if (si < steps.length && pct > si * 25) {
+      document.getElementById('lipsyncProgressText').textContent = steps[si];
+      si++;
+    }
+  }, 1000);
+
+  try {
+    // Convert image to base64
+    const imgBase64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result);
+      reader.onerror = rej;
+      reader.readAsDataURL(uploadedImageFile);
+    });
+
+    // Convert audio to base64
+    const audioBase64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result);
+      reader.onerror = rej;
+      reader.readAsDataURL(generatedAudioBlob);
+    });
+
+    const response = await fetch('/api/generate-lipsync', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({imageData: imgBase64, audioData: audioBase64})
+    });
+
+    clearInterval(interval);
+    bar.style.width = '100%';
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || 'Erreur lip sync');
+    }
+
+    const data = await response.json();
+    if (data.videoUrl) {
+      document.getElementById('lipsyncVideo').src = data.videoUrl;
+      document.getElementById('lipsyncProgress').style.display = 'none';
+      document.getElementById('lipsyncResult').style.display = 'block';
+      lipsyncVideoUrl = data.videoUrl;
+      showToast('Vidéo lip sync générée !', 'success');
+    } else {
+      throw new Error('Pas de vidéo retournée');
+    }
+  } catch(e) {
+    clearInterval(interval);
+    document.getElementById('lipsyncProgress').style.display = 'none';
+    document.getElementById('lipsyncSection').style.display = 'block';
+    showToast(e.message || 'Erreur lip sync', 'error');
+  }
+}
+
+let lipsyncVideoUrl = null;
+
+function downloadVideo() {
+  if (!lipsyncVideoUrl) return;
+  const a = document.createElement('a');
+  a.href = lipsyncVideoUrl;
+  a.download = 'limineo-studio-video-' + Date.now() + '.mp4';
+  a.click();
+  showToast('Téléchargement démarré', 'success');
+}
+
+function shareVideo() {
+  navigator.clipboard.writeText(lipsyncVideoUrl || window.location.href);
+  showToast('Lien copié !', 'success');
 }
 
 function showToast(msg, type) {
