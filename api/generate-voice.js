@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
 
-  const {text} = req.body;
+  const {text, voiceId} = req.body;
 
   if (!text) return res.status(400).json({error: 'Texte requis'});
   if (text.length > 500) return res.status(400).json({error: 'Texte trop long (max 500 caractères)'});
@@ -9,11 +9,17 @@ export default async function handler(req, res) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) return res.status(500).json({error: 'Clé API manquante'});
 
-  // Voix personnelle du compte - fonctionne sur plan gratuit
-  const VOICE_ID = 'E4FyMTjc8kqFCpto4KQC';
+  // Voix autorisées (voix personnelles du compte)
+  const ALLOWED_VOICES = [
+    'E4FyMTjc8kqFCpto4KQC', // Chat funny
+    'a0uftOTnKSLwJ6CdwHPs', // Lion
+    'InzG5DL3dmXzkFz9YpjI'  // Sophie
+  ];
+
+  const selectedVoice = ALLOWED_VOICES.includes(voiceId) ? voiceId : ALLOWED_VOICES[0];
 
   try {
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
       method: 'POST',
       headers: {
         'xi-api-key': apiKey,
