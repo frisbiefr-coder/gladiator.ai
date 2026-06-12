@@ -64,7 +64,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 #fileInput{display:none;}
 
 /* VOICE OPTIONS */
-.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.voice-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .voice-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s;}
 .voice-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.1);}
 .voice-emoji{font-size:22px;margin-bottom:4px;}
@@ -192,35 +192,20 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   <div class="card-section">
     <div class="section-label"><span>🎙</span> Étape 2 — Choisir une voix</div>
     <div class="voice-grid">
-      <div class="voice-card selected" onclick="selectVoice(this,'21m00Tcm4TlvDq8ikWAM')">
-        <div class="voice-emoji">👦</div>
-        <div class="voice-name">Rachel</div>
-        <div class="voice-desc">Douce, naturelle</div>
+      <div class="voice-card selected" onclick="selectVoice(this,'E4FyMTjc8kqFCpto4KQC')">
+        <div class="voice-emoji">🐱</div>
+        <div class="voice-name">Chat Funny</div>
+        <div class="voice-desc">Jeune, fun, comique</div>
       </div>
-      <div class="voice-card" onclick="selectVoice(this,'AZnzlk1XvdvUeBnXmlld')">
-        <div class="voice-emoji">🧔</div>
-        <div class="voice-name">Domi</div>
-        <div class="voice-desc">Forte, expressive</div>
-      </div>
-      <div class="voice-card" onclick="selectVoice(this,'EXAVITQu4vr4xnSDxMaL')">
-        <div class="voice-emoji">👩</div>
-        <div class="voice-name">Bella</div>
-        <div class="voice-desc">Douce, calme</div>
-      </div>
-      <div class="voice-card" onclick="selectVoice(this,'ErXwobaYiN019PkySvjV')">
-        <div class="voice-emoji">🎭</div>
-        <div class="voice-name">Antoni</div>
-        <div class="voice-desc">Chaleureux, doux</div>
-      </div>
-      <div class="voice-card" onclick="selectVoice(this,'MF3mGyEYCl7XYWbV9V6O')">
+      <div class="voice-card" onclick="selectVoice(this,'a0uftOTnKSLwJ6CdwHPs')">
         <div class="voice-emoji">🦁</div>
-        <div class="voice-name">Elli</div>
-        <div class="voice-desc">Jeune, énergique</div>
+        <div class="voice-name">Marc</div>
+        <div class="voice-desc">Grave, puissant, dramatique</div>
       </div>
-      <div class="voice-card" onclick="selectVoice(this,'TxGEqnHWrfWFTfGW9XjX')">
-        <div class="voice-emoji">🐻</div>
-        <div class="voice-name">Josh</div>
-        <div class="voice-desc">Profonde, grave</div>
+      <div class="voice-card" onclick="selectVoice(this,'InzG5DL3dmXzkFz9YpjI')">
+        <div class="voice-emoji">👩</div>
+        <div class="voice-name">Sophie</div>
+        <div class="voice-desc">Femme, chaleureuse, narrative</div>
       </div>
     </div>
   </div>
@@ -324,7 +309,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 </div>
 
 <script>
-let selectedVoiceId = '21m00Tcm4TlvDq8ikWAM';
+let selectedVoiceId = 'E4FyMTjc8kqFCpto4KQC';
 let uploadedImageFile = null;
 let generatedAudioBlob = null;
 let generatedAudioUrl = null;
@@ -338,10 +323,10 @@ const PRESETS = {
 };
 
 const EXAMPLES = {
-  chat: {text: "Miaou ! Je suis le chat le plus philosophe du quartier. Aujourd'hui j'ai médité 12 heures devant mon bol vide. La vie est une illusion.", voice: '21m00Tcm4TlvDq8ikWAM'},
-  chien: {text: "Bonjour ! C'est moi, le meilleur chien du monde ! Aujourd'hui j'ai appris une leçon importante : toujours agiter la queue en premier, poser des questions ensuite.", voice: 'MF3mGyEYCl7XYWbV9V6O'},
-  lion: {text: "Je suis le roi de la savane. Mon rugissement fait trembler la terre. Mais entre nous... j'ai un peu peur des souris. Chut, ne le dites à personne.", voice: 'TxGEqnHWrfWFTfGW9XjX'},
-  perroquet: {text: "Coucou ! Polly veut parler ! J'ai entendu que tu as dit quelque chose d'intéressant hier. Je vais le répéter à tout le monde. C'est mon métier.", voice: 'MF3mGyEYCl7XYWbV9V6O'}
+  chat: {text: "Miaou ! Je suis le chat le plus philosophe du quartier. Aujourd'hui j'ai médité 12 heures devant mon bol vide. La vie est une illusion.", voice: 'E4FyMTjc8kqFCpto4KQC'},
+  chien: {text: "Bonjour ! C'est moi, le meilleur chien du monde ! Aujourd'hui j'ai appris une leçon importante : toujours agiter la queue en premier, poser des questions ensuite.", voice: 'E4FyMTjc8kqFCpto4KQC'},
+  lion: {text: "Je suis le roi de la savane. Mon rugissement fait trembler la terre. Mais entre nous... j'ai un peu peur des souris. Chut, ne le dites à personne.", voice: 'a0uftOTnKSLwJ6CdwHPs'},
+  perroquet: {text: "Coucou ! Polly veut parler ! J'ai entendu que tu as dit quelque chose d'intéressant hier. Je vais le répéter à tout le monde. C'est mon métier.", voice: 'E4FyMTjc8kqFCpto4KQC'}
 };
 
 function selectVoice(el, voiceId) {
