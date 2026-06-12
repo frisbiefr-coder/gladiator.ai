@@ -291,10 +291,15 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <!-- GENERATE -->
 <div class="generate-section" id="generateSection">
   <div class="credits-info">
-    ⚡ <span class="credits-badge">2 crédits</span> audio · <span class="credits-badge">10 crédits</span> vidéo lip sync
+    ⚡ <span class="credits-badge">12 crédits</span> voix + vidéo · <span class="credits-badge">2 crédits</span> voix seule
   </div>
-  <button class="generate-btn" id="generateBtn" onclick="generateVoice()">
-    🎙 Générer la voix IA
+  <!-- BOUTON PRINCIPAL : Voix + Vidéo -->
+  <button class="generate-btn" id="generateBtn" onclick="generateAll()" style="margin-bottom:10px;">
+    🎬 Voix + Vidéo lip sync
+  </button>
+  <!-- BOUTON SECONDAIRE : Voix seulement -->
+  <button onclick="generateVoice()" style="width:100%;padding:12px;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--muted);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
+    🎙 Voix seulement
   </button>
 </div>
 
@@ -416,6 +421,101 @@ zone.addEventListener('drop', e => {
     document.getElementById('fileInput').dispatchEvent(new Event('change'));
   }
 });
+
+async function generateAll() {
+  // Validate
+  const text = document.getElementById('studioText').value.trim();
+  if (!text) { showToast('Ecrivez ce que doit dire votre personnage', 'error'); return; }
+  if (!uploadedImageFile) { showToast('Uploadez une photo pour la vidéo lip sync', 'error'); return; }
+
+  document.getElementById('generateSection').style.display = 'none';
+  document.getElementById('progressSection').classList.add('visible');
+  document.getElementById('resultSection').classList.remove('visible');
+
+  const bar = document.getElementById('progressBar');
+  const stepText = document.getElementById('progressStep');
+  const subText = document.getElementById('progressSub');
+
+  // Step 1: Generate voice
+  stepText.textContent = 'Génération de la voix IA...';
+  subText.textContent = 'ElevenLabs • synthèse vocale';
+  bar.style.width = '15%';
+
+  try {
+    const voiceResp = await fetch('/api/generate-voice', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text: text, voiceId: selectedVoiceId})
+    });
+    if (!voiceResp.ok) {
+      const err = await voiceResp.json().catch(() => ({}));
+      throw new Error(err.error || 'Erreur voix');
+    }
+    generatedAudioBlob = await voiceResp.blob();
+    generatedAudioUrl = URL.createObjectURL(generatedAudioBlob);
+    document.getElementById('resultAudio').src = generatedAudioUrl;
+    bar.style.width = '30%';
+
+    // Step 2: Upload image
+    stepText.textContent = 'Préparation de la photo...';
+    subText.textContent = 'Upload vers fal.ai';
+    bar.style.width = '45%';
+
+    const imgBase64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result);
+      reader.onerror = rej;
+      reader.readAsDataURL(uploadedImageFile);
+    });
+
+    const audioBase64 = await new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = () => res(reader.result);
+      reader.onerror = rej;
+      reader.readAsDataURL(generatedAudioBlob);
+    });
+
+    // Step 3: Lip sync
+    stepText.textContent = 'Génération lip sync vidéo...';
+    subText.textContent = 'fal.ai • animation faciale';
+    bar.style.width = '60%';
+
+    const lipsyncResp = await fetch('/api/generate-lipsync', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({imageData: imgBase64, audioData: audioBase64})
+    });
+
+    bar.style.width = '90%';
+
+    if (!lipsyncResp.ok) {
+      const err = await lipsyncResp.json().catch(() => ({}));
+      throw new Error(err.error || 'Erreur lip sync');
+    }
+
+    const lipsyncData = await lipsyncResp.json();
+    bar.style.width = '100%';
+
+    // Show result
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('resultSection').classList.add('visible');
+    document.getElementById('lipsyncSection').style.display = 'none';
+
+    if (lipsyncData.videoUrl) {
+      lipsyncVideoUrl = lipsyncData.videoUrl;
+      document.getElementById('lipsyncResult').style.display = 'block';
+      document.getElementById('lipsyncVideo').src = lipsyncData.videoUrl;
+      document.getElementById('lipsyncProgress').style.display = 'none';
+    }
+
+    showToast('Voix + Vidéo générées !', 'success');
+
+  } catch(e) {
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('generateSection').style.display = 'block';
+    showToast(e.message || 'Erreur de génération', 'error');
+  }
+}
 
 async function generateVoice() {
   const text = document.getElementById('studioText').value.trim();
