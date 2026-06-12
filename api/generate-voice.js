@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
 
-  const {text, voiceId, language} = req.body;
+  const {text} = req.body;
 
   if (!text) return res.status(400).json({error: 'Texte requis'});
   if (text.length > 500) return res.status(400).json({error: 'Texte trop long (max 500 caractères)'});
@@ -9,30 +9,11 @@ export default async function handler(req, res) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) return res.status(500).json({error: 'Clé API manquante'});
 
-  // Voix disponibles sur plan gratuit ElevenLabs
-  const FREE_VOICES = {
-    'rachel': 'EXAVITQu4vr4xnSDxMaL',
-    'bella': 'EXAVITQu4vr4xnSDxMaL',
-    'default': 'EXAVITQu4vr4xnSDxMaL'
-  };
+  // Voix personnelle du compte - fonctionne sur plan gratuit
+  const VOICE_ID = 'E4FyMTjc8kqFCpto4KQC';
 
-  // Sur plan gratuit, utiliser la première voix disponible via /voices
   try {
-    // D'abord récupérer les voix disponibles pour ce compte
-    const voicesResp = await fetch('https://api.elevenlabs.io/v1/voices', {
-      headers: {'xi-api-key': apiKey}
-    });
-    const voicesData = await voicesResp.json();
-    const voices = voicesData.voices || [];
-    
-    // Prendre la première voix disponible du compte
-    let selectedVoiceId = voices.length > 0 ? voices[0].voice_id : voiceId;
-
-    // Si l'ID demandé est dans les voix du compte, l'utiliser
-    const requested = voices.find(v => v.voice_id === voiceId);
-    if (requested) selectedVoiceId = voiceId;
-
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
       method: 'POST',
       headers: {
         'xi-api-key': apiKey,
