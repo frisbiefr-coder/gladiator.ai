@@ -203,7 +203,17 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
     <div class="feature-card"><div class="feature-icon">&#9889;</div><div class="feature-title">Resultats en quelques secondes</div><div class="feature-desc">Generation en 30 a 60 secondes. Pas d attente, juste de la creativite.</div></div>
   </section>
   <section class="lp-pricing" id="lpPricing">
-    <div class="section-label">Nos offres</div>
+    <!-- LIMINEO STUDIO PROMO -->
+  <div style="margin:0 20px 32px;">
+    <a href="/studio.html" style="text-decoration:none;display:block;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.15));border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-20px;right:-20px;font-size:80px;opacity:0.1;">🎙</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:8px;">&#10024; Nouveau</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#f1f0f7;margin-bottom:6px;">Limineo Studio</div>
+      <div style="font-size:13px;color:#9998b8;margin-bottom:14px;">Donnez une voix IA a vos photos — animaux, personnages, creations</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:white;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;">&#127908; Essayer Studio →</div>
+    </a>
+  </div>
+  <div class="section-label">Nos offres</div>
     <div class="section-title">Choisissez votre formule</div>
     <div class="pricing-toggle">
       <button class="pricing-toggle-btn active" onclick="setPricingPeriod('monthly',this)">Mensuel</button>
@@ -278,6 +288,7 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
   <div class="nav-item active" id="navMine" onclick="switchNav('mine')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Mes medias</div>
   <div class="nav-item" onclick="openCreate()"><div class="nav-create"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
   <div class="nav-item" id="navCredits" onclick="switchNav('credits')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Credits</div>
+  <a href="/studio.html" class="nav-item" style="text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>Studio</a>
 </div>
 
 <div class="modal-backdrop" id="authModal" onclick="closeOutside(event,'authModal')">
