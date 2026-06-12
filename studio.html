@@ -176,16 +176,18 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
   <!-- STEP 1: PHOTO -->
   <div class="card-section">
     <div class="section-label"><span>📸</span> Étape 1 — Choisir une photo</div>
-    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+    <label for="fileInput" style="display:block;cursor:pointer;">
+    <div class="upload-zone" id="uploadZone">
       <div id="uploadPlaceholder">
         <div class="upload-icon">🐾</div>
         <div class="upload-title">Appuyez pour choisir une photo</div>
         <div class="upload-sub">Animal, personne, personnage...</div>
       </div>
       <img id="uploadedImg" class="upload-img" alt="Photo uploadée"/>
-      <button class="change-img-btn" id="changeImgBtn" style="display:none" onclick="event.stopPropagation();document.getElementById('fileInput').click()">✎ Changer</button>
     </div>
-    <input type="file" id="fileInput" accept="image/*"/>
+    </label>
+    <input type="file" id="fileInput" accept="image/*" style="display:none"/>
+    <button class="change-img-btn" id="changeImgBtn" style="display:none;margin-top:8px;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:10px;font-size:12px;cursor:pointer;" onclick="document.getElementById('fileInput').click()">✎ Changer la photo</button>
   </div>
 
   <!-- STEP 2: VOICE -->
@@ -407,6 +409,7 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
   document.getElementById('uploadPlaceholder').style.display = 'none';
   document.getElementById('changeImgBtn').style.display = 'block';
   document.getElementById('uploadZone').classList.add('has-image');
+  document.getElementById('uploadPlaceholder').style.display = 'none';
   // Show confirmation
   showToast('Photo choisie : ' + file.name, 'success');
 });
