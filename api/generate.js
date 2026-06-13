@@ -21,6 +21,7 @@ module.exports = async (req, res) => {
     imageMimeType,
     duration = 5,        // 5, 10 ou 15 secondes
     universe = 'action', // pour le mode actor: action, scifi, fantasy, thriller
+    withAudio = true,    // son activé par défaut
   } = req.body;
 
   if (!prompt && type !== 'img2video') return res.status(400).json({ error: 'Prompt requis' });
@@ -33,17 +34,16 @@ module.exports = async (req, res) => {
 
   fal.config({ credentials: FAL_KEY });
 
-  // Coût en crédits selon le type et la durée
-  const getCreditCost = (type, duration) => {
+  // Coût en crédits selon le type et la durée (audio = +20%)
+  const getCreditCost = (type, duration, withAudio) => {
     if (type === 'image') return 1;
-    if (type === 'video' || type === 'img2video' || type === 'actor') {
-      if (duration <= 5)  return 5;
-      if (duration <= 10) return 10;
-      return 15; // 15 secondes
-    }
-    return 1;
+    let base = 0;
+    if (duration <= 5)  base = 5;
+    else if (duration <= 10) base = 10;
+    else base = 15;
+    return withAudio ? Math.ceil(base * 1.2) : base;
   };
-  const creditCost = getCreditCost(type, duration);
+  const creditCost = getCreditCost(type, duration, withAudio);
 
   // Vérifier et déduire les crédits
   const getRes = await fetch(`${SUPABASE_URL}/rest/v1/user_credits?user_id=eq.${userId}&select=credits`, {
@@ -107,7 +107,9 @@ module.exports = async (req, res) => {
           prompt: fullPrompt,
           duration: durationStr,
           aspect_ratio: '16:9',
-          generate_audio: false,
+          generate_audio: withAudio,
+          negative_prompt: 'blur, distort, low quality, watermark',
+          cfg_scale: 0.5,
         },
         webhookUrl
       });
@@ -132,7 +134,9 @@ module.exports = async (req, res) => {
           prompt: fullPrompt,
           duration: durationStr,
           aspect_ratio: '16:9',
-          generate_audio: false,
+          generate_audio: withAudio,
+          negative_prompt: 'blur, distort, low quality, watermark',
+          cfg_scale: 0.5,
         },
         webhookUrl
       });
@@ -165,7 +169,9 @@ module.exports = async (req, res) => {
           prompt: actorPrompt,
           duration: durationStr,
           aspect_ratio: '16:9',
-          generate_audio: false,
+          generate_audio: withAudio,
+          negative_prompt: 'blur, distort, low quality, watermark',
+          cfg_scale: 0.5,
           elements: [
             {
               image_url: actorImageUrl,
