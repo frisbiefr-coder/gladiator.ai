@@ -25,8 +25,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(10px);}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
 .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;position:relative;}
-.logo-text span{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;animation:letter-glow 3s ease-in-out infinite;}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;position:relative;white-space:nowrap;}
+.logo-text span{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline;animation:letter-glow 3s ease-in-out infinite;}
 .logo-text span:nth-child(1){animation-delay:0s}
 .logo-text span:nth-child(2){animation-delay:0.08s}
 .logo-text span:nth-child(3){animation-delay:0.16s}
@@ -56,7 +56,8 @@ background-clip:padding-box;
 .hero-badge::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1px;background:linear-gradient(135deg,#7c3aed,#06b6d4,#ec4899);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
 .hero-badge-text{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;line-height:1.2;margin-bottom:10px;}
-.hero h1 .word-glow span{background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;animation:word-glow-soft 3s ease-in-out infinite;}
+.hero h1 .word-glow{display:inline;white-space:nowrap;}
+.hero h1 .word-glow span{background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline;animation:word-glow-soft 3s ease-in-out infinite;}
 .hero h1 .word-glow span:nth-child(1){animation-delay:0s}
 .hero h1 .word-glow span:nth-child(2){animation-delay:0.1s}
 .hero h1 .word-glow span:nth-child(3){animation-delay:0.2s}
