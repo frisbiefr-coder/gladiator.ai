@@ -44,7 +44,7 @@ background-clip:padding-box;
 -webkit-background-clip:padding-box;}
 .hero-badge::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1px;background:linear-gradient(135deg,#7c3aed,#06b6d4,#ec4899);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
 .hero-badge-text{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;line-height:1.3;margin-bottom:10px;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;line-height:1.3;margin-bottom:10px;}
 .hero h1 .word-glow{display:inline;}
 .hero h1 .word-glow span{background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline;letter-spacing:normal;animation:word-glow-soft 3s ease-in-out infinite;}
 .hero h1 .word-glow span:nth-child(1){animation-delay:0s}
@@ -293,4 +293,500 @@ background-clip:padding-box;
   </div>
 
   <!-- UNIVERSE (actor only) -->
-  <div class="card-sect
+  <div class="card-section" id="universeSection" style="display:none;">
+    <div class="section-label"><span>🎬</span> Style de film</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <div class="universe-chip selected" onclick="selectUniverse(this,'action')" id="uni-action">💥 Action</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'scifi')" id="uni-scifi">🚀 Sci-Fi</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'fantasy')" id="uni-fantasy">⚔️ Fantasy</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'thriller')" id="uni-thriller">🕵️ Thriller</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'horror')" id="uni-horror">👻 Horreur</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'romance')" id="uni-romance">💕 Romance</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'western')" id="uni-western">🤠 Western</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'superhero')" id="uni-superhero">🦸 Super-héros</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'war')" id="uni-war">🪖 Guerre</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'cyberpunk')" id="uni-cyberpunk">🤖 Cyberpunk</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'documentary')" id="uni-documentary">🎥 Documentaire</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'comedy')" id="uni-comedy">😂 Comédie</div>
+    </div>
+  </div>
+
+  <!-- PROMPT (image, video, img2video) -->
+  <div class="card-section" id="promptSection">
+    <div class="section-label"><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="url(#pen)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="pen" x1="2" y1="2" x2="14" y2="14" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></span> Prompt</div>
+    <textarea class="text-input" id="promptText" placeholder="Ex: Un astronaute marchant sur Mars au coucher du soleil, lumière dramatique..." maxlength="500" oninput="updateCount()"></textarea>
+    <div class="char-count"><span id="charCount">0</span>/500</div>
+    <div class="preset-chips" id="presetChips"></div>
+  </div>
+
+  <!-- DURATION (video, img2video, actor) -->
+  <div class="card-section" id="durationSection" style="display:none;">
+    <div class="section-label"><span>⏱️</span> Durée de la vidéo</div>
+    <div class="duration-grid">
+      <div class="duration-card selected" onclick="selectDuration(this, 5)" id="dur-5">
+        <div class="duration-sec">5s</div>
+        <div class="duration-label">Rapide</div>
+        <div class="duration-credits" id="dur-5-credits">6 crédits</div>
+      </div>
+      <div class="duration-card" onclick="selectDuration(this, 10)" id="dur-10">
+        <div class="duration-sec">10s</div>
+        <div class="duration-label">Standard</div>
+        <div class="duration-credits" id="dur-10-credits">12 crédits</div>
+      </div>
+      <div class="duration-card" onclick="selectDuration(this, 15)" id="dur-15">
+        <div class="duration-sec">15s</div>
+        <div class="duration-label">Cinéma</div>
+        <div class="duration-credits" id="dur-15-credits">18 crédits</div>
+      </div>
+    </div>
+    <!-- AUDIO TOGGLE -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:10px 12px;background:var(--surface);border-radius:12px;border:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span id="audioIcon" style="font-size:18px;">🔊</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;" id="audioLabel">Son natif activé</div>
+          <div style="font-size:11px;color:var(--muted);" id="audioSub">Bruitages, ambiance, effets sonores</div>
+        </div>
+      </div>
+      <button onclick="toggleAudio()" id="audioToggleBtn" style="background:none;border:none;cursor:pointer;font-size:22px;padding:4px;opacity:0.4;transition:opacity 0.2s;" title="Désactiver le son">🔇</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- GENERATE -->
+<div class="generate-section" id="generateSection">
+  <div class="cost-info" id="costInfo">⚡ Coût : <span id="costDisplay">1 crédit</span></div>
+  <button class="generate-btn" id="generateBtn" onclick="generate()">
+    <span id="generateBtnIcon">🖼️</span>
+    <span id="generateBtnText">Générer l'image</span>
+  </button>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-section" id="progressSection">
+  <div class="progress-anim">
+    <svg class="progress-ring" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="26"/>
+    </svg>
+  </div>
+  <div class="progress-step" id="progressStep">Initialisation...</div>
+  <div class="progress-sub" id="progressSub">Kling 3.0 • Chargement</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-timer" id="progressTimer"></div>
+</div>
+
+<!-- RESULT -->
+<div class="result-section" id="resultSection">
+  <div class="result-title" id="resultTitle">🎉 C'est prêt !</div>
+  <img id="resultImage" class="result-media" style="display:none;" alt="Image générée"/>
+  <video id="resultVideo" class="result-media" style="display:none;" controls autoplay loop></video>
+  <div class="result-actions">
+    <button class="result-btn primary" onclick="downloadResult()">⬇ Télécharger</button>
+    <button class="result-btn secondary" onclick="shareResult()">🔗 Partager</button>
+  </div>
+  <button class="new-btn" onclick="resetStudio()">+ Nouvelle création</button>
+</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let currentMode = 'image';
+let currentDuration = 5;
+let currentUniverse = 'action';
+let withAudio = true;
+let uploadedImageFile = null;
+let resultUrl = null;
+let pollInterval = null;
+let timerInterval = null;
+let elapsedSeconds = 0;
+
+// userId depuis localStorage (même logique que ton app)
+const userId = localStorage.getItem('userId') || 'demo-user';
+
+// ─── PRESETS par mode ─────────────────────────────────────────────────────────
+const PRESETS = {
+  image: [],
+  video: [],
+  img2video: [],
+  actor: [],
+};
+
+const PRESET_TEXTS = {
+  '🌅 Coucher de soleil': 'Un coucher de soleil épique sur les montagnes, ciel orange et violet, lumière dorée, 4K cinématique',
+  '🏙️ Ville futuriste': 'Une mégalopole futuriste de nuit, néons bleus et violets, voitures volantes, Blade Runner style',
+  '🌊 Océan tempête': 'Un océan déchaîné sous une tempête, vagues de 20 mètres, éclairs, dramatique et cinématique',
+  '🌌 Galaxie': 'Une galaxie spirale vue depuis l espace, nébuleuse colorée, étoiles brillantes, ultra réaliste 4K',
+  '🦁 Lion majestueux': 'Un lion roi sur un rocher au coucher du soleil, crinière au vent, regard puissant, cinématique',
+  '🚗 Course poursuite': 'Course poursuite épique dans les rues d une ville la nuit, voitures de sport, dérapages, explosion',
+  '🌋 Éruption volcanique': 'Éruption volcanique massive, lave en fusion, ciel rouge, dramatique et épique, cinématique 4K',
+  '🌊 Vagues géantes': 'Vagues géantes de 30 mètres s écrasant sur des falaises, spray d eau, lumière dramatique',
+  '🚀 Décollage fusée': 'Décollage d une fusée depuis une base spatiale, flammes et fumée, vibrations, caméra basse',
+  '⚡ Orage dramatique': 'Orage violent au-dessus d une ville, éclairs multiplex, pluie torrentielle, cinématique',
+  '🌬️ Vent dans les cheveux': 'Animate with gentle wind effect, hair flowing naturally, soft light, smooth motion',
+  '👁️ Clignement des yeux': 'Subtle eye blink and breathing motion, realistic and natural, cinematic close-up',
+  '🔥 Flammes autour': 'Fire and flames appear around the subject, epic dramatic effect, cinematic slow-motion',
+  '💫 Lumière magique': 'Magical golden light particles swirling around, mystical glow effect, cinematic',
+  '🌧️ Pluie légère': 'Light rain falling, subject stays still, moody atmospheric, cinematic slow motion',
+};
+
+// ─── MODE ─────────────────────────────────────────────────────────────────────
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('mode-' + mode).classList.add('active');
+
+  // Upload zone
+  const uploadSection = document.getElementById('uploadSection');
+  const uploadLabel = document.getElementById('uploadLabel');
+  const actorTip = document.getElementById('actorTip');
+  const universeSection = document.getElementById('universeSection');
+  const promptSection = document.getElementById('promptSection');
+  const durationSection = document.getElementById('durationSection');
+
+  uploadSection.style.display = (mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
+  universeSection.style.display = mode === 'actor' ? 'block' : 'none';
+  actorTip.style.display = mode === 'actor' ? 'block' : 'none';
+  promptSection.style.display = mode === 'actor' ? 'none' : 'block';
+  durationSection.style.display = (mode === 'video' || mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
+
+  if (mode === 'actor') {
+    uploadLabel.innerHTML = '<span>📸</span> Ta photo (tu seras l\'acteur)';
+  } else {
+    uploadLabel.innerHTML = '<span>📸</span> Ton image à animer';
+  }
+
+  // Presets
+  updatePresets();
+  // Bouton
+  updateGenerateBtn();
+  // Coût
+  updateCost();
+}
+
+function updatePresets() {
+  const chips = document.getElementById('presetChips');
+  const presets = PRESETS[currentMode] || [];
+  chips.innerHTML = presets.map(p => `<div class="preset-chip" onclick="usePreset('${p}')">${p}</div>`).join('');
+}
+
+function usePreset(label) {
+  const text = PRESET_TEXTS[label] || label;
+  document.getElementById('promptText').value = text;
+  updateCount();
+}
+
+function updateGenerateBtn() {
+  const icons = { image: '🖼️', video: '🎬', img2video: '🎬', actor: '🎭' };
+  const labels = { image: 'Générer l\'image', video: 'Générer la vidéo', img2video: 'Animer l\'image', actor: 'Générer maintenant' };
+  document.getElementById('generateBtnIcon').textContent = icons[currentMode];
+  document.getElementById('generateBtnText').textContent = labels[currentMode];
+}
+
+function updateCost() {
+  let cost = 1;
+  if (currentMode === 'video' || currentMode === 'img2video' || currentMode === 'actor') {
+    cost = currentDuration;
+    if (withAudio) cost = Math.ceil(cost * 1.2);
+  }
+  document.getElementById('costDisplay').textContent = cost + ' crédit' + (cost > 1 ? 's' : '');
+}
+
+// ─── AUDIO TOGGLE ─────────────────────────────────────────────────────────────
+function toggleAudio() {
+  withAudio = !withAudio;
+  const btn = document.getElementById('audioToggleBtn');
+  const icon = document.getElementById('audioIcon');
+  const label = document.getElementById('audioLabel');
+  const sub = document.getElementById('audioSub');
+  if (withAudio) {
+    btn.style.opacity = '0.4';
+    icon.textContent = '🔊';
+    label.textContent = 'Son natif activé';
+    sub.textContent = 'Bruitages, ambiance, effets sonores';
+  } else {
+    btn.style.opacity = '1';
+    icon.textContent = '🔇';
+    label.textContent = 'Son désactivé';
+    sub.textContent = 'Vidéo muette — moins de crédits';
+  }
+  updateCost();
+  updateDurationCredits();
+}
+
+function updateDurationCredits() {
+  const costs = withAudio
+    ? { 5: '6 crédits', 10: '12 crédits', 15: '18 crédits' }
+    : { 5: '5 crédits', 10: '10 crédits', 15: '15 crédits' };
+  document.getElementById('dur-5-credits').textContent = costs[5];
+  document.getElementById('dur-10-credits').textContent = costs[10];
+  document.getElementById('dur-15-credits').textContent = costs[15];
+}
+
+// ─── DURATION ─────────────────────────────────────────────────────────────────
+function selectDuration(el, sec) {
+  document.querySelectorAll('.duration-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentDuration = sec;
+  updateCost();
+}
+
+// ─── UNIVERSE ─────────────────────────────────────────────────────────────────
+function selectUniverse(el, universe) {
+  document.querySelectorAll('.universe-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentUniverse = universe;
+}
+
+// ─── UPLOAD ───────────────────────────────────────────────────────────────────
+function triggerUpload() { document.getElementById('fileInput').click(); }
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  uploadedImageFile = file;
+  const url = URL.createObjectURL(file);
+  const img = document.getElementById('uploadedImg');
+  img.src = url;
+  img.classList.add('visible');
+  document.getElementById('uploadPlaceholder').style.display = 'none';
+  document.getElementById('changeImgBtn').style.display = 'block';
+  document.getElementById('uploadZone').classList.add('has-image');
+  showToast('Photo choisie ✓', 'success');
+});
+
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('fileInput').files = dt.files;
+    document.getElementById('fileInput').dispatchEvent(new Event('change'));
+  }
+});
+
+// ─── CHAR COUNT ───────────────────────────────────────────────────────────────
+function updateCount() {
+  document.getElementById('charCount').textContent = document.getElementById('promptText').value.length;
+}
+
+// ─── GENERATE ─────────────────────────────────────────────────────────────────
+async function generate() {
+  const prompt = document.getElementById('promptText').value.trim();
+
+  if (currentMode !== 'actor' && !prompt) {
+    showToast('Décris ce que tu veux créer !', 'error'); return;
+  }
+  if ((currentMode === 'img2video' || currentMode === 'actor') && !uploadedImageFile) {
+    showToast('Upload une photo d\'abord !', 'error');
+    document.getElementById('uploadZone').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+
+  // Show progress
+  document.getElementById('generateSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('resultSection').classList.remove('visible');
+  document.getElementById('progressSection').classList.add('visible');
+  document.getElementById('progressBar').style.width = '0%';
+
+  startTimer();
+
+  const progressSteps = {
+    image:    [{text:'Analyse du prompt...', sub:'Flux Schnell • préparation', pct:30}, {text:'Génération de l\'image...', sub:'Flux Schnell • rendu IA', pct:70}, {text:'Finalisation...', sub:'Presque prêt !', pct:90}],
+    video:    [{text:'Envoi vers Kling 3.0...', sub:'File d\'attente • quelques secondes', pct:15}, {text:'Génération vidéo en cours...', sub:`Kling 3.0 Pro • ${currentDuration}s de vidéo`, pct:40}, {text:'Rendu cinématique...', sub:'Patience, la magie opère ✨', pct:70}, {text:'Finalisation...', sub:'Encore quelques instants...', pct:85}],
+    img2video:[{text:'Upload de l\'image...', sub:'fal.ai • préparation', pct:15}, {text:'Animation en cours...', sub:`Kling 3.0 Pro • ${currentDuration}s`, pct:40}, {text:'Rendu vidéo...', sub:'Kling 3.0 • cinématique', pct:70}, {text:'Finalisation...', sub:'Presque prêt !', pct:85}],
+    actor:    [{text:'Upload de ta photo...', sub:'Préparation • acteur principal', pct:15}, {text:'Tu entres dans le film...', sub:`Kling 3.0 • univers ${currentUniverse}`, pct:35}, {text:'Génération cinématique...', sub:'Magie en cours ✨', pct:60}, {text:'Montage final...', sub:'Encore quelques instants...', pct:80}],
+  };
+
+  animateSteps(progressSteps[currentMode] || progressSteps.image);
+
+  try {
+    // Préparer le body
+    const body = { type: currentMode, userId, prompt: prompt || ' ', duration: currentDuration, universe: currentUniverse, withAudio };
+
+    if (currentMode === 'img2video' || currentMode === 'actor') {
+      const base64 = await fileToBase64(uploadedImageFile);
+      body.imageBase64 = base64;
+      body.imageMimeType = uploadedImageFile.type;
+    }
+
+    const resp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Erreur serveur');
+
+    if (currentMode === 'image') {
+      // Résultat immédiat
+      stopTimer();
+      showResult('image', data.url);
+    } else {
+      // Mode async : polling
+      if (!data.request_id) throw new Error('Pas de request_id');
+      pollForResult(data.request_id);
+    }
+
+  } catch(e) {
+    stopProgress();
+    showToast(e.message || 'Erreur de génération', 'error');
+  }
+}
+
+// ─── POLLING ──────────────────────────────────────────────────────────────────
+function pollForResult(requestId) {
+  let attempts = 0;
+  const maxAttempts = 180; // 15 min max
+
+  pollInterval = setInterval(async () => {
+    attempts++;
+    if (attempts > maxAttempts) {
+      clearInterval(pollInterval);
+      stopProgress();
+      showToast('Timeout — réessaie', 'error');
+      return;
+    }
+
+    try {
+      const resp = await fetch(`/api/poll-fal?requestId=${requestId}`);
+      const data = await resp.json();
+
+      if (data.status === 'completed') {
+        clearInterval(pollInterval);
+        stopTimer();
+        const videoUrl = data.output?.video?.url || data.output?.video_url || data.output?.url;
+        if (videoUrl) {
+          showResult('video', videoUrl);
+        } else {
+          stopProgress();
+          showToast('Vidéo non trouvée dans la réponse', 'error');
+        }
+      } else if (data.status === 'failed') {
+        clearInterval(pollInterval);
+        stopProgress();
+        showToast('Génération échouée — réessaie', 'error');
+      }
+      // sinon on continue de poller (IN_QUEUE, IN_PROGRESS)
+    } catch(e) {
+      // Erreur réseau temporaire, on continue
+    }
+  }, 5000); // poll toutes les 5 secondes
+}
+
+// ─── RESULT ───────────────────────────────────────────────────────────────────
+function showResult(type, url) {
+  resultUrl = url;
+  document.getElementById('progressSection').classList.remove('visible');
+  document.getElementById('generateSection').style.display = 'none';
+
+  const resultSection = document.getElementById('resultSection');
+  const img = document.getElementById('resultImage');
+  const video = document.getElementById('resultVideo');
+
+  if (type === 'image') {
+    img.src = url;
+    img.style.display = 'block';
+    video.style.display = 'none';
+    document.getElementById('resultTitle').textContent = '🎉 Ton image est prête !';
+  } else {
+    video.src = url;
+    video.style.display = 'block';
+    img.style.display = 'none';
+    document.getElementById('resultTitle').textContent = '🎬 Ta vidéo est prête !';
+  }
+
+  resultSection.classList.add('visible');
+  resultSection.style.display = 'block';
+  showToast('Création terminée !', 'success');
+}
+
+// ─── PROGRESS HELPERS ─────────────────────────────────────────────────────────
+function animateSteps(steps) {
+  let i = 0;
+  const bar = document.getElementById('progressBar');
+  bar.style.width = '5%';
+  const interval = setInterval(() => {
+    if (i >= steps.length) { clearInterval(interval); return; }
+    document.getElementById('progressStep').textContent = steps[i].text;
+    document.getElementById('progressSub').textContent = steps[i].sub;
+    bar.style.width = steps[i].pct + '%';
+    i++;
+  }, currentMode === 'image' ? 800 : 4000);
+}
+
+function startTimer() {
+  elapsedSeconds = 0;
+  timerInterval = setInterval(() => {
+    elapsedSeconds++;
+    const m = Math.floor(elapsedSeconds / 60);
+    const s = elapsedSeconds % 60;
+    document.getElementById('progressTimer').textContent = `⏱ ${m > 0 ? m + 'min ' : ''}${s}s écoulées`;
+  }, 1000);
+}
+
+function stopTimer() { clearInterval(timerInterval); document.getElementById('progressTimer').textContent = ''; }
+
+function stopProgress() {
+  clearInterval(pollInterval);
+  stopTimer();
+  document.getElementById('progressSection').classList.remove('visible');
+  document.getElementById('generateSection').style.display = 'block';
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => res(reader.result);
+    reader.onerror = rej;
+    reader.readAsDataURL(file);
+  });
+}
+
+function downloadResult() {
+  if (!resultUrl) return;
+  const ext = currentMode === 'image' ? 'jpg' : 'mp4';
+  const a = document.createElement('a');
+  a.href = resultUrl;
+  a.download = `limineo-${currentMode}-${Date.now()}.${ext}`;
+  a.click();
+  showToast('Téléchargement démarré', 'success');
+}
+
+function shareResult() {
+  navigator.clipboard.writeText(resultUrl || window.location.href).catch(() => {});
+  showToast('Lien copié !', 'success');
+}
+
+function resetStudio() {
+  clearInterval(pollInterval);
+  stopTimer();
+  resultUrl = null;
+  document.getElementById('resultSection').classList.remove('visible');
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('progressSection').classList.remove('visible');
+  document.getElementById('generateSection').style.display = 'block';
+  document.getElementById('promptText').value = '';
+  updateCount();
+  setMode(currentMode);
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init
+setMode('image');
+</script>
+</body>
+</html>
