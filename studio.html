@@ -271,18 +271,29 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
       <div class="duration-card selected" onclick="selectDuration(this, 5)" id="dur-5">
         <div class="duration-sec">5s</div>
         <div class="duration-label">Rapide</div>
-        <div class="duration-credits">5 crédits</div>
+        <div class="duration-credits" id="dur-5-credits">6 crédits</div>
       </div>
       <div class="duration-card" onclick="selectDuration(this, 10)" id="dur-10">
         <div class="duration-sec">10s</div>
         <div class="duration-label">Standard</div>
-        <div class="duration-credits">10 crédits</div>
+        <div class="duration-credits" id="dur-10-credits">12 crédits</div>
       </div>
       <div class="duration-card" onclick="selectDuration(this, 15)" id="dur-15">
         <div class="duration-sec">15s</div>
         <div class="duration-label">Cinéma</div>
-        <div class="duration-credits">15 crédits</div>
+        <div class="duration-credits" id="dur-15-credits">18 crédits</div>
       </div>
+    </div>
+    <!-- AUDIO TOGGLE -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:10px 12px;background:var(--surface);border-radius:12px;border:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span id="audioIcon" style="font-size:18px;">🔊</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;" id="audioLabel">Son natif activé</div>
+          <div style="font-size:11px;color:var(--muted);" id="audioSub">Bruitages, ambiance, effets sonores</div>
+        </div>
+      </div>
+      <button onclick="toggleAudio()" id="audioToggleBtn" style="background:none;border:none;cursor:pointer;font-size:22px;padding:4px;opacity:0.4;transition:opacity 0.2s;" title="Désactiver le son">🔇</button>
     </div>
   </div>
 
@@ -327,6 +338,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 let currentMode = 'image';
 let currentDuration = 5;
 let currentUniverse = 'action';
+let withAudio = true;
 let uploadedImageFile = null;
 let resultUrl = null;
 let pollInterval = null;
@@ -417,8 +429,42 @@ function updateGenerateBtn() {
 
 function updateCost() {
   let cost = 1;
-  if (currentMode === 'video' || currentMode === 'img2video' || currentMode === 'actor') cost = currentDuration;
+  if (currentMode === 'video' || currentMode === 'img2video' || currentMode === 'actor') {
+    cost = currentDuration;
+    if (withAudio) cost = Math.ceil(cost * 1.2);
+  }
   document.getElementById('costDisplay').textContent = cost + ' crédit' + (cost > 1 ? 's' : '');
+}
+
+// ─── AUDIO TOGGLE ─────────────────────────────────────────────────────────────
+function toggleAudio() {
+  withAudio = !withAudio;
+  const btn = document.getElementById('audioToggleBtn');
+  const icon = document.getElementById('audioIcon');
+  const label = document.getElementById('audioLabel');
+  const sub = document.getElementById('audioSub');
+  if (withAudio) {
+    btn.style.opacity = '0.4';
+    icon.textContent = '🔊';
+    label.textContent = 'Son natif activé';
+    sub.textContent = 'Bruitages, ambiance, effets sonores';
+  } else {
+    btn.style.opacity = '1';
+    icon.textContent = '🔇';
+    label.textContent = 'Son désactivé';
+    sub.textContent = 'Vidéo muette — moins de crédits';
+  }
+  updateCost();
+  updateDurationCredits();
+}
+
+function updateDurationCredits() {
+  const costs = withAudio
+    ? { 5: '6 crédits', 10: '12 crédits', 15: '18 crédits' }
+    : { 5: '5 crédits', 10: '10 crédits', 15: '15 crédits' };
+  document.getElementById('dur-5-credits').textContent = costs[5];
+  document.getElementById('dur-10-credits').textContent = costs[10];
+  document.getElementById('dur-15-credits').textContent = costs[15];
 }
 
 // ─── DURATION ─────────────────────────────────────────────────────────────────
@@ -506,7 +552,7 @@ async function generate() {
 
   try {
     // Préparer le body
-    const body = { type: currentMode, userId, prompt: prompt || ' ', duration: currentDuration, universe: currentUniverse };
+    const body = { type: currentMode, userId, prompt: prompt || ' ', duration: currentDuration, universe: currentUniverse, withAudio };
 
     if (currentMode === 'img2video' || currentMode === 'actor') {
       const base64 = await fileToBase64(uploadedImageFile);
