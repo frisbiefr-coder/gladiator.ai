@@ -92,6 +92,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(
 .gen-status.show{display:block;}
 .spinner{width:32px;height:32px;border:3px solid rgba(124,58,237,0.3);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 10px;}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* LOGO ANIMATION */
+.logo-shine span{display:inline-block;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:letter-glow-ai 3s ease-in-out infinite;}
+.logo-shine span:nth-child(1){animation-delay:0s}
+.logo-shine span:nth-child(2){animation-delay:0.07s}
+.logo-shine span:nth-child(3){animation-delay:0.14s}
+.logo-shine span:nth-child(4){animation-delay:0.21s}
+.logo-shine span:nth-child(5){animation-delay:0.28s}
+.logo-shine span:nth-child(6){animation-delay:0.35s}
+.logo-shine span:nth-child(7){animation-delay:0.42s}
+.logo-shine span:nth-child(8){animation-delay:0.49s}
+.logo-shine span:nth-child(9){animation-delay:0.56s}
+.logo-shine span:nth-child(10){animation-delay:0.63s}
+@keyframes letter-glow-ai{
+  0%,100%{filter:brightness(1);}
+  50%{filter:brightness(1.6) drop-shadow(0 0 4px #ec4899);}
+}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.3s;white-space:nowrap;}
 .toast.show{opacity:1;}
 .toast.success{border-color:#22c55e;color:#86efac;}
@@ -232,7 +248,7 @@ body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mai
 <nav>
   <div class="logo" onclick="window.location.reload()">
     <svg width="34" height="34" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><rect width="36" height="36" rx="11" fill="url(#lg1)"/><path d="M10 9 L10 27 L20 27" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M25 8 L26.2 11.8 L30 13 L26.2 14.2 L25 18 L23.8 14.2 L20 13 L23.8 11.8 Z" fill="white" fill-opacity="0.95"/></svg>
-    <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;">Limineo AI</span>
+    <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;white-space:nowrap;" class="logo-shine"><span>L</span><span>i</span><span>m</span><span>i</span><span>n</span><span>e</span><span>o</span><span> </span><span>A</span><span>I</span></span>
   </div>
   <div class="nav-right">
     <div class="credits-badge" id="creditsBadge">&#9889; <span id="creditsCount">0</span></div>
