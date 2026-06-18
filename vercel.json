@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/studio", "destination": "/studio.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
   "functions": {
@@ -7,6 +8,7 @@
     "api/check-video.js": { "maxDuration": 30 },
     "api/webhook-fal.js": { "maxDuration": 30 },
     "api/create-checkout.js": { "maxDuration": 60 },
-    "api/webhook.js": { "maxDuration": 60 }
+    "api/webhook.js": { "maxDuration": 60 },
+    "api/poll-fal.js": { "maxDuration": 30 }
   }
 }
