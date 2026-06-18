@@ -331,7 +331,7 @@ const SUPABASE_KEY = 'sb_publishable_NpMXZk_OYIV958R4OGHpBA_DjSN6Q7J';
 
 async function saveToSupabase(data) {
   try {
-    const resp = await fetch(`${SUPABASE_URL}/rest/v1/creations`, {
+    const resp = await fetch(`${SUPABASE_URL}/rest/v1/user_generations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -621,16 +621,13 @@ function showResult(type, url, prompt) {
   resultSection.style.display = 'block';
   showToast('Création terminée !', 'success');
 
-  // ✅ Sauvegarde dans Supabase
+  // ✅ Sauvegarde dans Supabase (table user_generations)
   saveToSupabase({
     user_id: userId,
     type: type,
-    mode: currentMode,
     url: url,
     prompt: prompt || null,
-    duration: (currentMode === 'video' || currentMode === 'img2video' || currentMode === 'actor') ? currentDuration : null,
-    universe: currentMode === 'actor' ? currentUniverse : null,
-    with_audio: (currentMode !== 'image') ? withAudio : null,
+    status: 'done',
   });
 }
 
