@@ -393,8 +393,11 @@ let pollInterval = null;
 let timerInterval = null;
 let elapsedSeconds = 0;
 
-// userId depuis localStorage (même logique que ton app)
-const userId = localStorage.getItem('userId') || 'demo-user';
+const _saved = localStorage.getItem('limineo_user');
+let _user = null;
+try { _user = _saved ? JSON.parse(_saved) : null; } catch(e) {}
+const userId = _user?.id || null;
+if (!userId) { window.location.href = '/'; }
 
 // ─── PRESETS par mode ─────────────────────────────────────────────────────────
 const PRESETS = {
