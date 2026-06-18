@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limineo Studio — Création IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131a;
+  --border:#1e1e2e;
+  --accent:#7c3aed;
+  --pink:#ec4899;
+  --gradient:linear-gradient(135deg,#7c3aed,#ec4899);
+  --text:#f1f0f7;
+  --muted:#6b6b8a;
+  --card:#16161f;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:40px;}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(10px);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-icon{width:36px;height:36px;background:var(--gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.back-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;}
+.credits-header{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
+.credits-badge{background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
+
+/* HERO */
+.hero{text-align:center;padding:32px 20px 24px;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:6px 14px;font-size:12px;color:#c4b5fd;margin-bottom:14px;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;line-height:1.2;margin-bottom:10px;}
+.hero h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{color:var(--muted);font-size:13px;line-height:1.6;max-width:320px;margin:0 auto;}
+
+/* MODE SELECTOR */
+.mode-section{padding:0 16px 20px;}
+.mode-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;text-align:center;}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mode-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:16px 12px;cursor:pointer;transition:all 0.2s;text-align:center;}
+.mode-card:hover{border-color:rgba(124,58,237,0.5);background:rgba(124,58,237,0.05);}
+.mode-card.active{border-color:var(--accent);background:rgba(124,58,237,0.1);}
+.mode-icon{font-size:28px;margin-bottom:8px;}
+.mode-title{font-size:13px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:4px;}
+.mode-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.mode-badge{display:inline-block;background:var(--gradient);color:white;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:6px;}
+
+/* MAIN CARD */
+.main-card{background:var(--card);border:1px solid var(--border);border-radius:20px;margin:0 16px 16px;overflow:hidden;}
+.card-section{padding:18px 20px;border-bottom:1px solid var(--border);}
+.card-section:last-child{border-bottom:none;}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.section-label span{font-size:15px;}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(124,58,237,0.05);}
+.upload-zone.has-image{border-style:solid;border-color:var(--accent);padding:0;}
+.upload-icon{font-size:32px;margin-bottom:8px;}
+.upload-title{font-size:14px;font-weight:600;margin-bottom:4px;}
+.upload-sub{font-size:12px;color:var(--muted);}
+.upload-img{width:100%;max-height:200px;object-fit:cover;border-radius:12px;display:none;}
+.upload-img.visible{display:block;}
+.change-img-btn{display:none;margin-top:8px;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:10px;font-size:12px;cursor:pointer;}
+#fileInput{position:absolute;opacity:0;width:0;height:0;}
+
+/* TEXT INPUT */
+.text-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;resize:none;height:90px;line-height:1.5;}
+.text-input:focus{outline:none;border-color:var(--accent);}
+.text-input::placeholder{color:var(--muted);}
+.char-count{text-align:right;font-size:11px;color:var(--muted);margin-top:4px;}
+
+/* DURATION SELECTOR */
+.duration-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.duration-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 8px;cursor:pointer;transition:all 0.2s;text-align:center;}
+.duration-card:hover{border-color:rgba(124,58,237,0.5);}
+.duration-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.1);}
+.duration-sec{font-size:18px;font-weight:800;font-family:'Syne',sans-serif;}
+.duration-label{font-size:10px;color:var(--muted);margin-top:2px;}
+.duration-credits{font-size:10px;color:#c4b5fd;margin-top:4px;font-weight:600;}
+
+/* UNIVERSE SELECTOR */
+.universe-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.universe-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:10px;}
+.universe-card:hover{border-color:rgba(124,58,237,0.5);}
+.universe-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.1);}
+.universe-emoji{font-size:24px;}
+.universe-info{}
+.universe-name{font-size:13px;font-weight:700;}
+.universe-desc{font-size:11px;color:var(--muted);}
+
+/* PRESET CHIPS */
+.preset-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.preset-chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all 0.2s;}
+.preset-chip:hover{border-color:var(--accent);color:#c4b5fd;}
+
+/* ACTOR TIP */
+.actor-tip{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:12px;margin-bottom:12px;font-size:12px;color:#c4b5fd;line-height:1.5;}
+.actor-tip strong{display:block;margin-bottom:4px;}
+
+/* GENERATE BTN */
+.generate-section{padding:16px;}
+.generate-btn{width:100%;padding:16px;background:var(--gradient);border:none;border-radius:14px;color:white;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;}
+.generate-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.cost-info{text-align:center;font-size:12px;color:var(--muted);margin-bottom:12px;}
+.cost-info span{color:#c4b5fd;font-weight:600;}
+
+/* PROGRESS */
+.progress-section{display:none;padding:28px 20px;text-align:center;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;}
+.progress-section.visible{display:block;}
+.progress-anim{width:60px;height:60px;margin:0 auto 16px;position:relative;}
+.progress-ring{width:60px;height:60px;animation:spin 1.5s linear infinite;}
+.progress-ring circle{stroke:url(#grad);stroke-width:4;fill:none;stroke-dasharray:130;stroke-dashoffset:30;stroke-linecap:round;}
+@keyframes spin{100%{transform:rotate(360deg);}}
+.progress-step{font-size:15px;font-weight:600;margin-bottom:6px;}
+.progress-sub{font-size:12px;color:var(--muted);margin-bottom:16px;}
+.progress-bar-wrap{background:var(--border);border-radius:10px;height:4px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--gradient);border-radius:10px;transition:width 0.8s ease;width:0%;}
+.progress-timer{font-size:11px;color:var(--muted);margin-top:10px;}
+
+/* RESULT */
+.result-section{display:none;padding:20px;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;}
+.result-section.visible{display:block;}
+.result-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:14px;text-align:center;}
+.result-media{width:100%;border-radius:14px;background:#000;}
+.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.result-btn{padding:12px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;border:none;}
+.result-btn.primary{background:var(--gradient);color:white;}
+.result-btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);}
+.new-btn{width:100%;margin-top:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e1e2e;border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:12px;font-size:13px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;max-width:90vw;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:var(--accent);}
+.toast.error{border-color:#ef4444;color:#fca5a5;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- HEADER -->
+<div class="header">
+  <a href="/" class="logo">
+    <div class="logo-icon">🎬</div>
+    <span class="logo-text">Limineo Studio</span>
+  </a>
+  <a href="/" class="back-btn">← Retour</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">✨ Kling 3.0 — Cinéma IA</div>
+  <h1>Crée des <span>vidéos</span> avec l'IA</h1>
+  <p>Images, vidéos cinématiques et même toi comme acteur principal — tout en quelques secondes.</p>
+</div>
+
+<!-- MODE SELECTOR -->
+<div class="mode-section">
+  <div class="mode-label">Choisis ton mode de création</div>
+  <div class="mode-grid">
+    <div class="mode-card active" onclick="setMode('image')" id="mode-image">
+      <div class="mode-icon">🖼️</div>
+      <div class="mode-title">Image IA</div>
+      <div class="mode-desc">Génère une image depuis un prompt</div>
+      <div class="mode-badge">1 crédit</div>
+    </div>
+    <div class="mode-card" onclick="setMode('video')" id="mode-video">
+      <div class="mode-icon">🎬</div>
+      <div class="mode-title">Vidéo IA</div>
+      <div class="mode-desc">Crée une vidéo cinématique</div>
+      <div class="mode-badge">5-15 crédits</div>
+    </div>
+    <div class="mode-card" onclick="setMode('img2video')" id="mode-img2video">
+      <div class="mode-icon">🖼️➡️🎬</div>
+      <div class="mode-title">Image → Vidéo</div>
+      <div class="mode-desc">Anime une image existante</div>
+      <div class="mode-badge">5-15 crédits</div>
+    </div>
+    <div class="mode-card" onclick="setMode('actor')" id="mode-actor">
+      <div class="mode-icon">🎭</div>
+      <div class="mode-title">Toi dans un film</div>
+      <div class="mode-desc">Ta photo → acteur principal</div>
+      <div class="mode-badge">🔥 NOUVEAU</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CARD -->
+<div class="main-card" id="mainCard">
+
+  <!-- PHOTO UPLOAD (img2video + actor) -->
+  <div class="card-section" id="uploadSection" style="display:none;">
+    <div class="section-label" id="uploadLabel"><span>📸</span> Ta photo</div>
+    <div id="actorTip" class="actor-tip" style="display:none;">
+      <strong>📌 Conseils pour un meilleur résultat :</strong>
+      Photo de face, corps entier ou buste visible, fond simple, bonne luminosité.
+    </div>
+    <div class="upload-zone" id="uploadZone" onclick="triggerUpload()">
+      <div id="uploadPlaceholder">
+        <div class="upload-icon">📷</div>
+        <div class="upload-title">Appuie pour choisir une photo</div>
+        <div class="upload-sub">JPG, PNG — max 10MB</div>
+      </div>
+      <img id="uploadedImg" class="upload-img" alt="Photo uploadée"/>
+      <input type="file" id="fileInput" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;"/>
+    </div>
+    <button class="change-img-btn" id="changeImgBtn" onclick="document.getElementById('fileInput').click()">✎ Changer la photo</button>
+  </div>
+
+  <!-- UNIVERSE (actor only) -->
+  <div class="card-section" id="universeSection" style="display:none;">
+    <div class="section-label"><span>🎬</span> Univers du film</div>
+    <div class="universe-grid">
+      <div class="universe-card selected" onclick="selectUniverse(this,'action')" id="uni-action">
+        <div class="universe-emoji">💥</div>
+        <div class="universe-info">
+          <div class="universe-name">Action</div>
+          <div class="universe-desc">Explosions, poursuites</div>
+        </div>
+      </div>
+      <div class="universe-card" onclick="selectUniverse(this,'scifi')" id="uni-scifi">
+        <div class="universe-emoji">🚀</div>
+        <div class="universe-info">
+          <div class="universe-name">Sci-Fi</div>
+          <div class="universe-desc">Espace, futur</div>
+        </div>
+      </div>
+      <div class="universe-card" onclick="selectUniverse(this,'fantasy')" id="uni-fantasy">
+        <div class="universe-emoji">⚔️</div>
+        <div class="universe-info">
+          <div class="universe-name">Fantasy</div>
+          <div class="universe-desc">Dragons, magie</div>
+        </div>
+      </div>
+      <div class="universe-card" onclick="selectUniverse(this,'thriller')" id="uni-thriller">
+        <div class="universe-emoji">🕵️</div>
+        <div class="universe-info">
+          <div class="universe-name">Thriller</div>
+          <div class="universe-desc">Espion, mystère</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMPT (image, video, img2video) -->
+  <div class="card-section" id="promptSection">
+    <div class="section-label"><span>✍️</span> Décris ta création</div>
+    <textarea class="text-input" id="promptText" placeholder="Ex: Un astronaute marchant sur Mars au coucher du soleil, lumière dramatique..." maxlength="500" oninput="updateCount()"></textarea>
+    <div class="char-count"><span id="charCount">0</span>/500</div>
+    <div class="preset-chips" id="presetChips"></div>
+  </div>
+
+  <!-- DURATION (video, img2video, actor) -->
+  <div class="card-section" id="durationSection" style="display:none;">
+    <div class="section-label"><span>⏱️</span> Durée de la vidéo</div>
+    <div class="duration-grid">
+      <div class="duration-card selected" onclick="selectDuration(this, 5)" id="dur-5">
+        <div class="duration-sec">5s</div>
+        <div class="duration-label">Rapide</div>
+        <div class="duration-credits" id="dur-5-credits">6 crédits</div>
+      </div>
+      <div class="duration-card" onclick="selectDuration(this, 10)" id="dur-10">
+        <div class="duration-sec">10s</div>
+        <div class="duration-label">Standard</div>
+        <div class="duration-credits" id="dur-10-credits">12 crédits</div>
+      </div>
+      <div class="duration-card" onclick="selectDuration(this, 15)" id="dur-15">
+        <div class="duration-sec">15s</div>
+        <div class="duration-label">Cinéma</div>
+        <div class="duration-credits" id="dur-15-credits">18 crédits</div>
+      </div>
+    </div>
+    <!-- AUDIO TOGGLE -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:10px 12px;background:var(--surface);border-radius:12px;border:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span id="audioIcon" style="font-size:18px;">🔊</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;" id="audioLabel">Son natif activé</div>
+          <div style="font-size:11px;color:var(--muted);" id="audioSub">Bruitages, ambiance, effets sonores</div>
+        </div>
+      </div>
+      <button onclick="toggleAudio()" id="audioToggleBtn" style="background:none;border:none;cursor:pointer;font-size:22px;padding:4px;opacity:0.4;transition:opacity 0.2s;" title="Désactiver le son">🔇</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- GENERATE -->
+<div class="generate-section" id="generateSection">
+  <div class="cost-info" id="costInfo">⚡ Coût : <span id="costDisplay">1 crédit</span></div>
+  <button class="generate-btn" id="generateBtn" onclick="generate()">
+    <span id="generateBtnIcon">🖼️</span>
+    <span id="generateBtnText">Générer l'image</span>
+  </button>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-section" id="progressSection">
+  <div class="progress-anim">
+    <svg class="progress-ring" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="26"/>
+    </svg>
+  </div>
+  <div class="progress-step" id="progressStep">Initialisation...</div>
+  <div class="progress-sub" id="progressSub">Kling 3.0 • Chargement</div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-timer" id="progressTimer"></div>
+</div>
+
+<!-- RESULT -->
+<div class="result-section" id="resultSection">
+  <div class="result-title" id="resultTitle">🎉 C'est prêt !</div>
+  <img id="resultImage" class="result-media" style="display:none;" alt="Image générée"/>
+  <video id="resultVideo" class="result-media" style="display:none;" controls autoplay loop></video>
+  <div class="result-actions">
+    <button class="result-btn primary" onclick="downloadResult()">⬇ Télécharger</button>
+    <button class="result-btn secondary" onclick="shareResult()">🔗 Partager</button>
+  </div>
+  <button class="new-btn" onclick="resetStudio()">+ Nouvelle création</button>
+</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let currentMode = 'image';
+let currentDuration = 5;
+let currentUniverse = 'action';
+let withAudio = true;
+let uploadedImageFile = null;
+let resultUrl = null;
+let pollInterval = null;
+let timerInterval = null;
+let elapsedSeconds = 0;
+
+// userId depuis localStorage (même logique que ton app)
+const userId = localStorage.getItem('userId') || 'demo-user';
+
+// ─── PRESETS par mode ─────────────────────────────────────────────────────────
+const PRESETS = {
+  image: ['🌅 Coucher de soleil', '🏙️ Ville futuriste', '🌊 Océan tempête', '🌌 Galaxie', '🦁 Lion majestueux'],
+  video: ['🚗 Course poursuite', '🌋 Éruption volcanique', '🌊 Vagues géantes', '🚀 Décollage fusée', '⚡ Orage dramatique'],
+  img2video: ['🌬️ Vent dans les cheveux', '👁️ Clignement des yeux', '🔥 Flammes autour', '💫 Lumière magique', '🌧️ Pluie légère'],
+  actor: [], // pas de preset texte pour actor
+};
+
+const PRESET_TEXTS = {
+  '🌅 Coucher de soleil': 'Un coucher de soleil épique sur les montagnes, ciel orange et violet, lumière dorée, 4K cinématique',
+  '🏙️ Ville futuriste': 'Une mégalopole futuriste de nuit, néons bleus et violets, voitures volantes, Blade Runner style',
+  '🌊 Océan tempête': 'Un océan déchaîné sous une tempête, vagues de 20 mètres, éclairs, dramatique et cinématique',
+  '🌌 Galaxie': 'Une galaxie spirale vue depuis l espace, nébuleuse colorée, étoiles brillantes, ultra réaliste 4K',
+  '🦁 Lion majestueux': 'Un lion roi sur un rocher au coucher du soleil, crinière au vent, regard puissant, cinématique',
+  '🚗 Course poursuite': 'Course poursuite épique dans les rues d une ville la nuit, voitures de sport, dérapages, explosion',
+  '🌋 Éruption volcanique': 'Éruption volcanique massive, lave en fusion, ciel rouge, dramatique et épique, cinématique 4K',
+  '🌊 Vagues géantes': 'Vagues géantes de 30 mètres s écrasant sur des falaises, spray d eau, lumière dramatique',
+  '🚀 Décollage fusée': 'Décollage d une fusée depuis une base spatiale, flammes et fumée, vibrations, caméra basse',
+  '⚡ Orage dramatique': 'Orage violent au-dessus d une ville, éclairs multiplex, pluie torrentielle, cinématique',
+  '🌬️ Vent dans les cheveux': 'Animate with gentle wind effect, hair flowing naturally, soft light, smooth motion',
+  '👁️ Clignement des yeux': 'Subtle eye blink and breathing motion, realistic and natural, cinematic close-up',
+  '🔥 Flammes autour': 'Fire and flames appear around the subject, epic dramatic effect, cinematic slow-motion',
+  '💫 Lumière magique': 'Magical golden light particles swirling around, mystical glow effect, cinematic',
+  '🌧️ Pluie légère': 'Light rain falling, subject stays still, moody atmospheric, cinematic slow motion',
+};
+
+// ─── MODE ─────────────────────────────────────────────────────────────────────
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('mode-' + mode).classList.add('active');
+
+  // Upload zone
+  const uploadSection = document.getElementById('uploadSection');
+  const uploadLabel = document.getElementById('uploadLabel');
+  const actorTip = document.getElementById('actorTip');
+  const universeSection = document.getElementById('universeSection');
+  const promptSection = document.getElementById('promptSection');
+  const durationSection = document.getElementById('durationSection');
+
+  uploadSection.style.display = (mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
+  universeSection.style.display = mode === 'actor' ? 'block' : 'none';
+  actorTip.style.display = mode === 'actor' ? 'block' : 'none';
+  promptSection.style.display = mode === 'actor' ? 'none' : 'block';
+  durationSection.style.display = (mode === 'video' || mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
+
+  if (mode === 'actor') {
+    uploadLabel.innerHTML = '<span>📸</span> Ta photo (tu seras l\'acteur)';
+  } else {
+    uploadLabel.innerHTML = '<span>📸</span> Ton image à animer';
+  }
+
+  // Presets
+  updatePresets();
+  // Bouton
+  updateGenerateBtn();
+  // Coût
+  updateCost();
+}
+
+function updatePresets() {
+  const chips = document.getElementById('presetChips');
+  const presets = PRESETS[currentMode] || [];
+  chips.innerHTML = presets.map(p => `<div class="preset-chip" onclick="usePreset('${p}')">${p}</div>`).join('');
+}
+
+function usePreset(label) {
+  const text = PRESET_TEXTS[label] || label;
+  document.getElementById('promptText').value = text;
+  updateCount();
+}
+
+function updateGenerateBtn() {
+  const icons = { image: '🖼️', video: '🎬', img2video: '🎬', actor: '🎭' };
+  const labels = { image: 'Générer l\'image', video: 'Générer la vidéo', img2video: 'Animer l\'image', actor: 'Me mettre dans le film !' };
+  document.getElementById('generateBtnIcon').textContent = icons[currentMode];
+  document.getElementById('generateBtnText').textContent = labels[currentMode];
+}
+
+function updateCost() {
+  let cost = 1;
+  if (currentMode === 'video' || currentMode === 'img2video' || currentMode === 'actor') {
+    cost = currentDuration;
+    if (withAudio) cost = Math.ceil(cost * 1.2);
+  }
+  document.getElementById('costDisplay').textContent = cost + ' crédit' + (cost > 1 ? 's' : '');
+}
+
+// ─── AUDIO TOGGLE ─────────────────────────────────────────────────────────────
+function toggleAudio() {
+  withAudio = !withAudio;
+  const btn = document.getElementById('audioToggleBtn');
+  const icon = document.getElementById('audioIcon');
+  const label = document.getElementById('audioLabel');
+  const sub = document.getElementById('audioSub');
+  if (withAudio) {
+    btn.style.opacity = '0.4';
+    icon.textContent = '🔊';
+    label.textContent = 'Son natif activé';
+    sub.textContent = 'Bruitages, ambiance, effets sonores';
+  } else {
+    btn.style.opacity = '1';
+    icon.textContent = '🔇';
+    label.textContent = 'Son désactivé';
+    sub.textContent = 'Vidéo muette — moins de crédits';
+  }
+  updateCost();
+  updateDurationCredits();
+}
+
+function updateDurationCredits() {
+  const costs = withAudio
+    ? { 5: '6 crédits', 10: '12 crédits', 15: '18 crédits' }
+    : { 5: '5 crédits', 10: '10 crédits', 15: '15 crédits' };
+  document.getElementById('dur-5-credits').textContent = costs[5];
+  document.getElementById('dur-10-credits').textContent = costs[10];
+  document.getElementById('dur-15-credits').textContent = costs[15];
+}
+
+// ─── DURATION ─────────────────────────────────────────────────────────────────
+function selectDuration(el, sec) {
+  document.querySelectorAll('.duration-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentDuration = sec;
+  updateCost();
+}
+
+// ─── UNIVERSE ─────────────────────────────────────────────────────────────────
+function selectUniverse(el, universe) {
+  document.querySelectorAll('.universe-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentUniverse = universe;
+}
+
+// ─── UPLOAD ───────────────────────────────────────────────────────────────────
+function triggerUpload() { document.getElementById('fileInput').click(); }
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  uploadedImageFile = file;
+  const url = URL.createObjectURL(file);
+  const img = document.getElementById('uploadedImg');
+  img.src = url;
+  img.classList.add('visible');
+  document.getElementById('uploadPlaceholder').style.display = 'none';
+  document.getElementById('changeImgBtn').style.display = 'block';
+  document.getElementById('uploadZone').classList.add('has-image');
+  showToast('Photo choisie ✓', 'success');
+});
+
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('fileInput').files = dt.files;
+    document.getElementById('fileInput').dispatchEvent(new Event('change'));
+  }
+});
+
+// ─── CHAR COUNT ───────────────────────────────────────────────────────────────
+function updateCount() {
+  document.getElementById('charCount').textContent = document.getElementById('promptText').value.length;
+}
+
+// ─── GENERATE ─────────────────────────────────────────────────────────────────
+async function generate() {
+  const prompt = document.getElementById('promptText').value.trim();
+
+  if (currentMode !== 'actor' && !prompt) {
+    showToast('Décris ce que tu veux créer !', 'error'); return;
+  }
+  if ((currentMode === 'img2video' || currentMode === 'actor') && !uploadedImageFile) {
+    showToast('Upload une photo d\'abord !', 'error');
+    document.getElementById('uploadZone').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+
+  // Show progress
+  document.getElementById('generateSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('resultSection').classList.remove('visible');
+  document.getElementById('progressSection').classList.add('visible');
+  document.getElementById('progressBar').style.width = '0%';
+
+  startTimer();
+
+  const progressSteps = {
+    image:    [{text:'Analyse du prompt...', sub:'Flux Schnell • préparation', pct:30}, {text:'Génération de l\'image...', sub:'Flux Schnell • rendu IA', pct:70}, {text:'Finalisation...', sub:'Presque prêt !', pct:90}],
+    video:    [{text:'Envoi vers Kling 3.0...', sub:'File d\'attente • quelques secondes', pct:15}, {text:'Génération vidéo en cours...', sub:`Kling 3.0 Pro • ${currentDuration}s de vidéo`, pct:40}, {text:'Rendu cinématique...', sub:'Patience, la magie opère ✨', pct:70}, {text:'Finalisation...', sub:'Encore quelques instants...', pct:85}],
+    img2video:[{text:'Upload de l\'image...', sub:'fal.ai • préparation', pct:15}, {text:'Animation en cours...', sub:`Kling 3.0 Pro • ${currentDuration}s`, pct:40}, {text:'Rendu vidéo...', sub:'Kling 3.0 • cinématique', pct:70}, {text:'Finalisation...', sub:'Presque prêt !', pct:85}],
+    actor:    [{text:'Upload de ta photo...', sub:'Préparation • acteur principal', pct:15}, {text:'Tu entres dans le film...', sub:`Kling 3.0 • univers ${currentUniverse}`, pct:35}, {text:'Génération cinématique...', sub:'Magie en cours ✨', pct:60}, {text:'Montage final...', sub:'Encore quelques instants...', pct:80}],
+  };
+
+  animateSteps(progressSteps[currentMode] || progressSteps.image);
+
+  try {
+    // Préparer le body
+    const body = { type: currentMode, userId, prompt: prompt || ' ', duration: currentDuration, universe: currentUniverse, withAudio };
+
+    if (currentMode === 'img2video' || currentMode === 'actor') {
+      const base64 = await fileToBase64(uploadedImageFile);
+      body.imageBase64 = base64;
+      body.imageMimeType = uploadedImageFile.type;
+    }
+
+    const resp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Erreur serveur');
+
+    if (currentMode === 'image') {
+      // Résultat immédiat
+      stopTimer();
+      showResult('image', data.url);
+    } else {
+      // Mode async : polling
+      if (!data.request_id) throw new Error('Pas de request_id');
+      pollForResult(data.request_id);
+    }
+
+  } catch(e) {
+    stopProgress();
+    showToast(e.message || 'Erreur de génération', 'error');
+  }
+}
+
+// ─── POLLING ──────────────────────────────────────────────────────────────────
+function pollForResult(requestId) {
+  let attempts = 0;
+  const maxAttempts = 180; // 15 min max
+
+  pollInterval = setInterval(async () => {
+    attempts++;
+    if (attempts > maxAttempts) {
+      clearInterval(pollInterval);
+      stopProgress();
+      showToast('Timeout — réessaie', 'error');
+      return;
+    }
+
+    try {
+      const resp = await fetch(`/api/poll-fal?requestId=${requestId}`);
+      const data = await resp.json();
+
+      if (data.status === 'completed') {
+        clearInterval(pollInterval);
+        stopTimer();
+        const videoUrl = data.output?.video?.url || data.output?.video_url || data.output?.url;
+        if (videoUrl) {
+          showResult('video', videoUrl);
+        } else {
+          stopProgress();
+          showToast('Vidéo non trouvée dans la réponse', 'error');
+        }
+      } else if (data.status === 'failed') {
+        clearInterval(pollInterval);
+        stopProgress();
+        showToast('Génération échouée — réessaie', 'error');
+      }
+      // sinon on continue de poller (IN_QUEUE, IN_PROGRESS)
+    } catch(e) {
+      // Erreur réseau temporaire, on continue
+    }
+  }, 5000); // poll toutes les 5 secondes
+}
+
+// ─── RESULT ───────────────────────────────────────────────────────────────────
+function showResult(type, url) {
+  resultUrl = url;
+  document.getElementById('progressSection').classList.remove('visible');
+  document.getElementById('generateSection').style.display = 'none';
+
+  const resultSection = document.getElementById('resultSection');
+  const img = document.getElementById('resultImage');
+  const video = document.getElementById('resultVideo');
+
+  if (type === 'image') {
+    img.src = url;
+    img.style.display = 'block';
+    video.style.display = 'none';
+    document.getElementById('resultTitle').textContent = '🎉 Ton image est prête !';
+  } else {
+    video.src = url;
+    video.style.display = 'block';
+    img.style.display = 'none';
+    document.getElementById('resultTitle').textContent = '🎬 Ta vidéo est prête !';
+  }
+
+  resultSection.classList.add('visible');
+  resultSection.style.display = 'block';
+  showToast('Création terminée !', 'success');
+}
+
+// ─── PROGRESS HELPERS ─────────────────────────────────────────────────────────
+function animateSteps(steps) {
+  let i = 0;
+  const bar = document.getElementById('progressBar');
+  bar.style.width = '5%';
+  const interval = setInterval(() => {
+    if (i >= steps.length) { clearInterval(interval); return; }
+    document.getElementById('progressStep').textContent = steps[i].text;
+    document.getElementById('progressSub').textContent = steps[i].sub;
+    bar.style.width = steps[i].pct + '%';
+    i++;
+  }, currentMode === 'image' ? 800 : 4000);
+}
+
+function startTimer() {
+  elapsedSeconds = 0;
+  timerInterval = setInterval(() => {
+    elapsedSeconds++;
+    const m = Math.floor(elapsedSeconds / 60);
+    const s = elapsedSeconds % 60;
+    document.getElementById('progressTimer').textContent = `⏱ ${m > 0 ? m + 'min ' : ''}${s}s écoulées`;
+  }, 1000);
+}
+
+function stopTimer() { clearInterval(timerInterval); document.getElementById('progressTimer').textContent = ''; }
+
+function stopProgress() {
+  clearInterval(pollInterval);
+  stopTimer();
+  document.getElementById('progressSection').classList.remove('visible');
+  document.getElementById('generateSection').style.display = 'block';
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => res(reader.result);
+    reader.onerror = rej;
+    reader.readAsDataURL(file);
+  });
+}
+
+function downloadResult() {
+  if (!resultUrl) return;
+  const ext = currentMode === 'image' ? 'jpg' : 'mp4';
+  const a = document.createElement('a');
+  a.href = resultUrl;
+  a.download = `limineo-${currentMode}-${Date.now()}.${ext}`;
+  a.click();
+  showToast('Téléchargement démarré', 'success');
+}
+
+function shareResult() {
+  navigator.clipboard.writeText(resultUrl || window.location.href).catch(() => {});
+  showToast('Lien copié !', 'success');
+}
+
+function resetStudio() {
+  clearInterval(pollInterval);
+  stopTimer();
+  resultUrl = null;
+  document.getElementById('resultSection').classList.remove('visible');
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('progressSection').classList.remove('visible');
+  document.getElementById('generateSection').style.display = 'block';
+  document.getElementById('promptText').value = '';
+  updateCount();
+  setMode(currentMode);
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init
+setMode('image');
+</script>
+</body>
+</html>
