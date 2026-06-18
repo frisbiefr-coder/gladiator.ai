@@ -21,7 +21,6 @@
 }
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:40px;}
 
-/* HEADER */
 .header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(10px);}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
 .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
@@ -29,30 +28,17 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .logo-text span{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline;animation:letter-glow 3s ease-in-out infinite;}
 .logo-text span:nth-child(1){animation-delay:0s}.logo-text span:nth-child(2){animation-delay:0.08s}.logo-text span:nth-child(3){animation-delay:0.16s}.logo-text span:nth-child(4){animation-delay:0.24s}.logo-text span:nth-child(5){animation-delay:0.32s}.logo-text span:nth-child(6){animation-delay:0.40s}.logo-text span:nth-child(7){animation-delay:0.48s}.logo-text span:nth-child(8){animation-delay:0.56s}.logo-text span:nth-child(9){animation-delay:0.64s}.logo-text span:nth-child(10){animation-delay:0.72s}.logo-text span:nth-child(11){animation-delay:0.80s}.logo-text span:nth-child(12){animation-delay:0.88s}.logo-text span:nth-child(13){animation-delay:0.96s}
 @keyframes letter-glow{0%,100%{filter:brightness(1);}50%{filter:brightness(2) drop-shadow(0 0 6px #ec4899);}}
-@keyframes logo-glow{
-  0%,100%{filter:brightness(1);}
-  50%{filter:brightness(1.8) drop-shadow(0 0 5px #ec4899);}
-}
 .back-btn{background:rgba(29,111,242,0.12);border:1px solid rgba(29,111,242,0.3);color:#7eb8ff;padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;}
-.credits-header{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
-.credits-badge{background:rgba(29,111,242,0.2);border:1px solid rgba(29,111,242,0.3);color:#7eb8ff;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
 
-/* HERO */
 .hero{text-align:center;padding:32px 20px 24px;}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.15));border:1px solid transparent;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;margin-bottom:14px;position:relative;
-background-clip:padding-box;
--webkit-background-clip:padding-box;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.15));border:1px solid transparent;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;margin-bottom:14px;position:relative;background-clip:padding-box;-webkit-background-clip:padding-box;}
 .hero-badge::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1px;background:linear-gradient(135deg,#7c3aed,#06b6d4,#ec4899);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
 .hero-badge-text{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(14px, 4.2vw, 18px);line-height:1.3;margin-bottom:10px;text-align:center;}
 .hero h1 .word-glow{background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:word-glow-soft 3s ease-in-out infinite;}
-@keyframes word-glow-soft{
-  0%,100%{filter:brightness(1);}
-  50%{filter:brightness(2.0) drop-shadow(0 0 8px #7c3aed) drop-shadow(0 0 3px #06b6d4);}
-}
+@keyframes word-glow-soft{0%,100%{filter:brightness(1);}50%{filter:brightness(2.0) drop-shadow(0 0 8px #7c3aed) drop-shadow(0 0 3px #06b6d4);}}
 .hero p{color:var(--muted);font-size:13px;line-height:1.6;max-width:320px;margin:0 auto;}
 
-/* MODE SELECTOR */
 .mode-section{padding:0 16px 20px;}
 .mode-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;text-align:center;}
 .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -64,36 +50,29 @@ background-clip:padding-box;
 .mode-card-body{padding:10px 10px 12px;}
 .mode-icon{font-size:22px;margin-bottom:5px;}
 .mode-title{font-size:13px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:3px;}
-.mode-desc{display:none;}
 .mode-badge{display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85);font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:5px;}
 .mode-badge.gold{background:linear-gradient(135deg,#7c3aed,#ec4899);border:none;color:white;}
 
-/* MAIN CARD */
 .main-card{background:var(--card);border:1px solid var(--border);border-radius:20px;margin:0 16px 16px;overflow:hidden;}
 .card-section{padding:18px 20px;border-bottom:1px solid var(--border);}
 .card-section:last-child{border-bottom:none;}
 .section-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
 .section-label span{font-size:15px;}
 
-/* UPLOAD ZONE */
 .upload-zone{border:2px dashed var(--border);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
 .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(29,111,242,0.05);}
 .upload-zone.has-image{border-style:solid;border-color:var(--accent);padding:0;}
-.upload-icon{font-size:32px;margin-bottom:8px;}
 .upload-title{font-size:14px;font-weight:600;margin-bottom:4px;}
 .upload-sub{font-size:12px;color:var(--muted);}
 .upload-img{width:100%;max-height:200px;object-fit:cover;border-radius:12px;display:none;}
 .upload-img.visible{display:block;}
 .change-img-btn{display:none;margin-top:8px;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:10px;font-size:12px;cursor:pointer;}
-#fileInput{position:absolute;opacity:0;width:0;height:0;}
 
-/* TEXT INPUT */
 .text-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;resize:none;height:90px;line-height:1.5;}
 .text-input:focus{outline:none;border-color:var(--accent);}
 .text-input::placeholder{color:rgba(255,255,255,0.75);}
 .char-count{text-align:right;font-size:11px;color:var(--muted);margin-top:4px;}
 
-/* DURATION SELECTOR */
 .duration-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .duration-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 8px;cursor:pointer;transition:all 0.2s;text-align:center;}
 .duration-card:hover{border-color:rgba(29,111,242,0.5);}
@@ -102,32 +81,23 @@ background-clip:padding-box;
 .duration-label{font-size:10px;color:var(--muted);margin-top:2px;}
 .duration-credits{font-size:10px;color:#7eb8ff;margin-top:4px;font-weight:600;}
 
-/* UNIVERSE CHIPS */
 .universe-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:7px 13px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;color:var(--muted);}
 .universe-chip:hover{border-color:rgba(29,111,242,0.5);color:var(--text);}
 .universe-chip.selected{border-color:var(--accent);background:rgba(29,111,242,0.15);color:#7eb8ff;}
-.universe-emoji{font-size:24px;}
-.universe-info{}
-.universe-name{font-size:13px;font-weight:700;}
-.universe-desc{font-size:11px;color:var(--muted);}
 
-/* PRESET CHIPS */
 .preset-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
 .preset-chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all 0.2s;}
 .preset-chip:hover{border-color:var(--accent);color:#7eb8ff;}
 
-/* ACTOR TIP */
 .actor-tip{background:rgba(29,111,242,0.08);border:1px solid rgba(29,111,242,0.2);border-radius:12px;padding:12px;margin-bottom:12px;font-size:12px;color:#7eb8ff;line-height:1.5;}
 .actor-tip strong{display:block;margin-bottom:4px;}
 
-/* GENERATE BTN */
 .generate-section{padding:16px;}
 .generate-btn{width:100%;padding:16px;background:linear-gradient(135deg,#7c3aed,#ec4899);border:none;border-radius:14px;color:white;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;}
 .generate-btn:disabled{opacity:0.5;cursor:not-allowed;}
 .cost-info{text-align:center;font-size:12px;color:var(--muted);margin-bottom:12px;}
 .cost-info span{color:#7eb8ff;font-weight:600;}
 
-/* PROGRESS */
 .progress-section{display:none;padding:28px 20px;text-align:center;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;}
 .progress-section.visible{display:block;}
 .progress-anim{width:60px;height:60px;margin:0 auto 16px;position:relative;}
@@ -140,7 +110,6 @@ background-clip:padding-box;
 .progress-bar{height:100%;background:var(--gradient);border-radius:10px;transition:width 0.8s ease;width:0%;}
 .progress-timer{font-size:11px;color:var(--muted);margin-top:10px;}
 
-/* RESULT */
 .result-section{display:none;padding:20px;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;}
 .result-section.visible{display:block;}
 .result-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:14px;text-align:center;}
@@ -151,7 +120,9 @@ background-clip:padding-box;
 .result-btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);}
 .new-btn{width:100%;margin-top:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;}
 
-/* TOAST */
+.saved-badge{display:none;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:12px;color:#34d399;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);border-radius:10px;padding:8px;}
+.saved-badge.visible{display:flex;}
+
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e1e2e;border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:12px;font-size:13px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;max-width:90vw;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.success{border-color:var(--accent);}
@@ -191,8 +162,6 @@ background-clip:padding-box;
 <div class="mode-section">
   <div class="mode-label">Choisis ton mode de création</div>
   <div class="mode-grid">
-
-    <!-- IMAGE IA -->
     <div class="mode-card active" onclick="setMode('image')" id="mode-image">
       <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
         <img class="mode-preview" src="https://picsum.photos/seed/galaxy/300/90" alt="Image IA preview" onerror="this.style.display='none'"/>
@@ -201,72 +170,50 @@ background-clip:padding-box;
       <div class="mode-card-body">
         <div class="mode-icon">🖼️</div>
         <div class="mode-title">Image IA</div>
-        <div class="mode-desc">Génère une image depuis un prompt</div>
         <div class="mode-badge">1 crédit</div>
       </div>
     </div>
-
-    <!-- VIDÉO IA -->
     <div class="mode-card" onclick="setMode('video')" id="mode-video">
       <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
-        <video class="mode-preview-video" autoplay muted loop playsinline
-          src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
-          poster="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=300&q=80">
-        </video>
+        <video class="mode-preview-video" autoplay muted loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4" poster="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=300&q=80"></video>
         <div style="position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,0.6);border-radius:6px;padding:2px 7px;font-size:9px;color:#7eb8ff;font-weight:700;">▶ VIDÉO</div>
       </div>
       <div class="mode-card-body">
         <div class="mode-icon">🎬</div>
         <div class="mode-title">Vidéo IA</div>
-        <div class="mode-desc">Crée une vidéo cinématique</div>
         <div class="mode-badge">5-15 crédits</div>
       </div>
     </div>
-
-    <!-- IMAGE → VIDÉO -->
     <div class="mode-card" onclick="setMode('img2video')" id="mode-img2video">
       <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;display:flex;">
         <img style="width:50%;height:100%;object-fit:cover;flex-shrink:0;" src="https://picsum.photos/seed/mountain/150/90" alt="before" onerror="this.style.display='none'"/>
         <div style="width:2px;background:var(--accent);flex-shrink:0;"></div>
-        <video style="width:50%;height:100%;object-fit:cover;flex-shrink:0;" autoplay muted loop playsinline
-          src="https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4"
-          poster="https://images.unsplash.com/photo-1431440869543-efaf3388c585?w=150&q=80">
-        </video>
+        <video style="width:50%;height:100%;object-fit:cover;flex-shrink:0;" autoplay muted loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4"></video>
         <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--accent);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;">▶</div>
       </div>
       <div class="mode-card-body">
         <div class="mode-icon">🖼️➡️🎬</div>
         <div class="mode-title">Image → Vidéo</div>
-        <div class="mode-desc">Anime une image existante</div>
         <div class="mode-badge">5-15 crédits</div>
       </div>
     </div>
-
-    <!-- TOI DANS UN FILM -->
     <div class="mode-card" onclick="setMode('actor')" id="mode-actor">
       <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
-        <video class="mode-preview-video" autoplay muted loop playsinline
-          src="https://assets.mixkit.co/videos/preview/mixkit-man-running-through-a-forest-32807-large.mp4"
-          poster="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&q=80">
-        </video>
+        <video class="mode-preview-video" autoplay muted loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-man-running-through-a-forest-32807-large.mp4"></video>
         <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(8,12,20,0.7));"></div>
-        <div style="position:absolute;bottom:5px;left:5px;background:linear-gradient(135deg,rgba(124,58,237,0.35),rgba(236,72,153,0.35));border:1px solid rgba(196,181,253,0.4);border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700;background-clip:padding-box;"><span style="background:linear-gradient(135deg,#c4b5fd,#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">🔥 NOUVEAU</span></div>
+        <div style="position:absolute;bottom:5px;left:5px;background:linear-gradient(135deg,rgba(124,58,237,0.35),rgba(236,72,153,0.35));border:1px solid rgba(196,181,253,0.4);border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700;"><span style="background:linear-gradient(135deg,#c4b5fd,#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">🔥 NOUVEAU</span></div>
       </div>
       <div class="mode-card-body">
         <div class="mode-icon">🎭</div>
         <div class="mode-title">Toi dans un film</div>
-        <div class="mode-desc">Ta photo → acteur principal</div>
         <div class="mode-badge gold">🔥 NOUVEAU</div>
       </div>
     </div>
-
   </div>
 </div>
 
 <!-- MAIN CARD -->
 <div class="main-card" id="mainCard">
-
-  <!-- PHOTO UPLOAD (img2video + actor) -->
   <div class="card-section" id="uploadSection" style="display:none;">
     <div class="section-label" id="uploadLabel"><span>📸</span> Ta photo</div>
     <div id="actorTip" class="actor-tip" style="display:none;">
@@ -275,7 +222,7 @@ background-clip:padding-box;
     </div>
     <div class="upload-zone" id="uploadZone" onclick="triggerUpload()">
       <div id="uploadPlaceholder">
-        <div style="margin-bottom:10px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="rgba(29,111,242,0.12)"/><path d="M20 26V18M20 18L16 22M20 18L24 22" stroke="url(#up)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 28h12" stroke="url(#up)" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="up" x1="14" y1="18" x2="26" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></div>
+        <div style="margin-bottom:10px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="rgba(29,111,242,0.12)"/><path d="M20 26V18M20 18L16 22M20 18L24 22" stroke="url(#up)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 28h12" stroke="url(#up)" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="up" x1="14" y1="18" x2="26" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></div>
         <div class="upload-title">Appuie pour choisir un fichier</div>
         <div class="upload-sub">Images : JPG, PNG, WEBP &nbsp;|&nbsp; Vidéos : MP4, MOV</div>
       </div>
@@ -285,26 +232,24 @@ background-clip:padding-box;
     <button class="change-img-btn" id="changeImgBtn" onclick="document.getElementById('fileInput').click()">✎ Changer le fichier</button>
   </div>
 
-  <!-- UNIVERSE (actor only) -->
   <div class="card-section" id="universeSection" style="display:none;">
     <div class="section-label"><span>🎬</span> Style de film</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
-      <div class="universe-chip selected" onclick="selectUniverse(this,'action')" id="uni-action">💥 Action</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'scifi')" id="uni-scifi">🚀 Sci-Fi</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'fantasy')" id="uni-fantasy">⚔️ Fantasy</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'thriller')" id="uni-thriller">🕵️ Thriller</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'horror')" id="uni-horror">👻 Horreur</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'romance')" id="uni-romance">💕 Romance</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'western')" id="uni-western">🤠 Western</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'superhero')" id="uni-superhero">🦸 Super-héros</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'war')" id="uni-war">🪖 Guerre</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'cyberpunk')" id="uni-cyberpunk">🤖 Cyberpunk</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'documentary')" id="uni-documentary">🎥 Documentaire</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'comedy')" id="uni-comedy">😂 Comédie</div>
+      <div class="universe-chip selected" onclick="selectUniverse(this,'action')">💥 Action</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'scifi')">🚀 Sci-Fi</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'fantasy')">⚔️ Fantasy</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'thriller')">🕵️ Thriller</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'horror')">👻 Horreur</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'romance')">💕 Romance</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'western')">🤠 Western</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'superhero')">🦸 Super-héros</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'war')">🪖 Guerre</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'cyberpunk')">🤖 Cyberpunk</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'documentary')">🎥 Documentaire</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'comedy')">😂 Comédie</div>
     </div>
   </div>
 
-  <!-- PROMPT (image, video, img2video) -->
   <div class="card-section" id="promptSection">
     <div class="section-label"><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="url(#pen)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="pen" x1="2" y1="2" x2="14" y2="14" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></span> Prompt</div>
     <textarea class="text-input" id="promptText" placeholder="Ex: Un astronaute marchant sur Mars au coucher du soleil, lumière dramatique..." maxlength="500" oninput="updateCount()"></textarea>
@@ -312,27 +257,25 @@ background-clip:padding-box;
     <div class="preset-chips" id="presetChips"></div>
   </div>
 
-  <!-- DURATION (video, img2video, actor) -->
   <div class="card-section" id="durationSection" style="display:none;">
     <div class="section-label"><span>⏱️</span> Durée de la vidéo</div>
     <div class="duration-grid">
-      <div class="duration-card selected" onclick="selectDuration(this, 5)" id="dur-5">
+      <div class="duration-card selected" onclick="selectDuration(this, 5)">
         <div class="duration-sec">5s</div>
         <div class="duration-label">Rapide</div>
         <div class="duration-credits" id="dur-5-credits">6 crédits</div>
       </div>
-      <div class="duration-card" onclick="selectDuration(this, 10)" id="dur-10">
+      <div class="duration-card" onclick="selectDuration(this, 10)">
         <div class="duration-sec">10s</div>
         <div class="duration-label">Standard</div>
         <div class="duration-credits" id="dur-10-credits">12 crédits</div>
       </div>
-      <div class="duration-card" onclick="selectDuration(this, 15)" id="dur-15">
+      <div class="duration-card" onclick="selectDuration(this, 15)">
         <div class="duration-sec">15s</div>
         <div class="duration-label">Cinéma</div>
         <div class="duration-credits" id="dur-15-credits">18 crédits</div>
       </div>
     </div>
-    <!-- AUDIO TOGGLE -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:10px 12px;background:var(--surface);border-radius:12px;border:1px solid var(--border);">
       <div style="display:flex;align-items:center;gap:8px;">
         <span id="audioIcon" style="font-size:18px;">🔊</span>
@@ -341,10 +284,9 @@ background-clip:padding-box;
           <div style="font-size:11px;color:var(--muted);" id="audioSub">Bruitages, ambiance, effets sonores</div>
         </div>
       </div>
-      <button onclick="toggleAudio()" id="audioToggleBtn" style="background:none;border:none;cursor:pointer;font-size:22px;padding:4px;opacity:0.4;transition:opacity 0.2s;" title="Désactiver le son">🔇</button>
+      <button onclick="toggleAudio()" id="audioToggleBtn" style="background:none;border:none;cursor:pointer;font-size:22px;padding:4px;opacity:0.4;transition:opacity 0.2s;">🔇</button>
     </div>
   </div>
-
 </div>
 
 <!-- GENERATE -->
@@ -378,10 +320,37 @@ background-clip:padding-box;
     <button class="result-btn primary" onclick="downloadResult()">⬇ Télécharger</button>
     <button class="result-btn secondary" onclick="shareResult()">🔗 Partager</button>
   </div>
+  <div class="saved-badge" id="savedBadge">✅ Sauvegardé dans Mes créations</div>
   <button class="new-btn" onclick="resetStudio()">+ Nouvelle création</button>
 </div>
 
 <script>
+// ─── SUPABASE CONFIG ──────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://sgrmbruwnswddulpdbic.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_NpMXZk_OYIV958R4OGHpBA_DjSN6Q7J';
+
+async function saveToSupabase(data) {
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/rest/v1/creations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(data)
+    });
+    if (resp.ok) {
+      document.getElementById('savedBadge').classList.add('visible');
+    } else {
+      console.error('Supabase save error:', await resp.text());
+    }
+  } catch(e) {
+    console.error('Supabase network error:', e);
+  }
+}
+
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let currentMode = 'image';
 let currentDuration = 5;
@@ -393,67 +362,38 @@ let pollInterval = null;
 let timerInterval = null;
 let elapsedSeconds = 0;
 
-// userId depuis localStorage (même logique que ton app)
 const savedUser = localStorage.getItem('limineo_user');
 const userId = savedUser ? JSON.parse(savedUser).id : 'demo-user';
 
-// ─── PRESETS par mode ─────────────────────────────────────────────────────────
-const PRESETS = {
-  image: [],
-  video: [],
-  img2video: [],
-  actor: [],
-};
-
+const PRESETS = { image: [], video: [], img2video: [], actor: [] };
 const PRESET_TEXTS = {
   '🌅 Coucher de soleil': 'Un coucher de soleil épique sur les montagnes, ciel orange et violet, lumière dorée, 4K cinématique',
   '🏙️ Ville futuriste': 'Une mégalopole futuriste de nuit, néons bleus et violets, voitures volantes, Blade Runner style',
   '🌊 Océan tempête': 'Un océan déchaîné sous une tempête, vagues de 20 mètres, éclairs, dramatique et cinématique',
-  '🌌 Galaxie': 'Une galaxie spirale vue depuis l espace, nébuleuse colorée, étoiles brillantes, ultra réaliste 4K',
-  '🦁 Lion majestueux': 'Un lion roi sur un rocher au coucher du soleil, crinière au vent, regard puissant, cinématique',
-  '🚗 Course poursuite': 'Course poursuite épique dans les rues d une ville la nuit, voitures de sport, dérapages, explosion',
-  '🌋 Éruption volcanique': 'Éruption volcanique massive, lave en fusion, ciel rouge, dramatique et épique, cinématique 4K',
-  '🌊 Vagues géantes': 'Vagues géantes de 30 mètres s écrasant sur des falaises, spray d eau, lumière dramatique',
-  '🚀 Décollage fusée': 'Décollage d une fusée depuis une base spatiale, flammes et fumée, vibrations, caméra basse',
-  '⚡ Orage dramatique': 'Orage violent au-dessus d une ville, éclairs multiplex, pluie torrentielle, cinématique',
-  '🌬️ Vent dans les cheveux': 'Animate with gentle wind effect, hair flowing naturally, soft light, smooth motion',
-  '👁️ Clignement des yeux': 'Subtle eye blink and breathing motion, realistic and natural, cinematic close-up',
-  '🔥 Flammes autour': 'Fire and flames appear around the subject, epic dramatic effect, cinematic slow-motion',
-  '💫 Lumière magique': 'Magical golden light particles swirling around, mystical glow effect, cinematic',
-  '🌧️ Pluie légère': 'Light rain falling, subject stays still, moody atmospheric, cinematic slow motion',
 };
 
-// ─── MODE ─────────────────────────────────────────────────────────────────────
 function setMode(mode) {
   currentMode = mode;
   document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
   document.getElementById('mode-' + mode).classList.add('active');
-
-  // Upload zone
   const uploadSection = document.getElementById('uploadSection');
   const uploadLabel = document.getElementById('uploadLabel');
   const actorTip = document.getElementById('actorTip');
   const universeSection = document.getElementById('universeSection');
   const promptSection = document.getElementById('promptSection');
   const durationSection = document.getElementById('durationSection');
-
   uploadSection.style.display = (mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
   universeSection.style.display = mode === 'actor' ? 'block' : 'none';
   actorTip.style.display = mode === 'actor' ? 'block' : 'none';
   promptSection.style.display = mode === 'actor' ? 'none' : 'block';
   durationSection.style.display = (mode === 'video' || mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
-
   if (mode === 'actor') {
     uploadLabel.innerHTML = '<span>📸</span> Ta photo (tu seras l\'acteur)';
   } else {
     uploadLabel.innerHTML = '<span>📸</span> Ton image à animer';
   }
-
-  // Presets
   updatePresets();
-  // Bouton
   updateGenerateBtn();
-  // Coût
   updateCost();
 }
 
@@ -485,7 +425,6 @@ function updateCost() {
   document.getElementById('costDisplay').textContent = cost + ' crédit' + (cost > 1 ? 's' : '');
 }
 
-// ─── AUDIO TOGGLE ─────────────────────────────────────────────────────────────
 function toggleAudio() {
   withAudio = !withAudio;
   const btn = document.getElementById('audioToggleBtn');
@@ -516,7 +455,6 @@ function updateDurationCredits() {
   document.getElementById('dur-15-credits').textContent = costs[15];
 }
 
-// ─── DURATION ─────────────────────────────────────────────────────────────────
 function selectDuration(el, sec) {
   document.querySelectorAll('.duration-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
@@ -524,14 +462,12 @@ function selectDuration(el, sec) {
   updateCost();
 }
 
-// ─── UNIVERSE ─────────────────────────────────────────────────────────────────
 function selectUniverse(el, universe) {
   document.querySelectorAll('.universe-chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   currentUniverse = universe;
 }
 
-// ─── UPLOAD ───────────────────────────────────────────────────────────────────
 function triggerUpload() { document.getElementById('fileInput').click(); }
 
 document.getElementById('fileInput').addEventListener('change', function(e) {
@@ -563,15 +499,12 @@ zone.addEventListener('drop', e => {
   }
 });
 
-// ─── CHAR COUNT ───────────────────────────────────────────────────────────────
 function updateCount() {
   document.getElementById('charCount').textContent = document.getElementById('promptText').value.length;
 }
 
-// ─── GENERATE ─────────────────────────────────────────────────────────────────
 async function generate() {
   const prompt = document.getElementById('promptText').value.trim();
-
   if (currentMode !== 'actor' && !prompt) {
     showToast('Décris ce que tu veux créer !', 'error'); return;
   }
@@ -581,10 +514,10 @@ async function generate() {
     return;
   }
 
-  // Show progress
   document.getElementById('generateSection').style.display = 'none';
   document.getElementById('resultSection').style.display = 'none';
   document.getElementById('resultSection').classList.remove('visible');
+  document.getElementById('savedBadge').classList.remove('visible');
   document.getElementById('progressSection').classList.add('visible');
   document.getElementById('progressBar').style.width = '0%';
 
@@ -600,9 +533,7 @@ async function generate() {
   animateSteps(progressSteps[currentMode] || progressSteps.image);
 
   try {
-    // Préparer le body
     const body = { type: currentMode, userId, prompt: prompt || ' ', duration: currentDuration, universe: currentUniverse, withAudio };
-
     if (currentMode === 'img2video' || currentMode === 'actor') {
       const base64 = await fileToBase64(uploadedImageFile);
       body.imageBase64 = base64;
@@ -619,26 +550,21 @@ async function generate() {
     if (!resp.ok) throw new Error(data.error || 'Erreur serveur');
 
     if (currentMode === 'image') {
-      // Résultat immédiat
       stopTimer();
-      showResult('image', data.url);
+      showResult('image', data.url, prompt);
     } else {
-      // Mode async : polling
       if (!data.request_id) throw new Error('Pas de request_id');
-      pollForResult(data.request_id);
+      pollForResult(data.request_id, prompt);
     }
-
   } catch(e) {
     stopProgress();
     showToast(e.message || 'Erreur de génération', 'error');
   }
 }
 
-// ─── POLLING ──────────────────────────────────────────────────────────────────
-function pollForResult(requestId) {
+function pollForResult(requestId, prompt) {
   let attempts = 0;
-  const maxAttempts = 180; // 15 min max
-
+  const maxAttempts = 180;
   pollInterval = setInterval(async () => {
     attempts++;
     if (attempts > maxAttempts) {
@@ -647,17 +573,15 @@ function pollForResult(requestId) {
       showToast('Timeout — réessaie', 'error');
       return;
     }
-
     try {
       const resp = await fetch(`/api/poll-fal?requestId=${requestId}`);
       const data = await resp.json();
-
       if (data.status === 'completed') {
         clearInterval(pollInterval);
         stopTimer();
         const videoUrl = data.output?.video?.url || data.output?.video_url || data.output?.url;
         if (videoUrl) {
-          showResult('video', videoUrl);
+          showResult('video', videoUrl, prompt);
         } else {
           stopProgress();
           showToast('Vidéo non trouvée dans la réponse', 'error');
@@ -667,15 +591,12 @@ function pollForResult(requestId) {
         stopProgress();
         showToast('Génération échouée — réessaie', 'error');
       }
-      // sinon on continue de poller (IN_QUEUE, IN_PROGRESS)
-    } catch(e) {
-      // Erreur réseau temporaire, on continue
-    }
-  }, 5000); // poll toutes les 5 secondes
+    } catch(e) {}
+  }, 5000);
 }
 
-// ─── RESULT ───────────────────────────────────────────────────────────────────
-function showResult(type, url) {
+// ─── RESULT + SAUVEGARDE SUPABASE ─────────────────────────────────────────────
+function showResult(type, url, prompt) {
   resultUrl = url;
   document.getElementById('progressSection').classList.remove('visible');
   document.getElementById('generateSection').style.display = 'none';
@@ -699,9 +620,20 @@ function showResult(type, url) {
   resultSection.classList.add('visible');
   resultSection.style.display = 'block';
   showToast('Création terminée !', 'success');
+
+  // ✅ Sauvegarde dans Supabase
+  saveToSupabase({
+    user_id: userId,
+    type: type,
+    mode: currentMode,
+    url: url,
+    prompt: prompt || null,
+    duration: (currentMode === 'video' || currentMode === 'img2video' || currentMode === 'actor') ? currentDuration : null,
+    universe: currentMode === 'actor' ? currentUniverse : null,
+    with_audio: (currentMode !== 'image') ? withAudio : null,
+  });
 }
 
-// ─── PROGRESS HELPERS ─────────────────────────────────────────────────────────
 function animateSteps(steps) {
   let i = 0;
   const bar = document.getElementById('progressBar');
@@ -734,7 +666,6 @@ function stopProgress() {
   document.getElementById('generateSection').style.display = 'block';
 }
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
 function fileToBase64(file) {
   return new Promise((res, rej) => {
     const reader = new FileReader();
@@ -765,6 +696,7 @@ function resetStudio() {
   resultUrl = null;
   document.getElementById('resultSection').classList.remove('visible');
   document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('savedBadge').classList.remove('visible');
   document.getElementById('progressSection').classList.remove('visible');
   document.getElementById('generateSection').style.display = 'block';
   document.getElementById('promptText').value = '';
@@ -779,7 +711,6 @@ function showToast(msg, type) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// Init
 setMode('image');
 </script>
 </body>
