@@ -393,10 +393,30 @@ let pollInterval = null;
 let timerInterval = null;
 let elapsedSeconds = 0;
 
-const _saved = localStorage.getItem('limineo_user');
-let _user = null;
-try { _user = _saved ? JSON.parse(_saved) : null; } catch(e) {}
-const userId = _user?.id || null;
+function resolveUserId() {
+  const _saved = localStorage.getItem('limineo_user');
+  if (!_saved) return null;
+
+  // Cas 1 : valeur brute (juste l'id en string, pas du JSON)
+  let _parsed = null;
+  try { _parsed = JSON.parse(_saved); } catch(e) { return _saved.trim() || null; }
+
+  if (!_parsed) return null;
+  if (typeof _parsed === 'string') return _parsed;
+
+  // Cas 2 : { id: ... } direct
+  if (_parsed.id) return _parsed.id;
+  // Cas 3 : session Supabase { user: { id: ... } }
+  if (_parsed.user?.id) return _parsed.user.id;
+  // Cas 4 : session Supabase imbriquée { session: { user: { id: ... } } }
+  if (_parsed.session?.user?.id) return _parsed.session.user.id;
+  // Cas 5 : { userId: ... }
+  if (_parsed.userId) return _parsed.userId;
+
+  return null;
+}
+
+const userId = resolveUserId();
 if (!userId) { window.location.href = '/'; }
 
 // ─── PRESETS par mode ─────────────────────────────────────────────────────────
