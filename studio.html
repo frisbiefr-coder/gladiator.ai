@@ -3,806 +3,987 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Limineo Studio — Création IA</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Limineo AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --bg:#080c14;
-  --surface:#0d1420;
-  --border:#1a2235;
-  --accent:#1d6ff2;
-  --gold:#f5c518;
-  --gradient:linear-gradient(135deg,#1d6ff2,#0ea5e9);
-  --gradient-gold:linear-gradient(135deg,#1d6ff2,#f5c518);
-  --text:#eef2ff;
-  --muted:#5a7096;
-  --card:#0f1825;
-}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:40px;}
-
-/* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(10px);}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;white-space:nowrap;}
-.logo-text span{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline;animation:letter-glow 3s ease-in-out infinite;}
-.logo-text span:nth-child(1){animation-delay:0s}.logo-text span:nth-child(2){animation-delay:0.08s}.logo-text span:nth-child(3){animation-delay:0.16s}.logo-text span:nth-child(4){animation-delay:0.24s}.logo-text span:nth-child(5){animation-delay:0.32s}.logo-text span:nth-child(6){animation-delay:0.40s}.logo-text span:nth-child(7){animation-delay:0.48s}.logo-text span:nth-child(8){animation-delay:0.56s}.logo-text span:nth-child(9){animation-delay:0.64s}.logo-text span:nth-child(10){animation-delay:0.72s}.logo-text span:nth-child(11){animation-delay:0.80s}.logo-text span:nth-child(12){animation-delay:0.88s}.logo-text span:nth-child(13){animation-delay:0.96s}
-@keyframes letter-glow{0%,100%{filter:brightness(1);}50%{filter:brightness(2) drop-shadow(0 0 6px #ec4899);}}
-@keyframes logo-glow{
+:root{--bg:#0a0a0f;--surface:#111118;--card:#16161f;--border:rgba(255,255,255,0.06);--accent:#7c3aed;--accent2:#ec4899;--text:#f0f0f8;--muted:#6b6b80;--gradient:linear-gradient(135deg,#7c3aed,#ec4899);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.lang-picker{position:relative;}
+.lang-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.5);border-radius:20px;padding:7px 12px;color:var(--text);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.lang-dropdown{display:none;position:fixed;top:62px;right:12px;background:#1a1a28;border:1px solid rgba(124,58,237,0.4);border-radius:18px;padding:8px;z-index:9999;min-width:200px;box-shadow:0 20px 60px rgba(0,0,0,0.8);}
+.lang-dropdown.open{display:block;}
+.lang-option{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:10px;cursor:pointer;font-size:14px;}
+.lang-option.active{background:rgba(124,58,237,0.2);color:#c4b5fd;font-weight:700;}
+.auth-btn{background:var(--gradient);border:none;color:white;border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;white-space:nowrap;}
+.credits-badge{background:rgba(124,58,237,0.2);border:1px solid var(--accent);border-radius:20px;padding:5px 10px;font-size:12px;color:#c4b5fd;display:none;white-space:nowrap;}
+.user-menu-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);border-radius:20px;padding:6px 12px;color:var(--text);font-size:13px;cursor:pointer;display:none;align-items:center;gap:6px;white-space:nowrap;}
+.user-dropdown{display:none;position:fixed;top:62px;right:12px;background:#1a1a28;border:1px solid rgba(124,58,237,0.4);border-radius:18px;padding:8px;z-index:9999;min-width:220px;box-shadow:0 20px 60px rgba(0,0,0,0.8);}
+.user-dropdown.open{display:block;}
+.user-dropdown-header{padding:12px 14px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.user-dropdown-email{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.user-dropdown-credits{font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.dropdown-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;cursor:pointer;font-size:14px;}
+.dropdown-item.danger{color:#fca5a5;}
+.banner{background:var(--gradient);text-align:center;padding:10px 16px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;margin-top:54px;}
+.banner button{background:#fff;color:#7c3aed;border:none;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+.banner .close{margin-left:auto;cursor:pointer;opacity:0.8;font-size:16px;}
+.tabs-wrapper{padding:0 20px;border-bottom:1px solid var(--border);background:var(--bg);display:flex;overflow-x:auto;scrollbar-width:none;margin-top:54px;}
+.tabs-wrapper::-webkit-scrollbar{display:none;}
+.tab{padding:14px 20px;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s;}
+.tab.active{color:var(--text);border-bottom-color:var(--accent);}
+.grid-container{padding:16px;display:flex;flex-direction:column;gap:6px;}
+.card{border-radius:12px;overflow:hidden;position:relative;cursor:pointer;background:var(--card);}
+.grid-row{display:flex;gap:6px;}
+.grid-row .card{flex:1;}
+.grid-row-center .card{width:100%;}
+.card video,.card img{width:100%;height:100%;object-fit:cover;display:block;}
+.card-sm{height:200px;}
+.card-full{height:220px;}
+.card .overlay{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;background:linear-gradient(transparent,rgba(0,0,0,0.75));display:flex;align-items:center;justify-content:space-between;}
+.card .likes{font-size:13px;color:rgba(255,255,255,0.9);}
+.card .badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 8px;font-size:10px;color:#fff;}
+.card .play-btn{width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;}
+.filter-bar{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.filter-btn{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;}
+.filter-btn.active{background:rgba(124,58,237,0.2);border-color:var(--accent);color:#c4b5fd;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;height:64px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--muted);font-size:10px;transition:color 0.2s;}
+.nav-item.active{color:var(--accent);}
+.nav-item svg{width:22px;height:22px;}
+.nav-create{width:48px;height:48px;background:var(--gradient);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 4px 20px rgba(124,58,237,0.5);cursor:pointer;}
+.spacer{height:80px;}
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:300;align-items:flex-end;justify-content:center;}
+.modal-backdrop.open{display:flex;}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;border:1px solid var(--border);width:100%;max-width:480px;padding:24px 20px 40px;max-height:90vh;overflow-y:auto;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-backdrop.open .modal{animation:slideUp 0.3s ease;}
+.handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+.modal h2{font-family:'Syne',sans-serif;font-size:20px;margin-bottom:6px;}
+.modal p{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.5;}
+.input-field{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:10px;}
+.input-field:focus{border-color:var(--accent);}
+.primary-btn{width:100%;background:var(--gradient);border:none;color:white;border-radius:14px;padding:14px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;}
+.primary-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.toggle-link{text-align:center;margin-top:14px;font-size:13px;color:var(--muted);cursor:pointer;}
+.toggle-link span{color:#c4b5fd;}
+.type-btns{display:flex;gap:8px;margin-bottom:16px;}
+.type-btn{flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;}
+.type-btn.active{background:rgba(124,58,237,0.15);border-color:var(--accent);color:var(--text);}
+.prompt-area{width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;resize:none;height:100px;outline:none;}
+.prompt-area:focus{border-color:var(--accent);}
+.credits-info{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:12px;padding:10px 14px;font-size:13px;color:#c4b5fd;margin-bottom:14px;}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all 0.2s;}
+.plan-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.15);box-shadow:0 0 0 2px var(--accent);}
+.plan-card.popular{border-color:rgba(236,72,153,0.3);}
+.plan-card.popular.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent);}
+.plan-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;}
+.plan-price{font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;}
+.plan-credits{color:var(--muted);font-size:13px;}
+.popular-badge{background:var(--gradient);color:white;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600;}
+.gen-status{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:12px;padding:14px;margin-top:14px;text-align:center;display:none;}
+.gen-status.show{display:block;}
+.spinner{width:32px;height:32px;border:3px solid rgba(124,58,237,0.3);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* LOGO ANIMATION */
+.logo-shine span{display:inline-block;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:letter-glow-ai 3s ease-in-out infinite;}
+.logo-shine span:nth-child(1){animation-delay:0s}
+.logo-shine span:nth-child(2){animation-delay:0.07s}
+.logo-shine span:nth-child(3){animation-delay:0.14s}
+.logo-shine span:nth-child(4){animation-delay:0.21s}
+.logo-shine span:nth-child(5){animation-delay:0.28s}
+.logo-shine span:nth-child(6){animation-delay:0.35s}
+.logo-shine span:nth-child(7){animation-delay:0.42s}
+.logo-shine span:nth-child(8){animation-delay:0.49s}
+.logo-shine span:nth-child(9){animation-delay:0.56s}
+.logo-shine span:nth-child(10){animation-delay:0.63s}
+@keyframes letter-glow-ai{
   0%,100%{filter:brightness(1);}
-  50%{filter:brightness(1.8) drop-shadow(0 0 5px #ec4899);}
+  50%{filter:brightness(1.6) drop-shadow(0 0 4px #ec4899);}
 }
-.back-btn{background:rgba(29,111,242,0.12);border:1px solid rgba(29,111,242,0.3);color:#7eb8ff;padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;}
-.credits-header{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
-.credits-badge{background:rgba(29,111,242,0.2);border:1px solid rgba(29,111,242,0.3);color:#7eb8ff;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
-
-/* HERO */
-.hero{text-align:center;padding:32px 20px 24px;}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.15));border:1px solid transparent;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;margin-bottom:14px;position:relative;
-background-clip:padding-box;
--webkit-background-clip:padding-box;}
-.hero-badge::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1px;background:linear-gradient(135deg,#7c3aed,#06b6d4,#ec4899);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
-.hero-badge-text{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:5vw;line-height:1.3;margin-bottom:10px;text-align:center;}
-.hero h1 .word-glow{background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:word-glow-soft 3s ease-in-out infinite;}
-@keyframes word-glow-soft{
-  0%,100%{filter:brightness(1);}
-  50%{filter:brightness(2.0) drop-shadow(0 0 8px #7c3aed) drop-shadow(0 0 3px #06b6d4);}
-}
-.hero p{color:var(--muted);font-size:13px;line-height:1.6;max-width:320px;margin:0 auto;}
-
-/* MODE SELECTOR */
-.mode-section{padding:0 16px 20px;}
-.mode-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;text-align:center;}
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.mode-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:0;cursor:pointer;transition:all 0.2s;text-align:center;overflow:hidden;}
-.mode-card:hover{border-color:rgba(148,197,255,0.35);background:rgba(148,197,255,0.03);}
-.mode-card.active{border-color:rgba(148,197,255,0.6);background:rgba(148,197,255,0.06);box-shadow:0 0 18px rgba(148,197,255,0.12);}
-.mode-preview{width:100%;height:90px;object-fit:cover;display:block;border-radius:0;}
-.mode-preview-video{width:100%;height:90px;object-fit:cover;display:block;border-radius:0;pointer-events:none;}
-.mode-card-body{padding:10px 10px 12px;}
-.mode-icon{font-size:22px;margin-bottom:5px;}
-.mode-title{font-size:13px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:3px;}
-.mode-desc{display:none;}
-.mode-badge{display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85);font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:5px;}
-.mode-badge.gold{background:linear-gradient(135deg,#7c3aed,#ec4899);border:none;color:white;}
-
-/* MAIN CARD */
-.main-card{background:var(--card);border:1px solid var(--border);border-radius:20px;margin:0 16px 16px;overflow:hidden;}
-.card-section{padding:18px 20px;border-bottom:1px solid var(--border);}
-.card-section:last-child{border-bottom:none;}
-.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
-.section-label span{font-size:15px;}
-
-/* UPLOAD ZONE */
-.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(29,111,242,0.05);}
-.upload-zone.has-image{border-style:solid;border-color:var(--accent);padding:0;}
-.upload-icon{font-size:32px;margin-bottom:8px;}
-.upload-title{font-size:14px;font-weight:600;margin-bottom:4px;}
-.upload-sub{font-size:12px;color:var(--muted);}
-.upload-img{width:100%;max-height:200px;object-fit:cover;border-radius:12px;display:none;}
-.upload-img.visible{display:block;}
-.change-img-btn{display:none;margin-top:8px;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:10px;font-size:12px;cursor:pointer;}
-#fileInput{position:absolute;opacity:0;width:0;height:0;}
-
-/* TEXT INPUT */
-.text-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;resize:none;height:90px;line-height:1.5;}
-.text-input:focus{outline:none;border-color:var(--accent);}
-.text-input::placeholder{color:rgba(255,255,255,0.75);}
-.char-count{text-align:right;font-size:11px;color:var(--muted);margin-top:4px;}
-
-/* DURATION SELECTOR */
-.duration-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.duration-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 8px;cursor:pointer;transition:all 0.2s;text-align:center;}
-.duration-card:hover{border-color:rgba(29,111,242,0.5);}
-.duration-card.selected{border-color:var(--accent);background:rgba(29,111,242,0.1);}
-.duration-sec{font-size:18px;font-weight:800;font-family:'Syne',sans-serif;}
-.duration-label{font-size:10px;color:var(--muted);margin-top:2px;}
-.duration-credits{font-size:10px;color:#7eb8ff;margin-top:4px;font-weight:600;}
-
-/* UNIVERSE CHIPS */
-.universe-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:7px 13px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;color:var(--muted);}
-.universe-chip:hover{border-color:rgba(29,111,242,0.5);color:var(--text);}
-.universe-chip.selected{border-color:var(--accent);background:rgba(29,111,242,0.15);color:#7eb8ff;}
-.universe-emoji{font-size:24px;}
-.universe-info{}
-.universe-name{font-size:13px;font-weight:700;}
-.universe-desc{font-size:11px;color:var(--muted);}
-
-/* PRESET CHIPS */
-.preset-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-.preset-chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all 0.2s;}
-.preset-chip:hover{border-color:var(--accent);color:#7eb8ff;}
-
-/* ACTOR TIP */
-.actor-tip{background:rgba(29,111,242,0.08);border:1px solid rgba(29,111,242,0.2);border-radius:12px;padding:12px;margin-bottom:12px;font-size:12px;color:#7eb8ff;line-height:1.5;}
-.actor-tip strong{display:block;margin-bottom:4px;}
-
-/* GENERATE BTN */
-.generate-section{padding:16px;}
-.generate-btn{width:100%;padding:16px;background:linear-gradient(135deg,#7c3aed,#ec4899);border:none;border-radius:14px;color:white;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;}
-.generate-btn:disabled{opacity:0.5;cursor:not-allowed;}
-.cost-info{text-align:center;font-size:12px;color:var(--muted);margin-bottom:12px;}
-.cost-info span{color:#7eb8ff;font-weight:600;}
-
-/* PROGRESS */
-.progress-section{display:none;padding:28px 20px;text-align:center;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;}
-.progress-section.visible{display:block;}
-.progress-anim{width:60px;height:60px;margin:0 auto 16px;position:relative;}
-.progress-ring{width:60px;height:60px;animation:spin 1.5s linear infinite;}
-.progress-ring circle{stroke:url(#grad);stroke-width:4;fill:none;stroke-dasharray:130;stroke-dashoffset:30;stroke-linecap:round;}
-@keyframes spin{100%{transform:rotate(360deg);}}
-.progress-step{font-size:15px;font-weight:600;margin-bottom:6px;}
-.progress-sub{font-size:12px;color:var(--muted);margin-bottom:16px;}
-.progress-bar-wrap{background:var(--border);border-radius:10px;height:4px;overflow:hidden;}
-.progress-bar{height:100%;background:var(--gradient);border-radius:10px;transition:width 0.8s ease;width:0%;}
-.progress-timer{font-size:11px;color:var(--muted);margin-top:10px;}
-
-/* RESULT */
-.result-section{display:none;padding:20px;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;}
-.result-section.visible{display:block;}
-.result-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:14px;text-align:center;}
-.result-media{width:100%;border-radius:14px;background:#000;}
-.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
-.result-btn{padding:12px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;border:none;}
-.result-btn.primary{background:var(--gradient);color:white;}
-.result-btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);}
-.new-btn{width:100%;margin-top:10px;padding:12px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:13px;cursor:pointer;}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1e1e2e;border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:12px;font-size:13px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;max-width:90vw;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.success{border-color:var(--accent);}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.3s;white-space:nowrap;}
+.toast.show{opacity:1;}
+.toast.success{border-color:#22c55e;color:#86efac;}
 .toast.error{border-color:#ef4444;color:#fca5a5;}
+.fullscreen-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:400;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.fullscreen-modal.open{display:flex;}
+.fullscreen-modal video,.fullscreen-modal img{max-width:95vw;max-height:82vh;border-radius:16px;object-fit:contain;}
+.fullscreen-close{position:absolute;top:20px;right:20px;color:white;font-size:28px;cursor:pointer;}
+.fullscreen-actions{display:flex;gap:12px;}
+.fs-action-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;border-radius:12px;padding:10px 20px;font-size:13px;cursor:pointer;}
+.lp-gallery-scroll::-webkit-scrollbar{display:none;}.lp-gcard{flex:0 0 160px;scroll-snap-align:start;border-radius:14px;overflow:hidden;position:relative;height:220px;background:#1a1a2e;}.lp-gcard.tall{flex:0 0 140px;height:240px;}.lp-gcard img{width:100%;height:100%;object-fit:cover;display:block;}.lp-gbadge{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:3px 9px;font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;letter-spacing:0.03em;}.img2vid-section{background:rgba(124,58,237,0.08);border:1px dashed rgba(124,58,237,0.4);border-radius:14px;padding:16px;margin-top:14px;}
+.upload-zone{border:2px dashed rgba(124,58,237,0.4);border-radius:12px;padding:20px;text-align:center;cursor:pointer;position:relative;}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-preview{width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover;display:none;}
+.modal-pricing-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px;}
+.modal-pricing-toggle-btn{flex:1;padding:8px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;}
+.modal-pricing-toggle-btn.active{background:var(--accent);color:white;}
+#landingPage{display:none;padding-top:54px;}
+#landingPage.show{display:block;}
+body.landing-mode .banner,body.landing-mode .tabs-wrapper,body.landing-mode #mainContent,body.landing-mode .spacer,body.landing-mode .bottom-nav{display:none !important;}
+.lp-hero{position:relative;display:flex;flex-direction:column;align-items:center;padding:40px 20px 30px;text-align:center;background:linear-gradient(160deg,#1a0533 0%,#0d0d1a 40%,#0a1628 100%);overflow:hidden;}.lp-hero-bg{position:absolute;inset:0;display:flex;gap:0;overflow:hidden;z-index:0;}.lp-hero-bg-item{flex:1;overflow:hidden;position:relative;}.lp-hero-bg-item img,.lp-hero-bg-item video{width:100%;height:100%;object-fit:cover;display:block;opacity:0.35;}.lp-hero-overlay{position:absolute;inset:0;background:linear-gradient(160deg,rgba(26,5,51,0.7) 0%,rgba(13,13,26,0.65) 40%,rgba(10,22,40,0.7) 100%);z-index:1;}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.15;pointer-events:none;z-index:2;}
+.orb-1{width:300px;height:300px;background:#7c3aed;top:-60px;left:-80px;}
+.orb-2{width:220px;height:220px;background:#ec4899;bottom:60px;right:-60px;}
+.lp-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.5);border-radius:30px;padding:6px 14px;font-size:11px;font-weight:600;color:#c4b5fd;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:18px;position:relative;z-index:3;}
+.eyebrow-dot{width:6px;height:6px;background:#7c3aed;border-radius:50%;}
+.lp-title{position:relative;z-index:3;font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;line-height:1.35;letter-spacing:0;margin-bottom:12px;position:relative;z-index:2;}
+.lp-title .grad{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.lp-subtitle{font-size:15px;color:rgba(240,240,248,0.85);max-width:340px;line-height:1.6;margin-bottom:28px;position:relative;z-index:3;}
+.lp-cta-group{display:flex;gap:10px;flex-direction:column;align-items:center;position:relative;z-index:3;}
+.btn-hero{background:var(--gradient);border:none;color:white;border-radius:14px;padding:14px 28px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:240px;box-shadow:0 8px 24px rgba(124,58,237,0.4);}
+.btn-ghost{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(240,240,248,0.7);border-radius:14px;padding:13px 28px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;width:240px;}
+.lp-stats{display:flex;justify-content:center;padding:20px 16px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.stat-item{flex:1;text-align:center;padding:0 8px;border-right:1px solid var(--border);}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+.lp-features{padding:40px 20px;}
+.section-label{font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin-bottom:8px;}
+.section-title{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;margin-bottom:16px;line-height:1.3;}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:12px;}
+.feature-icon{width:44px;height:44px;border-radius:12px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;}
+.feature-title{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;margin-bottom:6px;}
+.feature-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.lp-pricing{padding:0 20px 40px;}
+.pricing-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:20px;}
+.pricing-toggle-btn{flex:1;padding:8px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;}
+.pricing-toggle-btn.active{background:var(--accent);color:white;}
+.lp-plan-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:12px;position:relative;}
+.lp-plan-card.popular{border-color:var(--accent);}
+.popular-tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--gradient);color:white;border-radius:20px;padding:2px 14px;font-size:11px;font-weight:700;white-space:nowrap;}
+.lp-plan-name{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.lp-plan-price-wrap{display:flex;align-items:baseline;gap:4px;margin-bottom:4px;}
+.lp-plan-price{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.lp-plan-period{color:var(--muted);font-size:13px;}
+.lp-plan-desc{color:var(--muted);font-size:13px;margin-bottom:14px;}
+.lp-plan-features{list-style:none;margin-bottom:16px;}
+.lp-plan-features li{font-size:13px;padding:4px 0;display:flex;align-items:center;gap:8px;}
+.lp-plan-features li::before{content:'\2713';color:#22c55e;font-weight:700;}
+.lp-plan-btn{width:100%;padding:13px;border-radius:12px;border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;}
+.lp-plan-btn.filled{background:var(--gradient);color:white;}
+.lp-plan-btn.outlined{background:var(--gradient);color:white;border:none;}
+.lp-final-cta{margin:0 20px 48px;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px 24px;text-align:center;}
+.lp-final-cta h2{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;margin-bottom:10px;}
+.lp-final-cta p{color:var(--muted);font-size:14px;margin-bottom:24px;}
 </style>
 </head>
 <body>
 
+<div id="landingPage">
+  <section class="lp-hero">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div>
+    <div class="lp-eyebrow"><span class="eyebrow-dot"></span>IA Generation - Nouvelle Ere</div>
+    <div style="display:flex;gap:8px;width:100%;margin:16px 0 12px;position:relative;z-index:3;height:180px;">
+      <div style="flex:1;overflow:hidden;border-radius:14px;"><img src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/dd7d7ed852d15576.png" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;"></div>
+      <div style="flex:2;overflow:hidden;border-radius:14px;"><video src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_2.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;"></video></div>
+      <div style="flex:1;overflow:hidden;border-radius:14px;"><img src="https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fdf70ad5e98f691c.png" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;"></div>
+    </div>
+    <h1 class="lp-title">Creez des medias <span class="grad">extraordinaires</span> en quelques secondes</h1>
+    <p class="lp-subtitle">Transformez vos idees en images et videos epoustouflantes grace a l intelligence artificielle.</p>
+    <div style="width:100%;overflow:hidden;margin:16px 0;position:relative;z-index:2;">
+      <div id="autoScroll" style="display:flex;flex-direction:row;flex-wrap:nowrap;gap:10px;overflow-x:hidden;padding:4px 0 8px;width:max-content;">
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Portrait</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Animal</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Cinema</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Nature</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Portrait</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Animal</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Portrait</div></div>
+        <div style="flex:0 0 120px;border-radius:16px;overflow:hidden;position:relative;height:160px;"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=300&h=360&auto=format&fit=crop&q=80" style="width:100%;height:100%;object-fit:cover;display:block;"><div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.6);border-radius:20px;padding:2px 8px;font-size:9px;color:#fff;font-weight:600;">Animal</div></div>
+      </div>
+    </div>
+    <div class="lp-cta-group">
+      <button class="btn-hero" onclick="hideLanding();openAuth();">Commencer gratuitement</button>
+      <button class="btn-ghost" onclick="document.getElementById('lpPricing').scrollIntoView({behavior:'smooth'})">Voir les offres</button>
+    </div>
+  </section>
+  <div class="lp-stats">
+    <div class="stat-item"><div class="stat-num">50k+</div><div class="stat-label">Createurs</div></div>
+    <div class="stat-item"><div class="stat-num">2M+</div><div class="stat-label">Medias crees</div></div>
+    <div class="stat-item"><div class="stat-num">45s</div><div class="stat-label">Temps moyen</div></div>
+  </div>
+  <section class="lp-features">
+    <div class="section-label">Pourquoi Limineo AI</div>
+    <div class="section-title">Tout ce dont vous avez besoin</div>
+    <div class="feature-card"><div class="feature-icon">&#127912;</div><div class="feature-title">Images IA Ultra-realistes</div><div class="feature-desc">Generez des images de qualite professionnelle a partir d un simple texte.</div></div>
+    <div class="feature-card"><div class="feature-icon">&#127916;</div><div class="feature-title">Videos IA Cinematiques</div><div class="feature-desc">Donnez vie a vos idees avec des videos fluides et realistes.</div></div>
+    <div class="feature-card"><div class="feature-icon">&#128247;</div><div class="feature-title">Image vers Video</div><div class="feature-desc">Telechargez votre photo et transformez-la en video animee.</div></div>
+    <div class="feature-card"><div class="feature-icon">&#9889;</div><div class="feature-title">Resultats en quelques secondes</div><div class="feature-desc">Generation en 30 a 60 secondes. Pas d attente, juste de la creativite.</div></div>
+  </section>
+  <section class="lp-pricing" id="lpPricing">
+    <!-- LIMINEO STUDIO PROMO -->
+  <div style="margin:0 20px 32px;">
+    <a href="/studio.html" style="text-decoration:none;display:block;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.15));border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-20px;right:-20px;font-size:80px;opacity:0.1;">🎙</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#c4b5fd;margin-bottom:8px;">&#10024; Nouveau</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#f1f0f7;margin-bottom:6px;">Limineo Studio</div>
+      <div style="font-size:13px;color:#9998b8;margin-bottom:14px;">Donnez une voix IA a vos photos — animaux, personnages, creations</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#ec4899);color:white;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;">&#127908; Essayer Studio →</div>
+    </a>
+  </div>
+  <div class="section-label">Nos offres</div>
+    <div class="section-title">Choisissez votre formule</div>
+    <div class="pricing-toggle">
+      <button class="pricing-toggle-btn active" onclick="setPricingPeriod('monthly',this)">Mensuel</button>
+      <button class="pricing-toggle-btn" onclick="setPricingPeriod('yearly',this)">Annuel -10%</button>
+    </div>
+    <div id="lpPlansContainer"></div>
+  </section>
+  <div class="lp-final-cta">
+    <h2>Pret a creer ?</h2>
+    <p>Rejoignez des milliers de createurs qui utilisent deja Limineo AI</p>
+    <button class="btn-hero" style="margin:0 auto;" onclick="hideLanding();openAuth();">Creer un compte gratuit</button>
+    <p style="margin-top:14px;font-size:12px;">Aucune carte bancaire requise - 8 credits offerts a l inscription</p>
+  </div>
+</div>
+
+<nav>
+  <div class="logo" onclick="window.location.reload()">
+    <svg width="34" height="34" viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><rect width="36" height="36" rx="11" fill="url(#lg1)"/><path d="M10 9 L10 27 L20 27" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M25 8 L26.2 11.8 L30 13 L26.2 14.2 L25 18 L23.8 14.2 L20 13 L23.8 11.8 Z" fill="white" fill-opacity="0.95"/></svg>
+    <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;white-space:nowrap;" class="logo-shine"><span>L</span><span>i</span><span>m</span><span>i</span><span>n</span><span>e</span><span>o</span><span> </span><span>A</span><span>I</span></span>
+  </div>
+  <div class="nav-right">
+    <div class="credits-badge" id="creditsBadge">&#9889; <span id="creditsCount">0</span></div>
+    <div class="lang-picker" id="langPicker">
+      <button class="lang-btn" onclick="toggleLangDropdown(event)" id="langBtn">&#127467;&#127479; FR</button>
+      <div class="lang-dropdown" id="langDropdown">
+        <div class="lang-option active" onclick="setLang('fr')">&#127467;&#127479; Francais</div>
+        <div class="lang-option" onclick="setLang('en')">&#127468;&#127463; English</div>
+        <div class="lang-option" onclick="setLang('es')">&#127466;&#127480; Espanol</div>
+        <div class="lang-option" onclick="setLang('de')">&#127465;&#127466; Deutsch</div>
+        <div class="lang-option" onclick="setLang('pt')">&#127477;&#127481; Portugues</div>
+        <div class="lang-option" onclick="setLang('it')">&#127470;&#127481; Italiano</div>
+        <div class="lang-option" onclick="setLang('tr')">&#127481;&#127479; Turkce</div>
+      </div>
+    </div>
+    <button class="auth-btn" id="authBtn" onclick="openAuth()">Connexion</button>
+    <div style="position:relative;" id="userMenuWrap">
+      <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserDropdown(event)"><span id="userMenuName"></span> v</button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-dropdown-header">
+          <div class="user-dropdown-email" id="dropdownEmail"></div>
+          <div class="user-dropdown-credits">&#9889; <span id="dropdownCredits">0</span> credits</div>
+        </div>
+        <div class="dropdown-item" onclick="openPricing();closeUserDropdown();">&#9889; Acheter des credits</div>
+        <div class="dropdown-item danger" onclick="logout()">Se deconnecter</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="banner" id="banner">
+  <span>&#10024; Nouveau - Generez des videos et images IA reelles !</span>
+  <button onclick="openPricing()">Commencer</button>
+  <span class="close" onclick="document.getElementById('banner').style.display='none'">&#10005;</span>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tab active" onclick="setTab(this,'trending')">Tendances</div>
+  <div class="tab" onclick="setTab(this,'mine')">Mes creations</div>
+</div>
+
+<div id="mainContent">
+  <div class="filter-bar" id="filterBar" style="display:none;">
+    <button class="filter-btn active" onclick="filterMedia('all',this)">Tout</button>
+    <button class="filter-btn" onclick="filterMedia('video',this)">&#127916; Videos</button>
+    <button class="filter-btn" onclick="filterMedia('image',this)">&#128444; Images</button>
+  </div>
+  <div class="grid-container" id="grid"></div>
+</div>
+<div class="spacer"></div>
+
+<div class="bottom-nav">
+  <div class="nav-item active" id="navMine" onclick="switchNav('mine')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Mes medias</div>
+  <div class="nav-item" onclick="openCreate()"><div class="nav-create"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+  <div class="nav-item" id="navCredits" onclick="switchNav('credits')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Credits</div>
+  <a href="/studio.html" class="nav-item" style="text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>Studio</a>
+</div>
+
+<div class="modal-backdrop" id="authModal" onclick="closeOutside(event,'authModal')">
+  <div class="modal">
+    <div class="handle"></div>
+    <h2 id="authTitle">Connexion</h2>
+    <p id="authSubtitle">Connectez-vous pour creer des medias IA</p>
+    <input class="input-field" type="email" id="authEmail" placeholder="Votre email">
+    <input class="input-field" type="password" id="authPassword" placeholder="Mot de passe">
+    <button class="primary-btn" id="authSubmitBtn" onclick="handleAuth()">Se connecter</button>
+    <div class="toggle-link" onclick="toggleAuthMode()">Pas de compte ? <span>Creer un compte gratuit</span></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="createModal" onclick="closeOutside(event,'createModal')">
+  <div class="modal">
+    <div class="handle"></div>
+    <h2>Creer un media IA</h2>
+    <p>Decrivez ce que vous voulez generer</p>
+    <div class="type-btns">
+      <button class="type-btn active" onclick="setType(this,'image')">&#128444; Image</button>
+      <button class="type-btn" onclick="setType(this,'video')">&#127916; Video</button>
+      <button class="type-btn" onclick="setType(this,'img2video')">&#128247; Image-Video</button>
+    </div>
+    <div class="credits-info">&#9889; <span id="creditsInModal">0</span> credits - Image = 1 credit - Video = 5 credits</div>
+    <div id="promptSection"><textarea class="prompt-area" id="promptText" placeholder="Ex: Un lion majestueux au coucher du soleil..."></textarea></div>
+    <div class="img2vid-section" id="img2vidSection" style="display:none;">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">&#128247; Telechargez votre photo pour la transformer en video</p>
+      <div class="upload-zone">
+        <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+        <div id="uploadPlaceholder"><div style="font-size:28px;margin-bottom:8px;">&#128228;</div><div style="font-size:13px;color:var(--muted);">Appuyez pour choisir une photo</div></div>
+        <img id="uploadPreview" class="upload-preview">
+      </div>
+      <textarea class="prompt-area" id="img2vidPrompt" placeholder="Animation souhaitee (facultatif)..." style="height:70px;margin-top:10px;"></textarea>
+    </div>
+    <button class="primary-btn" onclick="generateMedia()" id="generateBtn" style="margin-top:12px">Generer maintenant</button>
+    <div class="gen-status" id="genStatus">
+      <div class="spinner"></div>
+      <div id="genStatusText">Generation en cours...</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:4px">30 a 60 secondes</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="pricingModal" onclick="closeOutside(event,'pricingModal')">
+  <div class="modal">
+    <div class="handle"></div>
+    <h2>&#9889; Acheter des credits</h2>
+    <p>1 image = 1 credit - 1 video = 5 credits</p>
+    <div class="modal-pricing-toggle">
+      <button class="modal-pricing-toggle-btn active" onclick="setModalPeriod('monthly',this)">Mensuel</button>
+      <button class="modal-pricing-toggle-btn" onclick="setModalPeriod('yearly',this)">Annuel -10%</button>
+    </div>
+    <div id="pricingModalPlans"></div>
+    <button class="primary-btn" id="payBtn" onclick="startPayment()" disabled>Payer maintenant</button>
+  </div>
+</div>
+
+<div class="fullscreen-modal" id="fullscreenModal" onclick="closeFullscreenOutside(event)">
+  <span class="fullscreen-close" onclick="closeFullscreen()">&#10005;</span>
+  <div id="fullscreenContent"></div>
+  <div class="fullscreen-actions" id="fullscreenActions">
+    <button class="fs-action-btn" onclick="downloadCurrent()">&#11015; Telecharger</button>
+    <button class="fs-action-btn" onclick="openShareMenu()">&#128279; Partager</button>
+    <button class="fs-action-btn" onclick="deleteCurrent()" style="border-color:rgba(239,68,68,0.4);color:#fca5a5;">&#128465; Supprimer</button>
+  </div>
+  <div id="shareMenu" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a28;border-top:1px solid rgba(124,58,237,0.4);border-radius:24px 24px 0 0;padding:20px;z-index:500;">
+    <div style="width:36px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin:0 auto 16px;"></div>
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#f0f0f8;margin-bottom:16px;">Partager sur...</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button onclick="shareToApp('whatsapp')" style="flex:1;min-width:120px;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">WhatsApp</button>
+      <button onclick="shareToApp('instagram')" style="flex:1;min-width:120px;background:rgba(236,72,153,0.15);border:1px solid rgba(236,72,153,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Instagram</button>
+      <button onclick="shareToApp('tiktok')" style="flex:1;min-width:120px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">TikTok</button>
+      <button onclick="shareToApp('twitter')" style="flex:1;min-width:120px;background:rgba(29,155,240,0.15);border:1px solid rgba(29,155,240,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Twitter/X</button>
+      <button onclick="shareToApp('copy')" style="flex:1;min-width:120px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);color:#fff;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Copier lien</button>
+    </div>
+    <button onclick="closeShareMenu()" style="width:100%;margin-top:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--muted);border-radius:12px;padding:12px;font-size:13px;cursor:pointer;">Annuler</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#1d6ff2"/>
-      <stop offset="100%" style="stop-color:#0ea5e9"/>
-    </linearGradient>
-  </defs>
-</svg>
-
-<!-- HEADER -->
-<div class="header">
-  <a href="/" class="logo">
-    <div class="logo-icon">🎬</div>
-    <span class="logo-text"><span>L</span><span>i</span><span>m</span><span>i</span><span>n</span><span>e</span><span>o</span><span> </span><span>S</span><span>t</span><span>u</span><span>d</span><span>i</span><span>o</span></span>
-  </a>
-  <a href="/" class="back-btn">← Retour</a>
-</div>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">✨ <span class="hero-badge-text">Kling 3.0 — Cinéma IA</span></div>
-  <h1>Créez des <span class="word-glow">vidéos</span> avec l'IA</h1>
-  <p>Images, vidéos cinématiques et même toi comme acteur principal — tout en quelques secondes.</p>
-</div>
-
-<!-- MODE SELECTOR -->
-<div class="mode-section">
-  <div class="mode-label">Choisis ton mode de création</div>
-  <div class="mode-grid">
-
-    <!-- IMAGE IA -->
-    <div class="mode-card active" onclick="setMode('image')" id="mode-image">
-      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
-        <img class="mode-preview" src="https://picsum.photos/seed/galaxy/300/90" alt="Image IA preview" onerror="this.style.display='none'"/>
-        <div style="position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,0.6);border-radius:6px;padding:2px 7px;font-size:9px;color:#7eb8ff;font-weight:700;">📸 PHOTO</div>
-      </div>
-      <div class="mode-card-body">
-        <div class="mode-icon">🖼️</div>
-        <div class="mode-title">Image IA</div>
-        <div class="mode-desc">Génère une image depuis un prompt</div>
-        <div class="mode-badge">1 crédit</div>
-      </div>
-    </div>
-
-    <!-- VIDÉO IA -->
-    <div class="mode-card" onclick="setMode('video')" id="mode-video">
-      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
-        <video class="mode-preview-video" autoplay muted loop playsinline
-          src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
-          poster="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=300&q=80">
-        </video>
-        <div style="position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,0.6);border-radius:6px;padding:2px 7px;font-size:9px;color:#7eb8ff;font-weight:700;">▶ VIDÉO</div>
-      </div>
-      <div class="mode-card-body">
-        <div class="mode-icon">🎬</div>
-        <div class="mode-title">Vidéo IA</div>
-        <div class="mode-desc">Crée une vidéo cinématique</div>
-        <div class="mode-badge">5-15 crédits</div>
-      </div>
-    </div>
-
-    <!-- IMAGE → VIDÉO -->
-    <div class="mode-card" onclick="setMode('img2video')" id="mode-img2video">
-      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;display:flex;">
-        <img style="width:50%;height:100%;object-fit:cover;flex-shrink:0;" src="https://picsum.photos/seed/mountain/150/90" alt="before" onerror="this.style.display='none'"/>
-        <div style="width:2px;background:var(--accent);flex-shrink:0;"></div>
-        <video style="width:50%;height:100%;object-fit:cover;flex-shrink:0;" autoplay muted loop playsinline
-          src="https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4"
-          poster="https://images.unsplash.com/photo-1431440869543-efaf3388c585?w=150&q=80">
-        </video>
-        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--accent);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;">▶</div>
-      </div>
-      <div class="mode-card-body">
-        <div class="mode-icon">🖼️➡️🎬</div>
-        <div class="mode-title">Image → Vidéo</div>
-        <div class="mode-desc">Anime une image existante</div>
-        <div class="mode-badge">5-15 crédits</div>
-      </div>
-    </div>
-
-    <!-- TOI DANS UN FILM -->
-    <div class="mode-card" onclick="setMode('actor')" id="mode-actor">
-      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
-        <video class="mode-preview-video" autoplay muted loop playsinline
-          src="https://assets.mixkit.co/videos/preview/mixkit-man-running-through-a-forest-32807-large.mp4"
-          poster="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&q=80">
-        </video>
-        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(8,12,20,0.7));"></div>
-        <div style="position:absolute;bottom:5px;left:5px;background:linear-gradient(135deg,rgba(124,58,237,0.35),rgba(236,72,153,0.35));border:1px solid rgba(196,181,253,0.4);border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700;background-clip:padding-box;"><span style="background:linear-gradient(135deg,#c4b5fd,#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">🔥 NOUVEAU</span></div>
-      </div>
-      <div class="mode-card-body">
-        <div class="mode-icon">🎭</div>
-        <div class="mode-title">Toi dans un film</div>
-        <div class="mode-desc">Ta photo → acteur principal</div>
-        <div class="mode-badge gold">🔥 NOUVEAU</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- MAIN CARD -->
-<div class="main-card" id="mainCard">
-
-  <!-- PHOTO UPLOAD (img2video + actor) -->
-  <div class="card-section" id="uploadSection" style="display:none;">
-    <div class="section-label" id="uploadLabel"><span>📸</span> Ta photo</div>
-    <div id="actorTip" class="actor-tip" style="display:none;">
-      <strong>📌 Conseils pour un meilleur résultat :</strong>
-      Photo de face, corps entier ou buste visible, fond simple, bonne luminosité.
-    </div>
-    <div class="upload-zone" id="uploadZone" onclick="triggerUpload()">
-      <div id="uploadPlaceholder">
-        <div style="margin-bottom:10px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="rgba(29,111,242,0.12)"/><path d="M20 26V18M20 18L16 22M20 18L24 22" stroke="url(#up)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 28h12" stroke="url(#up)" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="up" x1="14" y1="18" x2="26" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></div>
-        <div class="upload-title">Appuie pour choisir un fichier</div>
-        <div class="upload-sub">Images : JPG, PNG, WEBP &nbsp;|&nbsp; Vidéos : MP4, MOV</div>
-      </div>
-      <img id="uploadedImg" class="upload-img" alt="Fichier uploadé"/>
-      <input type="file" id="fileInput" accept="image/*,video/mp4,video/quicktime" style="position:absolute;opacity:0;width:0;height:0;"/>
-    </div>
-    <button class="change-img-btn" id="changeImgBtn" onclick="document.getElementById('fileInput').click()">✎ Changer le fichier</button>
-  </div>
-
-  <!-- UNIVERSE (actor only) -->
-  <div class="card-section" id="universeSection" style="display:none;">
-    <div class="section-label"><span>🎬</span> Style de film</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-      <div class="universe-chip selected" onclick="selectUniverse(this,'action')" id="uni-action">💥 Action</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'scifi')" id="uni-scifi">🚀 Sci-Fi</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'fantasy')" id="uni-fantasy">⚔️ Fantasy</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'thriller')" id="uni-thriller">🕵️ Thriller</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'horror')" id="uni-horror">👻 Horreur</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'romance')" id="uni-romance">💕 Romance</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'western')" id="uni-western">🤠 Western</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'superhero')" id="uni-superhero">🦸 Super-héros</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'war')" id="uni-war">🪖 Guerre</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'cyberpunk')" id="uni-cyberpunk">🤖 Cyberpunk</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'documentary')" id="uni-documentary">🎥 Documentaire</div>
-      <div class="universe-chip" onclick="selectUniverse(this,'comedy')" id="uni-comedy">😂 Comédie</div>
-    </div>
-  </div>
-
-  <!-- PROMPT (image, video, img2video) -->
-  <div class="card-section" id="promptSection">
-    <div class="section-label"><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="url(#pen)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="pen" x1="2" y1="2" x2="14" y2="14" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></span> Prompt</div>
-    <textarea class="text-input" id="promptText" placeholder="Ex: Un astronaute marchant sur Mars au coucher du soleil, lumière dramatique..." maxlength="500" oninput="updateCount()"></textarea>
-    <div class="char-count"><span id="charCount">0</span>/500</div>
-    <div class="preset-chips" id="presetChips"></div>
-  </div>
-
-  <!-- DURATION (video, img2video, actor) -->
-  <div class="card-section" id="durationSection" style="display:none;">
-    <div class="section-label"><span>⏱️</span> Durée de la vidéo</div>
-    <div class="duration-grid">
-      <div class="duration-card selected" onclick="selectDuration(this, 5)" id="dur-5">
-        <div class="duration-sec">5s</div>
-        <div class="duration-label">Rapide</div>
-        <div class="duration-credits" id="dur-5-credits">6 crédits</div>
-      </div>
-      <div class="duration-card" onclick="selectDuration(this, 10)" id="dur-10">
-        <div class="duration-sec">10s</div>
-        <div class="duration-label">Standard</div>
-        <div class="duration-credits" id="dur-10-credits">12 crédits</div>
-      </div>
-      <div class="duration-card" onclick="selectDuration(this, 15)" id="dur-15">
-        <div class="duration-sec">15s</div>
-        <div class="duration-label">Cinéma</div>
-        <div class="duration-credits" id="dur-15-credits">18 crédits</div>
-      </div>
-    </div>
-    <!-- AUDIO TOGGLE -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:10px 12px;background:var(--surface);border-radius:12px;border:1px solid var(--border);">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span id="audioIcon" style="font-size:18px;">🔊</span>
-        <div>
-          <div style="font-size:13px;font-weight:600;" id="audioLabel">Son natif activé</div>
-          <div style="font-size:11px;color:var(--muted);" id="audioSub">Bruitages, ambiance, effets sonores</div>
-        </div>
-      </div>
-      <button onclick="toggleAudio()" id="audioToggleBtn" style="background:none;border:none;cursor:pointer;font-size:22px;padding:4px;opacity:0.4;transition:opacity 0.2s;" title="Désactiver le son">🔇</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- GENERATE -->
-<div class="generate-section" id="generateSection">
-  <div class="cost-info" id="costInfo">⚡ Coût : <span id="costDisplay">1 crédit</span></div>
-  <button class="generate-btn" id="generateBtn" onclick="generate()">
-    <span id="generateBtnIcon">🖼️</span>
-    <span id="generateBtnText">Générer l'image</span>
-  </button>
-</div>
-
-<!-- PROGRESS -->
-<div class="progress-section" id="progressSection">
-  <div class="progress-anim">
-    <svg class="progress-ring" viewBox="0 0 60 60">
-      <circle cx="30" cy="30" r="26"/>
-    </svg>
-  </div>
-  <div class="progress-step" id="progressStep">Initialisation...</div>
-  <div class="progress-sub" id="progressSub">Kling 3.0 • Chargement</div>
-  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
-  <div class="progress-timer" id="progressTimer"></div>
-</div>
-
-<!-- RESULT -->
-<div class="result-section" id="resultSection">
-  <div class="result-title" id="resultTitle">🎉 C'est prêt !</div>
-  <img id="resultImage" class="result-media" style="display:none;" alt="Image générée"/>
-  <video id="resultVideo" class="result-media" style="display:none;" controls autoplay loop></video>
-  <div class="result-actions">
-    <button class="result-btn primary" onclick="downloadResult()">⬇ Télécharger</button>
-    <button class="result-btn secondary" onclick="shareResult()">🔗 Partager</button>
-  </div>
-  <button class="new-btn" onclick="resetStudio()">+ Nouvelle création</button>
-</div>
-
 <script>
-// ─── STATE ────────────────────────────────────────────────────────────────────
-let currentMode = 'image';
-let currentDuration = 5;
-let currentUniverse = 'action';
-let withAudio = true;
-let uploadedImageFile = null;
-let resultUrl = null;
-let pollInterval = null;
-let timerInterval = null;
-let elapsedSeconds = 0;
+const SUPABASE_URL='https://sgrmbruwnswddulpdbic.supabase.co';
+const SUPABASE_KEY='sb_publishable_NpMXZk_OYIV958R4OGHpBA_DjSN6Q7J';
+const STRIPE_PK='pk_live_51TbJgSC8IJGdwt4DColGTyHR0P47uS8j7V2loB43Vec0ScCNE0N3YY7ou43SjSWTKIxIMqIqwdtWmGNG7BQnLXBP00veCoQH8z';
 
-function resolveUserId() {
-  const _saved = localStorage.getItem('limineo_user');
-  if (!_saved) return null;
+let currentUser=null,userCredits=0,authMode='login',selectedPlan=null,selectedType='image',currentMediaUrl='',currentMediaType='',pendingUploadFile=null,pendingImageBase64=null,currentPricingPeriod='monthly',currentModalPeriod='monthly',currentLang='fr',currentFilter='all',allMyMedia=[];
 
-  // Cas 1 : valeur brute (juste l'id en string, pas du JSON)
-  let _parsed = null;
-  try { _parsed = JSON.parse(_saved); } catch(e) { return _saved.trim() || null; }
-
-  if (!_parsed) return null;
-  if (typeof _parsed === 'string') return _parsed;
-
-  // Cas 2 : { id: ... } direct
-  if (_parsed.id) return _parsed.id;
-  // Cas 3 : session Supabase { user: { id: ... } }
-  if (_parsed.user?.id) return _parsed.user.id;
-  // Cas 4 : session Supabase imbriquée { session: { user: { id: ... } } }
-  if (_parsed.session?.user?.id) return _parsed.session.user.id;
-  // Cas 5 : { userId: ... }
-  if (_parsed.userId) return _parsed.userId;
-
-  return null;
-}
-
-const userId = resolveUserId();
-if (!userId) { window.location.href = '/'; }
-
-// ─── PRESETS par mode ─────────────────────────────────────────────────────────
-const PRESETS = {
-  image: [],
-  video: [],
-  img2video: [],
-  actor: [],
+const PLANS={
+  monthly:[
+    {name:'Starter',price:9.90,credits:100,desc:'100 images ou 20 videos',popular:false,planKey:'starter_monthly'},
+    {name:'Pro',price:19.90,credits:225,desc:'225 images ou 45 videos',popular:true,planKey:'pro_monthly'},
+    {name:'Ultra',price:39.90,credits:500,desc:'500 images ou 100 videos',popular:false,planKey:'ultra_monthly'}
+  ],
+  yearly:[
+    {name:'Starter',price:8.90,credits:100,desc:'100 images ou 20 videos/mois',popular:false,planKey:'starter_yearly'},
+    {name:'Pro',price:17.90,credits:225,desc:'225 images ou 45 videos/mois',popular:true,planKey:'pro_yearly'},
+    {name:'Ultra',price:34.90,credits:500,desc:'500 images ou 100 videos/mois',popular:false,planKey:'ultra_yearly'}
+  ]
 };
 
-const PRESET_TEXTS = {
-  '🌅 Coucher de soleil': 'Un coucher de soleil épique sur les montagnes, ciel orange et violet, lumière dorée, 4K cinématique',
-  '🏙️ Ville futuriste': 'Une mégalopole futuriste de nuit, néons bleus et violets, voitures volantes, Blade Runner style',
-  '🌊 Océan tempête': 'Un océan déchaîné sous une tempête, vagues de 20 mètres, éclairs, dramatique et cinématique',
-  '🌌 Galaxie': 'Une galaxie spirale vue depuis l espace, nébuleuse colorée, étoiles brillantes, ultra réaliste 4K',
-  '🦁 Lion majestueux': 'Un lion roi sur un rocher au coucher du soleil, crinière au vent, regard puissant, cinématique',
-  '🚗 Course poursuite': 'Course poursuite épique dans les rues d une ville la nuit, voitures de sport, dérapages, explosion',
-  '🌋 Éruption volcanique': 'Éruption volcanique massive, lave en fusion, ciel rouge, dramatique et épique, cinématique 4K',
-  '🌊 Vagues géantes': 'Vagues géantes de 30 mètres s écrasant sur des falaises, spray d eau, lumière dramatique',
-  '🚀 Décollage fusée': 'Décollage d une fusée depuis une base spatiale, flammes et fumée, vibrations, caméra basse',
-  '⚡ Orage dramatique': 'Orage violent au-dessus d une ville, éclairs multiplex, pluie torrentielle, cinématique',
-  '🌬️ Vent dans les cheveux': 'Animate with gentle wind effect, hair flowing naturally, soft light, smooth motion',
-  '👁️ Clignement des yeux': 'Subtle eye blink and breathing motion, realistic and natural, cinematic close-up',
-  '🔥 Flammes autour': 'Fire and flames appear around the subject, epic dramatic effect, cinematic slow-motion',
-  '💫 Lumière magique': 'Magical golden light particles swirling around, mystical glow effect, cinematic',
-  '🌧️ Pluie légère': 'Light rain falling, subject stays still, moody atmospheric, cinematic slow motion',
+const CREDIT_COST={image:1,video:5,img2video:5};
+
+const DEFAULT_MEDIA=[
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_1.mp4',type:'video'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/1006d0e4ed84490f.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_2.mp4',type:'video'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fdf70ad5e98f691c.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/shot_3.mp4',type:'video'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/9c2b6d7a7919fac2.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/138d10ed8ce449b6.png',type:'image'},
+  {url:'https://sgrmbruwnswddulpdbic.supabase.co/storage/v1/object/public/media/Untitled%20folder/fa0f36a927827787.png',type:'image'}
+];
+
+function renderLandingPlans(){
+  var c=document.getElementById('lpPlansContainer');if(!c)return;
+  var L=TRANSLATIONS[currentLang]||TRANSLATIONS.fr;
+  var feats=L.planFeats||TRANSLATIONS.fr.planFeats;
+  c.innerHTML=(PLANS[currentPricingPeriod]||[]).map(function(p){
+    return '<div class="lp-plan-card '+(p.popular?'popular':'')+'">'
+      +(p.popular?'<span class="popular-tag">'+(L.popularTag||'Le plus populaire')+'</span>':'')
+      +'<div class="lp-plan-name">'+p.name+'</div>'
+      +'<div class="lp-plan-price-wrap"><span class="lp-plan-price">'+p.price.toFixed(2).replace('.',',')+'EUR</span><span class="lp-plan-period">'+(L.mois||'/mois')+'</span></div>'
+      +'<div class="lp-plan-desc">'+p.credits+' '+(L.dropdownCredits||'credits')+' - '+p.desc+'</div>'
+      +'<ul class="lp-plan-features"><li>'+p.credits+' '+feats[0]+'</li><li>'+feats[1]+'</li><li>'+feats[2]+'</li><li>'+feats[3]+'</li><li>'+feats[4]+'</li></ul>'
+      +'<button class="lp-plan-btn '+(p.popular?'filled':'outlined')+'" onclick="hideLanding();openAuth();">'+(L.choisir||'Choisir')+' '+p.name+'</button>'
+      +'</div>';
+  }).join('');
+}
+
+function renderPricingModal(){
+  var c=document.getElementById('pricingModalPlans');if(!c)return;
+  var L=TRANSLATIONS[currentLang]||TRANSLATIONS.fr;
+  c.innerHTML=(PLANS[currentModalPeriod]||[]).map(function(p){
+    var badge=p.popular?('<span class="popular-badge">'+(L.popularBadge||'Populaire')+'</span>'):'';
+    var el=document.createElement('div');
+    el.className='plan-card'+(p.popular?' popular':'');
+    el.setAttribute('onclick','selectPlan(this,"'+p.planKey+'",'+Math.round(p.price*100)+')');
+    el.innerHTML='<div class="plan-header"><span class="plan-name">'+p.name+'</span><span class="plan-price">'+p.price.toFixed(2).replace('.',',')+'EUR</span>'+badge+'</div><div class="plan-credits">'+p.credits+' '+(L.dropdownCredits||'credits')+' - '+p.desc+'</div>';
+    return el.outerHTML;
+  }).join('');
+  selectedPlan=null;document.getElementById('payBtn').disabled=true;
+}
+
+function setModalPeriod(p,el){currentModalPeriod=p;document.querySelectorAll('.modal-pricing-toggle-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderPricingModal();}
+function setPricingPeriod(p,el){currentPricingPeriod=p;document.querySelectorAll('.pricing-toggle-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderLandingPlans();}
+
+const TRANSLATIONS={
+fr:{langBtn:'&#127467;&#127479; FR',connexion:'Connexion',tendances:'Tendances',mesCreations:'Mes creations',mesMedias:'Mes medias',credits:'Credits',bannerText:'&#10024; Nouveau - Generez des videos et images IA reelles !',bannerBtn:'Commencer',commencer:'Commencer gratuitement',voirOffres:'Voir les offres',eyebrow:'IA Generation - Nouvelle Ere',heroTitle:'Creez des medias <span class="grad">extraordinaires</span> en quelques secondes',heroSub:'Transformez vos idees en images et videos epoustouflantes grace a l intelligence artificielle.',statCreateurs:'Createurs',statMedias:'Medias crees',statTemps:'Temps moyen',whyLabel:'Pourquoi Limineo AI',whyTitle:'Tout ce dont vous avez besoin',f1t:'Images IA Ultra-realistes',f1d:'Generez des images de qualite professionnelle a partir d un simple texte.',f2t:'Videos IA Cinematiques',f2d:'Donnez vie a vos idees avec des videos fluides et realistes.',f3t:'Image vers Video',f3d:'Telechargez votre photo et transformez-la en video animee.',f4t:'Resultats en quelques secondes',f4d:'Generation en 30 a 60 secondes. Pas d attente, juste de la creativite.',offresLabel:'Nos offres',offresTitle:'Choisissez votre formule',mensuel:'Mensuel',annuel:'Annuel -10%',planFeats:['credits inclus','Images IA','Videos IA','Image vers Video','Telechargement HD'],popularTag:'Le plus populaire',popularBadge:'Populaire',choisir:'Choisir',mois:'/mois',ctaTitle:'Pret a creer ?',ctaSub:'Rejoignez des milliers de createurs qui utilisent deja Limineo AI',ctaBtn:'Creer un compte gratuit',ctaNote:'Aucune carte bancaire requise - 8 credits offerts a l inscription',authTitle:'Connexion',authSub:'Connectez-vous pour creer des medias IA',authEmail:'Votre email',authPwd:'Mot de passe',authSubmit:'Se connecter',authToggle:'Pas de compte ? <span>Creer un compte gratuit</span>',signupTitle:'Creer un compte',signupSub:'Rejoignez Limineo AI gratuitement',signupSubmit:'Creer mon compte',signupToggle:'Deja un compte ? <span>Se connecter</span>',createTitle:'Creer un media IA',createSub:'Decrivez ce que vous voulez generer',typeImg:'&#128444; Image',typeVid:'&#127916; Video',typeI2V:'&#128247; Image-Video',generateBtn:'Generer maintenant',genStatus:'Generation en cours...',genTime:'30 a 60 secondes',uploadLabel:'Appuyez pour choisir une photo',uploadPrompt:'Animation souhaitee (facultatif)...',promptPH:'Ex: Un lion majestueux au coucher du soleil...',pricingTitle:'&#9889; Acheter des credits',pricingNote:'1 image = 1 credit - 1 video = 5 credits',payBtn:'Payer maintenant',payRedir:'Redirection...',acheterCredits:'Acheter des credits',deconnecter:'Se deconnecter',telecharger:'&#11015; Telecharger',partager:'&#128279; Partager',supprimer:'&#128465; Supprimer',partagerSur:'Partager sur...',annuler:'Annuler',copierLien:'Copier lien',filterTout:'Tout',filterVideos:'&#127916; Videos',filterImages:'&#128444; Images',dropdownCredits:'credits',toastWelcome:'Bienvenue sur Limineo AI !',toastLogout:'Deconnecte avec succes',toastPayOk:'Paiement reussi ! Credits ajoutes',toastErrPay:'Erreur paiement.',toastErrNet:'Erreur reseau.',toastLienIG:'Lien copie ! Collez-le dans Instagram',toastLienTT:'Lien copie ! Collez-le dans TikTok',toastLienCopie:'Lien copie !',toastDelOk:'Media supprime !',toastDelErr:'Erreur suppression',toastFields:'Remplissez tous les champs',toastAlready:'Vous etes deja connecte !',toastConfirmEmail:'Confirmez votre email avant de vous connecter',toastErrLogin:'Erreur de connexion',confirmDelete:'Supprimer ce media ?'},
+en:{langBtn:'&#127468;&#127463; EN',connexion:'Login',tendances:'Trending',mesCreations:'My creations',mesMedias:'My media',credits:'Credits',bannerText:'&#10024; New - Generate real AI videos and images!',bannerBtn:'Start',commencer:'Start for free',voirOffres:'See plans',eyebrow:'AI Generation - New Era',heroTitle:'Create <span class="grad">extraordinary</span> media in seconds',heroSub:'Transform your ideas into stunning images and videos with artificial intelligence.',statCreateurs:'Creators',statMedias:'Media created',statTemps:'Avg time',whyLabel:'Why Limineo AI',whyTitle:'Everything you need',f1t:'Ultra-realistic AI Images',f1d:'Generate professional-quality images from simple text.',f2t:'Cinematic AI Videos',f2d:'Bring your ideas to life with smooth, realistic videos.',f3t:'Image to Video',f3d:'Upload your photo and transform it into an animated video.',f4t:'Results in seconds',f4d:'Generation in 30 to 60 seconds. No waiting, just creativity.',offresLabel:'Our plans',offresTitle:'Choose your plan',mensuel:'Monthly',annuel:'Yearly -10%',planFeats:['credits included','AI Images','AI Videos','Image to Video','HD Download'],popularTag:'Most popular',popularBadge:'Popular',choisir:'Choose',mois:'/month',ctaTitle:'Ready to create?',ctaSub:'Join thousands of creators already using Limineo AI',ctaBtn:'Create a free account',ctaNote:'No credit card required - 8 free credits on signup',authTitle:'Login',authSub:'Sign in to create AI media',authEmail:'Your email',authPwd:'Password',authSubmit:'Sign in',authToggle:'No account? <span>Create a free account</span>',signupTitle:'Create account',signupSub:'Join Limineo AI for free',signupSubmit:'Create my account',signupToggle:'Already have an account? <span>Sign in</span>',createTitle:'Create AI media',createSub:'Describe what you want to generate',typeImg:'&#128444; Image',typeVid:'&#127916; Video',typeI2V:'&#128247; Img-Video',generateBtn:'Generate now',genStatus:'Generating...',genTime:'30 to 60 seconds',uploadLabel:'Tap to choose a photo',uploadPrompt:'Desired animation (optional)...',promptPH:'Ex: A majestic lion at sunset...',pricingTitle:'&#9889; Buy credits',pricingNote:'1 image = 1 credit - 1 video = 5 credits',payBtn:'Pay now',payRedir:'Redirecting...',acheterCredits:'Buy credits',deconnecter:'Sign out',telecharger:'&#11015; Download',partager:'&#128279; Share',supprimer:'&#128465; Delete',partagerSur:'Share to...',annuler:'Cancel',copierLien:'Copy link',filterTout:'All',filterVideos:'&#127916; Videos',filterImages:'&#128444; Images',dropdownCredits:'credits',toastWelcome:'Welcome to Limineo AI!',toastLogout:'Signed out successfully',toastPayOk:'Payment successful! Credits added',toastErrPay:'Payment error.',toastErrNet:'Network error.',toastLienIG:'Link copied! Paste it in Instagram',toastLienTT:'Link copied! Paste it in TikTok',toastLienCopie:'Link copied!',toastDelOk:'Media deleted!',toastDelErr:'Delete error',toastFields:'Please fill all fields',toastAlready:'You are already logged in!',toastConfirmEmail:'Please confirm your email before signing in',toastErrLogin:'Login error',confirmDelete:'Delete this media?'},
+es:{langBtn:'&#127466;&#127480; ES',connexion:'Iniciar sesion',tendances:'Tendencias',mesCreations:'Mis creaciones',mesMedias:'Mis medias',credits:'Creditos',bannerText:'&#10024; Nuevo - Genera videos e imagenes IA reales!',bannerBtn:'Empezar',commencer:'Empezar gratis',voirOffres:'Ver planes',eyebrow:'Generacion IA - Nueva Era',heroTitle:'Crea medios <span class="grad">extraordinarios</span> en segundos',heroSub:'Transforma tus ideas en imagenes y videos impresionantes con inteligencia artificial.',statCreateurs:'Creadores',statMedias:'Medios creados',statTemps:'Tiempo medio',whyLabel:'Por que Limineo AI',whyTitle:'Todo lo que necesitas',f1t:'Imagenes IA ultra-realistas',f1d:'Genera imagenes de calidad profesional desde texto simple.',f2t:'Videos IA cinematicos',f2d:'Da vida a tus ideas con videos fluidos y realistas.',f3t:'Imagen a Video',f3d:'Sube tu foto y transformala en un video animado.',f4t:'Resultados en segundos',f4d:'Generacion en 30 a 60 segundos. Sin esperas.',offresLabel:'Nuestros planes',offresTitle:'Elige tu plan',mensuel:'Mensual',annuel:'Anual -10%',planFeats:['creditos incluidos','Imagenes IA','Videos IA','Imagen a Video','Descarga HD'],popularTag:'El mas popular',popularBadge:'Popular',choisir:'Elegir',mois:'/mes',ctaTitle:'Listo para crear?',ctaSub:'Unete a miles de creadores que ya usan Limineo AI',ctaBtn:'Crear cuenta gratis',ctaNote:'Sin tarjeta de credito - 8 creditos gratis al registrarse',authTitle:'Iniciar sesion',authSub:'Inicia sesion para crear medios IA',authEmail:'Tu email',authPwd:'Contrasena',authSubmit:'Iniciar sesion',authToggle:'Sin cuenta? <span>Crear cuenta gratis</span>',signupTitle:'Crear cuenta',signupSub:'Unete a Limineo AI gratis',signupSubmit:'Crear mi cuenta',signupToggle:'Ya tienes cuenta? <span>Iniciar sesion</span>',createTitle:'Crear medio IA',createSub:'Describe lo que quieres generar',typeImg:'&#128444; Imagen',typeVid:'&#127916; Video',typeI2V:'&#128247; Img-Video',generateBtn:'Generar ahora',genStatus:'Generando...',genTime:'30 a 60 segundos',uploadLabel:'Toca para elegir una foto',uploadPrompt:'Animacion deseada (opcional)...',promptPH:'Ej: Un leon majestuoso al atardecer...',pricingTitle:'&#9889; Comprar creditos',pricingNote:'1 imagen = 1 credito - 1 video = 5 creditos',payBtn:'Pagar ahora',payRedir:'Redirigiendo...',acheterCredits:'Comprar creditos',deconnecter:'Cerrar sesion',telecharger:'&#11015; Descargar',partager:'&#128279; Compartir',supprimer:'&#128465; Eliminar',partagerSur:'Compartir en...',annuler:'Cancelar',copierLien:'Copiar enlace',filterTout:'Todo',filterVideos:'&#127916; Videos',filterImages:'&#128444; Imagenes',dropdownCredits:'creditos',toastWelcome:'Bienvenido a Limineo AI!',toastLogout:'Sesion cerrada',toastPayOk:'Pago exitoso! Creditos anadidos',toastErrPay:'Error de pago.',toastErrNet:'Error de red.',toastLienIG:'Enlace copiado! Pegalo en Instagram',toastLienTT:'Enlace copiado! Pegalo en TikTok',toastLienCopie:'Enlace copiado!',toastDelOk:'Media eliminado!',toastDelErr:'Error al eliminar',toastFields:'Rellena todos los campos',toastAlready:'Ya has iniciado sesion!',toastConfirmEmail:'Confirma tu email antes de iniciar sesion',toastErrLogin:'Error de inicio de sesion',confirmDelete:'Eliminar este media?'},
+de:{langBtn:'&#127465;&#127466; DE',connexion:'Anmelden',tendances:'Trends',mesCreations:'Meine Kreationen',mesMedias:'Meine Medien',credits:'Credits',bannerText:'&#10024; Neu - Echte KI-Videos und Bilder generieren!',bannerBtn:'Starten',commencer:'Kostenlos starten',voirOffres:'Angebote sehen',eyebrow:'KI-Generierung - Neue Ara',heroTitle:'Erstelle <span class="grad">aussergewohnliche</span> Medien in Sekunden',heroSub:'Verwandle deine Ideen in atemberaubende Bilder und Videos mit kunstlicher Intelligenz.',statCreateurs:'Kreative',statMedias:'Erstellte Medien',statTemps:'Durchschnittszeit',whyLabel:'Warum Limineo AI',whyTitle:'Alles was du brauchst',f1t:'Ultra-realistische KI-Bilder',f1d:'Generiere professionelle Bilder aus einfachem Text.',f2t:'Cinematische KI-Videos',f2d:'Erwecke deine Ideen mit flussigen Videos zum Leben.',f3t:'Bild zu Video',f3d:'Lade dein Foto hoch und verwandle es in ein animiertes Video.',f4t:'Ergebnisse in Sekunden',f4d:'Generierung in 30 bis 60 Sekunden. Kein Warten.',offresLabel:'Unsere Angebote',offresTitle:'Wahle deinen Plan',mensuel:'Monatlich',annuel:'Jahrlich -10%',planFeats:['Credits inklusive','KI-Bilder','KI-Videos','Bild zu Video','HD-Download'],popularTag:'Am beliebtesten',popularBadge:'Beliebt',choisir:'Wahlen',mois:'/Monat',ctaTitle:'Bereit zum Erstellen?',ctaSub:'Schliesse dich Tausenden von Kreativen an',ctaBtn:'Kostenloses Konto erstellen',ctaNote:'Keine Kreditkarte erforderlich - 8 gratis Credits',authTitle:'Anmelden',authSub:'Melde dich an um KI-Medien zu erstellen',authEmail:'Deine E-Mail',authPwd:'Passwort',authSubmit:'Anmelden',authToggle:'Kein Konto? <span>Kostenloses Konto erstellen</span>',signupTitle:'Konto erstellen',signupSub:'Trete Limineo AI kostenlos bei',signupSubmit:'Mein Konto erstellen',signupToggle:'Bereits ein Konto? <span>Anmelden</span>',createTitle:'KI-Medium erstellen',createSub:'Beschreibe was du generieren mochtest',typeImg:'&#128444; Bild',typeVid:'&#127916; Video',typeI2V:'&#128247; Bild-Video',generateBtn:'Jetzt generieren',genStatus:'Wird generiert...',genTime:'30 bis 60 Sekunden',uploadLabel:'Tippe um ein Foto auszuwahlen',uploadPrompt:'Gewunschte Animation (optional)...',promptPH:'Bsp: Ein majestatatischer Lowe bei Sonnenuntergang...',pricingTitle:'&#9889; Credits kaufen',pricingNote:'1 Bild = 1 Credit - 1 Video = 5 Credits',payBtn:'Jetzt bezahlen',payRedir:'Weiterleitung...',acheterCredits:'Credits kaufen',deconnecter:'Abmelden',telecharger:'&#11015; Herunterladen',partager:'&#128279; Teilen',supprimer:'&#128465; Loschen',partagerSur:'Teilen auf...',annuler:'Abbrechen',copierLien:'Link kopieren',filterTout:'Alle',filterVideos:'&#127916; Videos',filterImages:'&#128444; Bilder',dropdownCredits:'Credits',toastWelcome:'Willkommen bei Limineo AI!',toastLogout:'Erfolgreich abgemeldet',toastPayOk:'Zahlung erfolgreich! Credits hinzugefugt',toastErrPay:'Zahlungsfehler.',toastErrNet:'Netzwerkfehler.',toastLienIG:'Link kopiert! In Instagram einfugen',toastLienTT:'Link kopiert! In TikTok einfugen',toastLienCopie:'Link kopiert!',toastDelOk:'Medium geloscht!',toastDelErr:'Loschfehler',toastFields:'Bitte alle Felder ausfullen',toastAlready:'Du bist bereits angemeldet!',toastConfirmEmail:'Bitte bestatige deine E-Mail',toastErrLogin:'Anmeldefehler',confirmDelete:'Dieses Medium loschen?'},
+pt:{langBtn:'&#127477;&#127481; PT',connexion:'Entrar',tendances:'Tendencias',mesCreations:'Minhas criacoes',mesMedias:'Meus medias',credits:'Creditos',bannerText:'&#10024; Novo - Gere videos e imagens IA reais!',bannerBtn:'Comecar',commencer:'Comecar gratis',voirOffres:'Ver planos',eyebrow:'Geracao IA - Nova Era',heroTitle:'Crie midias <span class="grad">extraordinarias</span> em segundos',heroSub:'Transforme suas ideias em imagens e videos impressionantes com inteligencia artificial.',statCreateurs:'Criadores',statMedias:'Midias criadas',statTemps:'Tempo medio',whyLabel:'Por que Limineo AI',whyTitle:'Tudo que voce precisa',f1t:'Imagens IA ultra-realistas',f1d:'Gere imagens de qualidade profissional a partir de texto.',f2t:'Videos IA cinematicos',f2d:'De vida as suas ideias com videos fluidos e realistas.',f3t:'Imagem para Video',f3d:'Envie sua foto e transforme-a em um video animado.',f4t:'Resultados em segundos',f4d:'Geracao em 30 a 60 segundos. Sem espera.',offresLabel:'Nossos planos',offresTitle:'Escolha seu plano',mensuel:'Mensal',annuel:'Anual -10%',planFeats:['creditos incluidos','Imagens IA','Videos IA','Imagem para Video','Download HD'],popularTag:'O mais popular',popularBadge:'Popular',choisir:'Escolher',mois:'/mes',ctaTitle:'Pronto para criar?',ctaSub:'Junte-se a milhares de criadores que ja usam Limineo AI',ctaBtn:'Criar conta gratis',ctaNote:'Sem cartao de credito - 8 creditos gratis no cadastro',authTitle:'Entrar',authSub:'Entre para criar midias IA',authEmail:'Seu email',authPwd:'Senha',authSubmit:'Entrar',authToggle:'Sem conta? <span>Criar conta gratis</span>',signupTitle:'Criar conta',signupSub:'Entre no Limineo AI de graca',signupSubmit:'Criar minha conta',signupToggle:'Ja tem conta? <span>Entrar</span>',createTitle:'Criar midia IA',createSub:'Descreva o que voce quer gerar',typeImg:'&#128444; Imagem',typeVid:'&#127916; Video',typeI2V:'&#128247; Img-Video',generateBtn:'Gerar agora',genStatus:'Gerando...',genTime:'30 a 60 segundos',uploadLabel:'Toque para escolher uma foto',uploadPrompt:'Animacao desejada (opcional)...',promptPH:'Ex: Um leao majestoso ao por do sol...',pricingTitle:'&#9889; Comprar creditos',pricingNote:'1 imagem = 1 credito - 1 video = 5 creditos',payBtn:'Pagar agora',payRedir:'Redirecionando...',acheterCredits:'Comprar creditos',deconnecter:'Sair',telecharger:'&#11015; Baixar',partager:'&#128279; Compartilhar',supprimer:'&#128465; Excluir',partagerSur:'Compartilhar em...',annuler:'Cancelar',copierLien:'Copiar link',filterTout:'Tudo',filterVideos:'&#127916; Videos',filterImages:'&#128444; Imagens',dropdownCredits:'creditos',toastWelcome:'Bem-vindo ao Limineo AI!',toastLogout:'Desconectado com sucesso',toastPayOk:'Pagamento bem-sucedido! Creditos adicionados',toastErrPay:'Erro no pagamento.',toastErrNet:'Erro de rede.',toastLienIG:'Link copiado! Cole no Instagram',toastLienTT:'Link copiado! Cole no TikTok',toastLienCopie:'Link copiado!',toastDelOk:'Midia excluida!',toastDelErr:'Erro ao excluir',toastFields:'Preencha todos os campos',toastAlready:'Voce ja esta conectado!',toastConfirmEmail:'Confirme seu email antes de entrar',toastErrLogin:'Erro de login',confirmDelete:'Excluir esta midia?'},
+it:{langBtn:'&#127470;&#127481; IT',connexion:'Accedi',tendances:'Tendenze',mesCreations:'Le mie creazioni',mesMedias:'I miei media',credits:'Crediti',bannerText:'&#10024; Nuovo - Genera video e immagini IA reali!',bannerBtn:'Inizia',commencer:'Inizia gratis',voirOffres:'Vedi piani',eyebrow:'Generazione IA - Nuova Era',heroTitle:'Crea media <span class="grad">straordinari</span> in pochi secondi',heroSub:"Trasforma le tue idee in immagini e video straordinari con l intelligenza artificiale.",statCreateurs:'Creatori',statMedias:'Media creati',statTemps:'Tempo medio',whyLabel:'Perche Limineo AI',whyTitle:'Tutto cio di cui hai bisogno',f1t:'Immagini IA ultra-realistiche',f1d:'Genera immagini di qualita professionale da semplice testo.',f2t:'Video IA cinematici',f2d:'Dai vita alle tue idee con video fluidi e realistici.',f3t:'Immagine in Video',f3d:'Carica la tua foto e trasformala in un video animato.',f4t:'Risultati in secondi',f4d:'Generazione in 30-60 secondi. Nessuna attesa.',offresLabel:'I nostri piani',offresTitle:'Scegli il tuo piano',mensuel:'Mensile',annuel:'Annuale -10%',planFeats:['crediti inclusi','Immagini IA','Video IA','Immagine in Video','Download HD'],popularTag:'Il piu popolare',popularBadge:'Popolare',choisir:'Scegli',mois:'/mese',ctaTitle:'Pronto a creare?',ctaSub:'Unisciti a migliaia di creatori che usano Limineo AI',ctaBtn:'Crea account gratis',ctaNote:'Nessuna carta richiesta - 8 crediti gratis alla registrazione',authTitle:'Accedi',authSub:'Accedi per creare media IA',authEmail:'La tua email',authPwd:'Password',authSubmit:'Accedi',authToggle:'Nessun account? <span>Crea account gratis</span>',signupTitle:'Crea account',signupSub:'Unisciti a Limineo AI gratuitamente',signupSubmit:'Crea il mio account',signupToggle:'Hai gia un account? <span>Accedi</span>',createTitle:'Crea media IA',createSub:'Descrivi cosa vuoi generare',typeImg:'&#128444; Immagine',typeVid:'&#127916; Video',typeI2V:'&#128247; Img-Video',generateBtn:'Genera ora',genStatus:'Generazione in corso...',genTime:'30-60 secondi',uploadLabel:'Tocca per scegliere una foto',uploadPrompt:'Animazione desiderata (opzionale)...',promptPH:'Es: Un leone maestoso al tramonto...',pricingTitle:'&#9889; Acquista crediti',pricingNote:'1 immagine = 1 credito - 1 video = 5 crediti',payBtn:'Paga ora',payRedir:'Reindirizzamento...',acheterCredits:'Acquista crediti',deconnecter:'Esci',telecharger:'&#11015; Scarica',partager:'&#128279; Condividi',supprimer:'&#128465; Elimina',partagerSur:'Condividi su...',annuler:'Annulla',copierLien:'Copia link',filterTout:'Tutto',filterVideos:'&#127916; Video',filterImages:'&#128444; Immagini',dropdownCredits:'crediti',toastWelcome:'Benvenuto su Limineo AI!',toastLogout:'Disconnesso con successo',toastPayOk:'Pagamento riuscito! Crediti aggiunti',toastErrPay:'Errore pagamento.',toastErrNet:'Errore di rete.',toastLienIG:'Link copiato! Incollalo in Instagram',toastLienTT:'Link copiato! Incollalo in TikTok',toastLienCopie:'Link copiato!',toastDelOk:'Media eliminato!',toastDelErr:'Errore eliminazione',toastFields:'Compila tutti i campi',toastAlready:'Sei gia connesso!',toastConfirmEmail:'Conferma la tua email prima di accedere',toastErrLogin:'Errore di accesso',confirmDelete:'Eliminare questo media?'},
+tr:{langBtn:'&#127481;&#127479; TR',connexion:'Giris yap',tendances:'Trendler',mesCreations:'Yaratimlarim',mesMedias:'Medyalarim',credits:'Kredi',bannerText:'&#10024; Yeni - Gercek AI video ve gorsel olusturun!',bannerBtn:'Baslat',commencer:'Ucretsiz baslat',voirOffres:'Planlari gor',eyebrow:'AI Uretimi - Yeni Cag',heroTitle:'Saniyeler icinde <span class="grad">olaganustu</span> medya olustur',heroSub:'Yapay zeka ile fikirlerinizi etkileyici gorsel ve videolara donusturun.',statCreateurs:'Yaraticlar',statMedias:'Olusturulan medya',statTemps:'Ort sure',whyLabel:'Neden Limineo AI',whyTitle:'Ihtiyaciniz olan her sey',f1t:'Ultra-gercekci AI Gorseller',f1d:'Basit metinden profesyonel kalitede gorsel olusturun.',f2t:'Sinematik AI Videolar',f2d:'Fikirlerinizi akici ve gercekci videolarla hayata gecirin.',f3t:'Gorsel den Video',f3d:'Fotografinizi yukleyin ve animasyonlu videoya donusturun.',f4t:'Saniyeler icinde sonuc',f4d:'30-60 saniyede uretim. Bekleme yok.',offresLabel:'Planlarimiz',offresTitle:'Planinizi secin',mensuel:'Aylik',annuel:'Yillik -10%',planFeats:['kredi dahil','AI Gorseller','AI Videolar','Gorsel den Video','HD Indirme'],popularTag:'En populer',popularBadge:'Populer',choisir:'Sec',mois:'/ay',ctaTitle:'Olusturmaya hazir misiniz?',ctaSub:'Limineo AI kullanan binlerce yaraticiya katilin',ctaBtn:'Ucretsiz hesap olustur',ctaNote:'Kredi karti gerekmez - Kayit olunca 8 ucretsiz kredi',authTitle:'Giris yap',authSub:'AI medya olusturmak icin giris yapin',authEmail:'E-postaniz',authPwd:'Sifre',authSubmit:'Giris yap',authToggle:'Hesabiniz yok mu? <span>Ucretsiz hesap olustur</span>',signupTitle:'Hesap olustur',signupSub:'Limineo AI ye ucretsiz katilin',signupSubmit:'Hesabimi olustur',signupToggle:'Zaten hesabiniz var mi? <span>Giris yap</span>',createTitle:'AI medya olustur',createSub:'Ne olusturmak istediginizi aciklayin',typeImg:'&#128444; Gorsel',typeVid:'&#127916; Video',typeI2V:'&#128247; Gorsel-Video',generateBtn:'Simdi olustur',genStatus:'Olusturuluyor...',genTime:'30-60 saniye',uploadLabel:'Foto secmek icin tiklayin',uploadPrompt:'Istenen animasyon (istege bagli)...',promptPH:'Orn: Gunbatiminda gorkemli bir aslan...',pricingTitle:'&#9889; Kredi satin al',pricingNote:'1 gorsel = 1 kredi - 1 video = 5 kredi',payBtn:'Simdi ode',payRedir:'Yonlendiriliyor...',acheterCredits:'Kredi satin al',deconnecter:'Cikis yap',telecharger:'&#11015; Indir',partager:'&#128279; Paylas',supprimer:'&#128465; Sil',partagerSur:'Paylas...',annuler:'Iptal',copierLien:'Baglantiy kopyala',filterTout:'Tumu',filterVideos:'&#127916; Videolar',filterImages:'&#128444; Gorseller',dropdownCredits:'kredi',toastWelcome:'Limineo AI ye hosgeldiniz!',toastLogout:'Basariyla cikis yapildi',toastPayOk:'Odeme basarili! Kredi eklendi',toastErrPay:'Odeme hatasi.',toastErrNet:'Ag hatasi.',toastLienIG:'Baglanti kopyalandi! Instagram a yapistirin',toastLienTT:'Baglanti kopyalandi! TikTok a yapistirin',toastLienCopie:'Baglanti kopyalandi!',toastDelOk:'Medya silindi!',toastDelErr:'Silme hatasi',toastFields:'Lutfen tum alanlari doldurun',toastAlready:'Zaten giris yaptiniz!',toastConfirmEmail:'Giris yapmadan once e-postanizi onaylayin',toastErrLogin:'Giris hatasi',confirmDelete:'Bu medyayi sil?'}
 };
+function T(k){return(TRANSLATIONS[currentLang]||TRANSLATIONS.fr)[k]||(TRANSLATIONS.fr[k]||'');}
 
-// ─── MODE ─────────────────────────────────────────────────────────────────────
-function setMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
-  document.getElementById('mode-' + mode).classList.add('active');
-
-  // Upload zone
-  const uploadSection = document.getElementById('uploadSection');
-  const uploadLabel = document.getElementById('uploadLabel');
-  const actorTip = document.getElementById('actorTip');
-  const universeSection = document.getElementById('universeSection');
-  const promptSection = document.getElementById('promptSection');
-  const durationSection = document.getElementById('durationSection');
-
-  uploadSection.style.display = (mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
-  universeSection.style.display = mode === 'actor' ? 'block' : 'none';
-  actorTip.style.display = mode === 'actor' ? 'block' : 'none';
-  promptSection.style.display = mode === 'actor' ? 'none' : 'block';
-  durationSection.style.display = (mode === 'video' || mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
-
-  if (mode === 'actor') {
-    uploadLabel.innerHTML = '<span>📸</span> Ta photo (tu seras l\'acteur)';
-  } else {
-    uploadLabel.innerHTML = '<span>📸</span> Ton image à animer';
-  }
-
-  // Presets
-  updatePresets();
-  // Bouton
-  updateGenerateBtn();
-  // Coût
-  updateCost();
+function applyTranslations(){
+  var L=TRANSLATIONS[currentLang]||TRANSLATIONS.fr;
+  // Lang btn + active state
+  var lb=document.getElementById('langBtn');if(lb)lb.innerHTML=L.langBtn;
+  document.querySelectorAll('.lang-option').forEach(function(o){
+    o.classList.remove('active');
+    var map={fr:'Francais',en:'English',es:'Espanol',de:'Deutsch',pt:'Portugues',it:'Italiano',tr:'Turkce'};
+    if(map[currentLang]&&o.textContent.trim().indexOf(map[currentLang])>=0)o.classList.add('active');
+  });
+  // Nav
+  var ab=document.getElementById('authBtn');if(ab)ab.textContent=L.connexion;
+  // Tabs
+  var tabs=document.querySelectorAll('.tab');
+  if(tabs[0])tabs[0].textContent=L.tendances;
+  if(tabs[1])tabs[1].textContent=L.mesCreations;
+  // Bottom nav labels
+  var ni=document.querySelectorAll('.nav-item');
+  if(ni[0]){var t0=ni[0].querySelector('span')||ni[0].lastChild;if(t0&&t0.nodeType===3)t0.textContent=L.mesMedias;else if(ni[0].lastChild&&ni[0].lastChild.nodeType===3)ni[0].lastChild.textContent=L.mesMedias;}
+  if(ni[2]){var t2=ni[2].lastChild;if(t2&&t2.nodeType===3)t2.textContent=L.credits;}
+  // Banner
+  var ban=document.getElementById('banner');
+  if(ban){var bs=ban.querySelector('span:first-child');if(bs)bs.innerHTML=L.bannerText;var bb=ban.querySelector('button');if(bb)bb.textContent=L.bannerBtn;}
+  // User dropdown items
+  var di=document.querySelectorAll('.dropdown-item');
+  if(di[0])di[0].innerHTML='&#9889; '+L.acheterCredits;
+  if(di[1])di[1].textContent=L.deconnecter;
+  // Dropdown credits
+  var dc=document.querySelector('.user-dropdown-credits');
+  if(dc)dc.innerHTML='&#9889; <span id="dropdownCredits">'+userCredits+'</span> '+L.dropdownCredits;
+  // Auth modal
+  var at=document.getElementById('authTitle');if(at)at.textContent=authMode==='login'?L.authTitle:L.signupTitle;
+  var as=document.getElementById('authSubtitle');if(as)as.textContent=authMode==='login'?L.authSub:L.signupSub;
+  var ae=document.getElementById('authEmail');if(ae)ae.placeholder=L.authEmail;
+  var ap=document.getElementById('authPassword');if(ap)ap.placeholder=L.authPwd;
+  var asb=document.getElementById('authSubmitBtn');if(asb)asb.textContent=authMode==='login'?L.authSubmit:L.signupSubmit;
+  var tl=document.querySelector('.toggle-link');if(tl)tl.innerHTML=authMode==='login'?L.authToggle:L.signupToggle;
+  // Create modal
+  var ct=document.querySelector('#createModal h2');if(ct)ct.textContent=L.createTitle;
+  var csp=document.querySelector('#createModal p');if(csp)csp.textContent=L.createSub;
+  var tb=document.querySelectorAll('.type-btn');
+  if(tb[0])tb[0].innerHTML=L.typeImg;if(tb[1])tb[1].innerHTML=L.typeVid;if(tb[2])tb[2].innerHTML=L.typeI2V;
+  var pt=document.getElementById('promptText');if(pt)pt.placeholder=L.promptPH;
+  var gb=document.getElementById('generateBtn');if(gb)gb.textContent=L.generateBtn;
+  var gst=document.getElementById('genStatusText');if(gst)gst.textContent=L.genStatus;
+  var upl=document.getElementById('uploadPlaceholder');if(upl)upl.innerHTML='<div style="font-size:28px;margin-bottom:8px;">&#128228;</div><div style="font-size:13px;color:var(--muted);">'+L.uploadLabel+'</div>';
+  var i2p=document.getElementById('img2vidPrompt');if(i2p)i2p.placeholder=L.uploadPrompt;
+  // Pricing modal
+  var pmt=document.querySelector('#pricingModal h2');if(pmt)pmt.innerHTML=L.pricingTitle;
+  var pmp=document.querySelector('#pricingModal p');if(pmp)pmp.textContent=L.pricingNote;
+  var mt=document.querySelectorAll('.modal-pricing-toggle-btn');
+  if(mt[0])mt[0].textContent=L.mensuel;if(mt[1])mt[1].textContent=L.annuel;
+  var pb=document.getElementById('payBtn');if(pb)pb.textContent=L.payBtn;
+  // Landing pricing toggle
+  var pt2=document.querySelectorAll('.pricing-toggle-btn');
+  if(pt2[0])pt2[0].textContent=L.mensuel;if(pt2[1])pt2[1].textContent=L.annuel;
+  // Fullscreen actions
+  var fa=document.querySelectorAll('.fs-action-btn');
+  if(fa[0])fa[0].innerHTML=L.telecharger;if(fa[1])fa[1].innerHTML=L.partager;if(fa[2])fa[2].innerHTML=L.supprimer;
+  // Share menu
+  var smt=document.querySelector('#shareMenu div[style*="font-family"]');if(smt)smt.textContent=L.partagerSur;
+  var smb=document.querySelectorAll('#shareMenu button');
+  if(smb[4])smb[4].textContent=L.copierLien;if(smb[5])smb[5].textContent=L.annuler;
+  // Filter bar
+  var fb=document.querySelectorAll('.filter-btn');
+  if(fb[0])fb[0].textContent=L.filterTout;if(fb[1])fb[1].innerHTML=L.filterVideos;if(fb[2])fb[2].innerHTML=L.filterImages;
+  // Landing page texts
+  var ey=document.querySelector('.lp-eyebrow');
+  if(ey){var dot=ey.querySelector('.eyebrow-dot');ey.innerHTML='';if(dot)ey.appendChild(dot);ey.appendChild(document.createTextNode(L.eyebrow));}
+  var lt=document.querySelector('.lp-title');if(lt)lt.innerHTML=L.heroTitle;
+  var lsub=document.querySelector('.lp-subtitle');if(lsub)lsub.textContent=L.heroSub;
+  var bh=document.querySelectorAll('.btn-hero');if(bh[0])bh[0].textContent=L.commencer;if(bh[1])bh[1].textContent=L.ctaBtn;
+  var bg=document.querySelector('.btn-ghost');if(bg)bg.textContent=L.voirOffres;
+  var sl=document.querySelectorAll('.stat-label');
+  if(sl[0])sl[0].textContent=L.statCreateurs;if(sl[1])sl[1].textContent=L.statMedias;if(sl[2])sl[2].textContent=L.statTemps;
+  var secL=document.querySelectorAll('.section-label');
+  if(secL[0])secL[0].textContent=L.whyLabel;if(secL[1])secL[1].textContent=L.offresLabel;
+  var secT=document.querySelectorAll('.section-title');
+  if(secT[0])secT[0].textContent=L.whyTitle;if(secT[1])secT[1].textContent=L.offresTitle;
+  var ft=document.querySelectorAll('.feature-title');
+  if(ft[0])ft[0].textContent=L.f1t;if(ft[1])ft[1].textContent=L.f2t;if(ft[2])ft[2].textContent=L.f3t;if(ft[3])ft[3].textContent=L.f4t;
+  var fd=document.querySelectorAll('.feature-desc');
+  if(fd[0])fd[0].textContent=L.f1d;if(fd[1])fd[1].textContent=L.f2d;if(fd[2])fd[2].textContent=L.f3d;if(fd[3])fd[3].textContent=L.f4d;
+  var cta=document.querySelector('.lp-final-cta');
+  if(cta){var ch=cta.querySelector('h2');if(ch)ch.textContent=L.ctaTitle;var cp=cta.querySelectorAll('p');if(cp[0])cp[0].textContent=L.ctaSub;if(cp[1])cp[1].textContent=L.ctaNote;}
+  // Re-render plans
+  renderLandingPlans();renderPricingModal();
 }
 
-function updatePresets() {
-  const chips = document.getElementById('presetChips');
-  const presets = PRESETS[currentMode] || [];
-  chips.innerHTML = presets.map(p => `<div class="preset-chip" onclick="usePreset('${p}')">${p}</div>`).join('');
-}
+function setLang(lang){currentLang=lang;localStorage.setItem('limineo_lang',lang);closeLangDropdown();applyTranslations();}
+function toggleLangDropdown(e){if(e)e.stopPropagation();document.getElementById('langDropdown').classList.toggle('open');}
+function closeLangDropdown(){document.getElementById('langDropdown').classList.remove('open');}
+function toggleUserDropdown(e){if(e)e.stopPropagation();document.getElementById('userDropdown').classList.toggle('open');}
+function closeUserDropdown(){document.getElementById('userDropdown').classList.remove('open');}
 
-function usePreset(label) {
-  const text = PRESET_TEXTS[label] || label;
-  document.getElementById('promptText').value = text;
-  updateCount();
-}
-
-function updateGenerateBtn() {
-  const icons = { image: '🖼️', video: '🎬', img2video: '🎬', actor: '🎭' };
-  const labels = { image: 'Générer l\'image', video: 'Générer la vidéo', img2video: 'Animer l\'image', actor: 'Générer maintenant' };
-  document.getElementById('generateBtnIcon').textContent = icons[currentMode];
-  document.getElementById('generateBtnText').textContent = labels[currentMode];
-}
-
-function updateCost() {
-  let cost = 1;
-  if (currentMode === 'video' || currentMode === 'img2video' || currentMode === 'actor') {
-    cost = currentDuration;
-    if (withAudio) cost = Math.ceil(cost * 1.2);
-  }
-  document.getElementById('costDisplay').textContent = cost + ' crédit' + (cost > 1 ? 's' : '');
-}
-
-// ─── AUDIO TOGGLE ─────────────────────────────────────────────────────────────
-function toggleAudio() {
-  withAudio = !withAudio;
-  const btn = document.getElementById('audioToggleBtn');
-  const icon = document.getElementById('audioIcon');
-  const label = document.getElementById('audioLabel');
-  const sub = document.getElementById('audioSub');
-  if (withAudio) {
-    btn.style.opacity = '0.4';
-    icon.textContent = '🔊';
-    label.textContent = 'Son natif activé';
-    sub.textContent = 'Bruitages, ambiance, effets sonores';
-  } else {
-    btn.style.opacity = '1';
-    icon.textContent = '🔇';
-    label.textContent = 'Son désactivé';
-    sub.textContent = 'Vidéo muette — moins de crédits';
-  }
-  updateCost();
-  updateDurationCredits();
-}
-
-function updateDurationCredits() {
-  const costs = withAudio
-    ? { 5: '6 crédits', 10: '12 crédits', 15: '18 crédits' }
-    : { 5: '5 crédits', 10: '10 crédits', 15: '15 crédits' };
-  document.getElementById('dur-5-credits').textContent = costs[5];
-  document.getElementById('dur-10-credits').textContent = costs[10];
-  document.getElementById('dur-15-credits').textContent = costs[15];
-}
-
-// ─── DURATION ─────────────────────────────────────────────────────────────────
-function selectDuration(el, sec) {
-  document.querySelectorAll('.duration-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  currentDuration = sec;
-  updateCost();
-}
-
-// ─── UNIVERSE ─────────────────────────────────────────────────────────────────
-function selectUniverse(el, universe) {
-  document.querySelectorAll('.universe-chip').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  currentUniverse = universe;
-}
-
-// ─── UPLOAD ───────────────────────────────────────────────────────────────────
-function triggerUpload() { document.getElementById('fileInput').click(); }
-
-document.getElementById('fileInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  uploadedImageFile = file;
-  const url = URL.createObjectURL(file);
-  const img = document.getElementById('uploadedImg');
-  img.src = url;
-  img.classList.add('visible');
-  document.getElementById('uploadPlaceholder').style.display = 'none';
-  document.getElementById('changeImgBtn').style.display = 'block';
-  document.getElementById('uploadZone').classList.add('has-image');
-  showToast('Photo choisie ✓', 'success');
+document.addEventListener('click',e=>{
+  const lp=document.getElementById('langPicker');if(lp&&!lp.contains(e.target))closeLangDropdown();
+  const uw=document.getElementById('userMenuWrap');if(uw&&!uw.contains(e.target))closeUserDropdown();
 });
 
-const zone = document.getElementById('uploadZone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
-zone.addEventListener('drop', e => {
-  e.preventDefault();
-  zone.classList.remove('drag');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) {
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    document.getElementById('fileInput').files = dt.files;
-    document.getElementById('fileInput').dispatchEvent(new Event('change'));
-  }
-});
+function showLanding(){document.getElementById('landingPage').classList.add('show');document.body.classList.add('landing-mode');}
+function hideLanding(){document.getElementById('landingPage').classList.remove('show');document.body.classList.remove('landing-mode');}
 
-// ─── CHAR COUNT ───────────────────────────────────────────────────────────────
-function updateCount() {
-  document.getElementById('charCount').textContent = document.getElementById('promptText').value.length;
+async function sbFetch(path,options={}){
+  return fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${currentUser?.token||SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
+}
+async function sbAuth(endpoint,body){
+  const r=await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.json();
 }
 
-// ─── GENERATE ─────────────────────────────────────────────────────────────────
-async function generate() {
-  const prompt = document.getElementById('promptText').value.trim();
-
-  if (currentMode !== 'actor' && !prompt) {
-    showToast('Décris ce que tu veux créer !', 'error'); return;
-  }
-  if ((currentMode === 'img2video' || currentMode === 'actor') && !uploadedImageFile) {
-    showToast('Upload une photo d\'abord !', 'error');
-    document.getElementById('uploadZone').scrollIntoView({behavior:'smooth'});
-    return;
-  }
-
-  // Show progress
-  document.getElementById('generateSection').style.display = 'none';
-  document.getElementById('resultSection').style.display = 'none';
-  document.getElementById('resultSection').classList.remove('visible');
-  document.getElementById('progressSection').classList.add('visible');
-  document.getElementById('progressBar').style.width = '0%';
-
-  startTimer();
-
-  const progressSteps = {
-    image:    [{text:'Analyse du prompt...', sub:'Flux Schnell • préparation', pct:30}, {text:'Génération de l\'image...', sub:'Flux Schnell • rendu IA', pct:70}, {text:'Finalisation...', sub:'Presque prêt !', pct:90}],
-    video:    [{text:'Envoi vers Kling 3.0...', sub:'File d\'attente • quelques secondes', pct:15}, {text:'Génération vidéo en cours...', sub:`Kling 3.0 Pro • ${currentDuration}s de vidéo`, pct:40}, {text:'Rendu cinématique...', sub:'Patience, la magie opère ✨', pct:70}, {text:'Finalisation...', sub:'Encore quelques instants...', pct:85}],
-    img2video:[{text:'Upload de l\'image...', sub:'fal.ai • préparation', pct:15}, {text:'Animation en cours...', sub:`Kling 3.0 Pro • ${currentDuration}s`, pct:40}, {text:'Rendu vidéo...', sub:'Kling 3.0 • cinématique', pct:70}, {text:'Finalisation...', sub:'Presque prêt !', pct:85}],
-    actor:    [{text:'Upload de ta photo...', sub:'Préparation • acteur principal', pct:15}, {text:'Tu entres dans le film...', sub:`Kling 3.0 • univers ${currentUniverse}`, pct:35}, {text:'Génération cinématique...', sub:'Magie en cours ✨', pct:60}, {text:'Montage final...', sub:'Encore quelques instants...', pct:80}],
-  };
-
-  animateSteps(progressSteps[currentMode] || progressSteps.image);
-
-  try {
-    // Préparer le body
-    const body = { type: currentMode, userId, prompt: prompt || ' ', duration: currentDuration, universe: currentUniverse, withAudio };
-
-    if (currentMode === 'img2video' || currentMode === 'actor') {
-      const base64 = await fileToBase64(uploadedImageFile);
-      body.imageBase64 = base64;
-      body.imageMimeType = uploadedImageFile.type;
-    }
-
-    const resp = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    });
-
-    const data = await resp.json();
-    if (!resp.ok) throw new Error(data.error || 'Erreur serveur');
-
-    if (currentMode === 'image') {
-      // Résultat immédiat
-      stopTimer();
-      showResult('image', data.url);
-    } else {
-      // Mode async : polling
-      if (!data.request_id) throw new Error('Pas de request_id');
-      pollForResult(data.request_id);
-    }
-
-  } catch(e) {
-    stopProgress();
-    showToast(e.message || 'Erreur de génération', 'error');
-  }
+function openAuth(){if(currentUser){showToast('Vous etes deja connecte !','success');return;}hideLanding();document.getElementById('authModal').classList.add('open');}
+function toggleAuthMode(){
+  authMode=authMode==='login'?'signup':'login';
+  document.getElementById('authTitle').textContent=authMode==='login'?'Connexion':'Creer un compte';
+  document.getElementById('authSubtitle').textContent=authMode==='login'?'Connectez-vous pour creer des medias IA':'Rejoignez Limineo AI gratuitement';
+  document.getElementById('authSubmitBtn').textContent=authMode==='login'?'Se connecter':'Creer mon compte';
+  document.querySelector('.toggle-link').innerHTML=authMode==='login'?'Pas de compte ? <span>Creer un compte gratuit</span>':'Deja un compte ? <span>Se connecter</span>';
 }
 
-// ─── POLLING ──────────────────────────────────────────────────────────────────
-function pollForResult(requestId) {
-  let attempts = 0;
-  const maxAttempts = 180; // 15 min max
-
-  pollInterval = setInterval(async () => {
-    attempts++;
-    if (attempts > maxAttempts) {
-      clearInterval(pollInterval);
-      stopProgress();
-      showToast('Timeout — réessaie', 'error');
-      return;
-    }
-
-    try {
-      const resp = await fetch(`/api/poll-fal?requestId=${requestId}`);
-      const data = await resp.json();
-
-      if (data.status === 'completed') {
-        clearInterval(pollInterval);
-        stopTimer();
-        const videoUrl = data.output?.video?.url || data.output?.video_url || data.output?.url;
-        if (videoUrl) {
-          showResult('video', videoUrl);
-        } else {
-          stopProgress();
-          showToast('Vidéo non trouvée dans la réponse', 'error');
+async function handleAuth(){
+  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
+  const L=TRANSLATIONS[currentLang]||TRANSLATIONS.fr;
+  if(!email||!password){showToast(L.toastFields,'error');return;}
+  const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='...';
+  try{
+    const data=await sbAuth(authMode==='login'?'token?grant_type=password':'signup',{email,password});
+    if(authMode==='signup'){
+      if(data.error||data.msg){
+        // Erreur explicite de Supabase
+        var msg=data.error_description||data.msg||L.toastErrLogin;
+        if(msg.toLowerCase().includes('already')||msg.toLowerCase().includes('existe')){
+          showToast('Cet email est deja utilise','error');
+        }else{
+          showToast(msg,'error');
         }
-      } else if (data.status === 'failed') {
-        clearInterval(pollInterval);
-        stopProgress();
-        showToast('Génération échouée — réessaie', 'error');
+      }else if(data.user&&data.user.identities&&data.user.identities.length===0){
+        // Email deja enregistre - Supabase ne le dit pas clairement
+        showToast('Cet email est deja utilise','error');
+      }else if(data.user&&!data.access_token){
+        // Nouveau compte cree - email de confirmation envoye
+        showToast('📧 Verifiez votre email pour activer votre compte !','success');
+        document.getElementById('authModal').classList.remove('open');
+      }else if(data.access_token){
+        // Confirmation desactivee - connexion directe
+        currentUser={email,token:data.access_token,id:data.user.id};
+        localStorage.setItem('limineo_user',JSON.stringify(currentUser));
+        document.getElementById('authModal').classList.remove('open');
+        showUserMenu(email);hideLanding();await loadCredits();
+        await initUserCredits();
+        showToast(L.toastWelcome,'success');
+        loadTrending();
+      }else{
+        showToast(L.toastErrLogin,'error');
       }
-      // sinon on continue de poller (IN_QUEUE, IN_PROGRESS)
-    } catch(e) {
-      // Erreur réseau temporaire, on continue
+    }else{
+      // Login normal
+      if(data.access_token){
+        currentUser={email,token:data.access_token,id:data.user.id};
+        localStorage.setItem('limineo_user',JSON.stringify(currentUser));
+        document.getElementById('authModal').classList.remove('open');
+        showUserMenu(email);hideLanding();await loadCredits();
+        showToast(L.toastWelcome,'success');
+        loadTrending();
+      }else if(data.error==='email_not_confirmed'){
+        showToast(L.toastConfirmEmail,'error');
+      }else{
+        showToast(data.error_description||L.toastErrLogin,'error');
+      }
     }
-  }, 5000); // poll toutes les 5 secondes
-}
-
-// ─── RESULT ───────────────────────────────────────────────────────────────────
-function showResult(type, url) {
-  resultUrl = url;
-  document.getElementById('progressSection').classList.remove('visible');
-  document.getElementById('generateSection').style.display = 'none';
-
-  const resultSection = document.getElementById('resultSection');
-  const img = document.getElementById('resultImage');
-  const video = document.getElementById('resultVideo');
-
-  if (type === 'image') {
-    img.src = url;
-    img.style.display = 'block';
-    video.style.display = 'none';
-    document.getElementById('resultTitle').textContent = '🎉 Ton image est prête !';
-  } else {
-    video.src = url;
-    video.style.display = 'block';
-    img.style.display = 'none';
-    document.getElementById('resultTitle').textContent = '🎬 Ta vidéo est prête !';
+  }catch(e){
+    showToast(L.toastErrNet,'error');
   }
-
-  resultSection.classList.add('visible');
-  resultSection.style.display = 'block';
-  showToast('Création terminée !', 'success');
+  btn.disabled=false;btn.textContent=authMode==='login'?L.authSubmit:L.signupSubmit;
 }
 
-// ─── PROGRESS HELPERS ─────────────────────────────────────────────────────────
-function animateSteps(steps) {
-  let i = 0;
-  const bar = document.getElementById('progressBar');
-  bar.style.width = '5%';
-  const interval = setInterval(() => {
-    if (i >= steps.length) { clearInterval(interval); return; }
-    document.getElementById('progressStep').textContent = steps[i].text;
-    document.getElementById('progressSub').textContent = steps[i].sub;
-    bar.style.width = steps[i].pct + '%';
-    i++;
-  }, currentMode === 'image' ? 800 : 4000);
+function showUserMenu(email){
+  document.getElementById('authBtn').style.display='none';
+  const btn=document.getElementById('userMenuBtn');btn.style.display='flex';
+  document.getElementById('userMenuName').textContent=email.split('@')[0];
+  document.getElementById('dropdownEmail').textContent=email;
 }
 
-function startTimer() {
-  elapsedSeconds = 0;
-  timerInterval = setInterval(() => {
-    elapsedSeconds++;
-    const m = Math.floor(elapsedSeconds / 60);
-    const s = elapsedSeconds % 60;
-    document.getElementById('progressTimer').textContent = `⏱ ${m > 0 ? m + 'min ' : ''}${s}s écoulées`;
-  }, 1000);
+async function initUserCredits(){
+  try{await sbFetch('user_credits',{method:'POST',body:JSON.stringify({user_id:currentUser.id,credits:8,email:currentUser.email})});userCredits=8;updateCreditsUI();}catch(e){}
 }
 
-function stopTimer() { clearInterval(timerInterval); document.getElementById('progressTimer').textContent = ''; }
-
-function stopProgress() {
-  clearInterval(pollInterval);
-  stopTimer();
-  document.getElementById('progressSection').classList.remove('visible');
-  document.getElementById('generateSection').style.display = 'block';
+async function loadCredits(){
+  try{
+    const r=await sbFetch(`user_credits?user_id=eq.${currentUser.id}&select=credits`);
+    const d=await r.json();
+    if(d&&d[0]&&d[0].credits!==undefined){
+      userCredits=d[0].credits;
+      updateCreditsUI();
+    }else if(!d||d.length===0){
+      await initUserCredits();
+    }
+  }catch(e){}
 }
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-function fileToBase64(file) {
-  return new Promise((res, rej) => {
-    const reader = new FileReader();
-    reader.onload = () => res(reader.result);
-    reader.onerror = rej;
-    reader.readAsDataURL(file);
+function updateCreditsUI(){
+  document.getElementById('creditsCount').textContent=userCredits;
+  const c=document.getElementById('creditsInModal');if(c)c.textContent=userCredits;
+  document.getElementById('dropdownCredits').textContent=userCredits;
+  document.getElementById('creditsBadge').style.display='flex';
+}
+
+function logout(){
+  localStorage.removeItem('limineo_user');currentUser=null;userCredits=0;
+  showToast('Deconnecte avec succes','success');
+  setTimeout(()=>window.location.reload(),1000);
+}
+
+function switchNav(s){
+  ['mine','credits'].forEach(x=>{const el=document.getElementById('nav'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.classList.remove('active');});
+  const a=document.getElementById('nav'+s.charAt(0).toUpperCase()+s.slice(1));if(a)a.classList.add('active');
+  if(s==='mine')showMyCreations();
+  if(s==='credits')openPricing();
+}
+
+function setTab(el,s){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('filterBar').style.display=s==='mine'?'flex':'none';
+  if(s==='mine')showMyCreations();
+  else loadTrending();
+}
+
+function closeOutside(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
+function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3000);}
+
+function loadTrending(){
+  const grid=document.getElementById('grid');
+  document.getElementById('filterBar').style.display='none';
+  renderGrid(grid,DEFAULT_MEDIA);
+}
+
+function makeCard(m,sizeClass){
+  const card=document.createElement('div');
+  card.className='card '+sizeClass;
+  const isVid=m.type==='video'||m.type==='img2video';
+  if(isVid){
+    card.innerHTML=`<video src="${m.url}" autoplay muted loop playsinline></video><div class="badge">Video</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#9654;</div></div>`;
+  }else{
+    card.innerHTML=`<img src="${m.url}" alt="IA"><div class="badge">Image</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#10530;</div></div>`;
+  }
+  card.onclick=()=>openFullscreen(m.url,m.type);
+  return card;
+}
+
+function renderGrid(grid,items){
+  grid.innerHTML='';
+  let i=0;
+  while(i<items.length){
+    const pattern=Math.floor(i/3)%3;
+    if(pattern===0){
+      const row1=document.createElement('div');row1.className='grid-row';
+      if(items[i])row1.appendChild(makeCard(items[i],'card-sm'));
+      if(items[i+1])row1.appendChild(makeCard(items[i+1],'card-sm'));
+      grid.appendChild(row1);
+      if(items[i+2]){const row2=document.createElement('div');row2.className='grid-row grid-row-center';row2.appendChild(makeCard(items[i+2],'card-full'));grid.appendChild(row2);}
+      i+=3;
+    }else if(pattern===1){
+      if(items[i]){const row=document.createElement('div');row.className='grid-row grid-row-center';row.appendChild(makeCard(items[i],'card-full'));grid.appendChild(row);}
+      i+=1;
+    }else{
+      const row=document.createElement('div');row.className='grid-row';
+      if(items[i])row.appendChild(makeCard(items[i],'card-sm'));
+      if(items[i+1])row.appendChild(makeCard(items[i+1],'card-sm'));
+      grid.appendChild(row);i+=2;
+    }
+  }
+}
+
+async function showMyCreations(){
+  if(!currentUser){openAuth();return;}
+  document.getElementById('filterBar').style.display='flex';
+  const grid=document.getElementById('grid');
+  grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Chargement...</div>';
+  try{
+    const r=await sbFetch(`user_generations?user_id=eq.${currentUser.id}&order=created_at.desc&select=*`);
+    const data=await r.json();
+    if(!data||data.length===0){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';return;}
+    allMyMedia=[...data.filter(d=>d.type==='video'||d.type==='img2video'),...data.filter(d=>d.type==='image')];
+    renderMyMedia();
+  }catch(e){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucune creation. Appuyez sur + pour creer !</div>';}
+}
+
+function filterMedia(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');renderMyMedia();
+}
+
+function renderMyMedia(){
+  const grid=document.getElementById('grid');grid.innerHTML='';
+  const filtered=currentFilter==='all'?allMyMedia:allMyMedia.filter(m=>{
+    if(currentFilter==='video')return m.type==='video'||m.type==='img2video';
+    return m.type==='image';
+  });
+  if(!filtered.length){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Aucun media dans cette categorie.</div>';return;}
+  filtered.forEach(item=>{
+    const card=document.createElement('div');card.className='card';
+    const isVideo=item.type==='video'||item.type==='img2video';
+    if(isVideo&&item.url){
+      card.innerHTML=`<video src="${item.url}" style="width:100%" autoplay muted loop playsinline></video><div class="badge">Video</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#9654;</div></div>`;
+      card.onclick=()=>openFullscreen(item.url,'video');
+    }else if(item.url){
+      card.innerHTML=`<img src="${item.url}" style="width:100%" alt="media"><div class="badge">Image</div><div class="overlay"><div class="likes">0</div><div class="play-btn">&#10530;</div></div>`;
+      card.onclick=()=>openFullscreen(item.url,'image');
+    }
+    grid.appendChild(card);
   });
 }
 
-function downloadResult() {
-  if (!resultUrl) return;
-  const ext = currentMode === 'image' ? 'jpg' : 'mp4';
-  const a = document.createElement('a');
-  a.href = resultUrl;
-  a.download = `limineo-${currentMode}-${Date.now()}.${ext}`;
+function openCreate(){if(!currentUser){openAuth();return;}document.getElementById('createModal').classList.add('open');updateCreditsUI();}
+
+function setType(btn,type){
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedType=type;
+  document.getElementById('promptSection').style.display=type==='img2video'?'none':'block';
+  document.getElementById('img2vidSection').style.display=type==='img2video'?'block':'none';
+}
+
+function handleImageUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  pendingUploadFile=file;
+  pendingImageBase64=null;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    pendingImageBase64=ev.target.result;
+    const p=document.getElementById('uploadPreview');
+    p.src=ev.target.result;p.style.display='block';
+    document.getElementById('uploadPlaceholder').style.display='none';
+    showToast('Photo chargee !','success');
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+
+async function generateMedia(){
+  const cost=CREDIT_COST[selectedType]||1;
+  let prompt='',imageBase64=null,imageMimeType=null;
+
+  if(selectedType==='img2video'){
+    if(!pendingImageBase64){showToast('Telechargez une image !','error');return;}
+    prompt=document.getElementById('img2vidPrompt').value.trim()||'Animate this image with smooth motion';
+    imageBase64=pendingImageBase64;
+    imageMimeType=pendingUploadFile?pendingUploadFile.type:'image/jpeg';
+  }else{
+    prompt=document.getElementById('promptText').value.trim();
+    if(!prompt){showToast('Entrez une description !','error');return;}
+  }
+
+  if(userCredits<cost){
+    showToast(`Credits insuffisants (besoin de ${cost})` ,'error');
+    setTimeout(()=>{document.getElementById('createModal').classList.remove('open');openPricing();},1000);
+    return;
+  }
+
+  const btn=document.getElementById('generateBtn'),status=document.getElementById('genStatus');
+  btn.disabled=true;btn.textContent='Generation...';status.classList.add('show');
+  document.getElementById('genStatusText').textContent=selectedType==='img2video'?'Animation en cours... (1-2 min)':'Generation en cours...';
+
+  try{
+    const body={prompt,type:selectedType,userId:currentUser.id};
+    if(imageBase64){body.imageBase64=imageBase64;body.imageMimeType=imageMimeType;}
+    const r=await fetch('/api/generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},
+      body:JSON.stringify(body)
+    });
+    const data=await r.json();
+    if(data.url){
+      if(data.creditsLeft!==undefined){userCredits=data.creditsLeft;}else{userCredits-=cost;}
+      updateCreditsUI();
+      try{await sbFetch('user_generations',{method:'POST',body:JSON.stringify({user_id:currentUser.id,prompt,type:selectedType,url:data.url,status:'done'})});}catch(e){}
+      document.getElementById('createModal').classList.remove('open');
+      showToast('Image generee !','success');
+      pendingUploadFile=null;pendingImageBase64=null;
+      document.getElementById('uploadPreview').style.display='none';
+      document.getElementById('uploadPlaceholder').style.display='block';
+      showMyCreations();
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelector('.tab:nth-child(2)').classList.add('active');
+      document.getElementById('filterBar').style.display='flex';
+    }else if(data.status==='processing'&&data.request_id){
+      if(data.creditsLeft!==undefined){userCredits=data.creditsLeft;}else{userCredits-=cost;}
+      updateCreditsUI();
+      document.getElementById('createModal').classList.remove('open');
+      pendingUploadFile=null;pendingImageBase64=null;
+      document.getElementById('uploadPreview').style.display='none';
+      document.getElementById('uploadPlaceholder').style.display='block';
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelector('.tab:nth-child(2)').classList.add('active');
+      document.getElementById('filterBar').style.display='flex';
+      showToast('Video en cours... (1-3 min)','success');
+      showMyCreations();
+      pollVideo(data.request_id,currentUser.id);
+    }else{showToast(data.error||'Erreur de generation.','error');}
+  }catch(e){showToast('Erreur reseau.','error');}
+
+  btn.disabled=false;btn.textContent='Generer maintenant';status.classList.remove('show');
+  document.getElementById('promptText').value='';
+}
+
+async function pollVideo(requestId,userId){
+  let attempts=0;
+  const interval=setInterval(async()=>{
+    attempts++;
+    if(attempts>60){clearInterval(interval);showToast('Video trop longue, verifie tes creations plus tard','error');return;}
+    try{
+      const r=await fetch('/api/check-video',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},
+        body:JSON.stringify({requestId,userId})
+      });
+      const d=await r.json();
+      if(d.status==='done'){clearInterval(interval);showToast('Video prete !','success');showMyCreations();}
+      else if(d.status==='failed'){clearInterval(interval);showToast('Erreur generation video','error');}
+    }catch(e){}
+  },10000);
+}
+
+function openPricing(){if(!currentUser){openAuth();return;}document.getElementById('pricingModal').classList.add('open');}
+
+function selectPlan(el,planKey,amount){
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');selectedPlan={planKey,amount};
+  document.getElementById('payBtn').disabled=false;
+}
+
+async function startPayment(){
+  if(!selectedPlan)return;
+  const btn=document.getElementById('payBtn');btn.disabled=true;btn.textContent='Redirection...';
+  try{
+    const r=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${currentUser.token}`},body:JSON.stringify({plan:selectedPlan.planKey,userId:currentUser.id,email:currentUser.email})});
+    const data=await r.json();
+    if(data.url){window.location.href=data.url;}else{showToast('Erreur paiement.','error');}
+  }catch(e){showToast('Erreur reseau.','error');}
+  btn.disabled=false;btn.textContent='Payer maintenant';
+}
+
+function openFullscreen(url,type){
+  currentMediaUrl=url;currentMediaType=type;
+  const c=document.getElementById('fullscreenContent');
+  if(url&&(type==='video'||type==='img2video')){c.innerHTML=`<video src="${url}" controls autoplay style="max-width:95vw;max-height:82vh;border-radius:16px"></video>`;}
+  else if(url){c.innerHTML=`<img src="${url}" style="max-width:95vw;max-height:82vh;border-radius:16px;object-fit:contain">`;}
+  document.getElementById('fullscreenActions').style.display=url?'flex':'none';
+  document.getElementById('fullscreenModal').classList.add('open');
+}
+function closeFullscreen(){document.getElementById('fullscreenModal').classList.remove('open');document.getElementById('fullscreenContent').innerHTML='';}
+function closeFullscreenOutside(e){if(e.target.id==='fullscreenModal')closeFullscreen();}
+function downloadCurrent(){
+  if(!currentMediaUrl)return;
+  const a=document.createElement('a');
+  a.href=currentMediaUrl;
+  a.download='limineo-media.'+(currentMediaType==='video'||currentMediaType==='img2video'?'mp4':'jpg');
+  a.target='_blank';
   a.click();
-  showToast('Téléchargement démarré', 'success');
+}
+function openShareMenu(){document.getElementById('shareMenu').style.display='block';}
+function closeShareMenu(){document.getElementById('shareMenu').style.display='none';}
+function shareToApp(platform){
+  if(!currentMediaUrl)return;
+  const url=encodeURIComponent(currentMediaUrl);
+  const text=encodeURIComponent('Cree avec Limineo AI ✨');
+  if(platform==='whatsapp'){window.open(`https://wa.me/?text=${text}%20${url}`);}
+  else if(platform==='twitter'){window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`);}
+  else if(platform==='instagram'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie ! Collez-le dans Instagram','success');}
+  else if(platform==='tiktok'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie ! Collez-le dans TikTok','success');}
+  else if(platform==='copy'){navigator.clipboard.writeText(currentMediaUrl);showToast('Lien copie !','success');}
+  closeShareMenu();
+}
+async function deleteCurrent(){
+  if(!currentMediaUrl||!currentUser)return;
+  if(!confirm('Supprimer ce media ?'))return;
+  try{
+    const item=allMyMedia.find(m=>m.url===currentMediaUrl);
+    if(item&&item.id){
+      await sbFetch(`user_generations?id=eq.${item.id}`,{method:'DELETE'});
+    }
+    allMyMedia=allMyMedia.filter(m=>m.url!==currentMediaUrl);
+    closeFullscreen();
+    renderMyMedia();
+    showToast('Media supprime !','success');
+  }catch(e){showToast('Erreur suppression','error');}
 }
 
-function shareResult() {
-  navigator.clipboard.writeText(resultUrl || window.location.href).catch(() => {});
-  showToast('Lien copié !', 'success');
-}
+window.addEventListener('load',async()=>{
+  currentLang=localStorage.getItem('limineo_lang')||'fr';
+  renderLandingPlans();renderPricingModal();
+  applyTranslations();
+  const saved=localStorage.getItem('limineo_user');
+  if(saved){
+    try{
+      currentUser=JSON.parse(saved);
+      showUserMenu(currentUser.email);
+      await loadCredits();loadTrending();
+    }catch(e){localStorage.removeItem('limineo_user');showLanding();}
+  }else{showLanding();}
+  const p=new URLSearchParams(window.location.search);
+  if(p.get('success')==='true'){showToast('Paiement reussi ! Credits ajoutes','success');if(currentUser)await loadCredits();window.history.replaceState({},'','/');}
+});
 
-function resetStudio() {
-  clearInterval(pollInterval);
-  stopTimer();
-  resultUrl = null;
-  document.getElementById('resultSection').classList.remove('visible');
-  document.getElementById('resultSection').style.display = 'none';
-  document.getElementById('progressSection').classList.remove('visible');
-  document.getElementById('generateSection').style.display = 'block';
-  document.getElementById('promptText').value = '';
-  updateCount();
-  setMode(currentMode);
-}
-
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + (type || '');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// Init
-setMode('image');
+// Auto-scroll gallery
+(function(){
+  const el = document.getElementById('autoScroll');
+  if(!el) return;
+  let pos = 0;
+  let paused = false;
+  el.addEventListener('touchstart', () => { paused = true; });
+  el.addEventListener('touchend', () => { setTimeout(() => { paused = false; }, 2000); });
+  setInterval(() => {
+    if(paused) return;
+    pos += 0.5;
+    const maxScroll = el.scrollWidth / 2;
+    if(pos >= maxScroll) pos = 0;
+    el.parentElement.scrollLeft = pos;
+    el.style.transform = 'translateX(-' + pos + 'px)';
+  }, 16);
+})();
 </script>
 </body>
 </html>
