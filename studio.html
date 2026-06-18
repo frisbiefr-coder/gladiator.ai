@@ -8,45 +8,65 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#0a0a0f;
-  --surface:#13131a;
-  --border:#1e1e2e;
-  --accent:#7c3aed;
-  --pink:#ec4899;
-  --gradient:linear-gradient(135deg,#7c3aed,#ec4899);
-  --text:#f1f0f7;
-  --muted:#6b6b8a;
-  --card:#16161f;
+  --bg:#080c14;
+  --surface:#0d1420;
+  --border:#1a2235;
+  --accent:#1d6ff2;
+  --gold:#f5c518;
+  --gradient:linear-gradient(135deg,#1d6ff2,#0ea5e9);
+  --gradient-gold:linear-gradient(135deg,#1d6ff2,#f5c518);
+  --text:#eef2ff;
+  --muted:#5a7096;
+  --card:#0f1825;
 }
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:40px;}
 
 /* HEADER */
 .header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(10px);}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-icon{width:36px;height:36px;background:var(--gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.back-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;white-space:nowrap;}
+.logo-text span{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline;animation:letter-glow 3s ease-in-out infinite;}
+.logo-text span:nth-child(1){animation-delay:0s}.logo-text span:nth-child(2){animation-delay:0.08s}.logo-text span:nth-child(3){animation-delay:0.16s}.logo-text span:nth-child(4){animation-delay:0.24s}.logo-text span:nth-child(5){animation-delay:0.32s}.logo-text span:nth-child(6){animation-delay:0.40s}.logo-text span:nth-child(7){animation-delay:0.48s}.logo-text span:nth-child(8){animation-delay:0.56s}.logo-text span:nth-child(9){animation-delay:0.64s}.logo-text span:nth-child(10){animation-delay:0.72s}.logo-text span:nth-child(11){animation-delay:0.80s}.logo-text span:nth-child(12){animation-delay:0.88s}.logo-text span:nth-child(13){animation-delay:0.96s}
+@keyframes letter-glow{0%,100%{filter:brightness(1);}50%{filter:brightness(2) drop-shadow(0 0 6px #ec4899);}}
+@keyframes logo-glow{
+  0%,100%{filter:brightness(1);}
+  50%{filter:brightness(1.8) drop-shadow(0 0 5px #ec4899);}
+}
+.back-btn{background:rgba(29,111,242,0.12);border:1px solid rgba(29,111,242,0.3);color:#7eb8ff;padding:8px 14px;border-radius:20px;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;}
 .credits-header{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
-.credits-badge{background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.3);color:#c4b5fd;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
+.credits-badge{background:rgba(29,111,242,0.2);border:1px solid rgba(29,111,242,0.3);color:#7eb8ff;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
 
 /* HERO */
 .hero{text-align:center;padding:32px 20px 24px;}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:6px 14px;font-size:12px;color:#c4b5fd;margin-bottom:14px;}
-.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;line-height:1.2;margin-bottom:10px;}
-.hero h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.15));border:1px solid transparent;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;margin-bottom:14px;position:relative;
+background-clip:padding-box;
+-webkit-background-clip:padding-box;}
+.hero-badge::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1px;background:linear-gradient(135deg,#7c3aed,#06b6d4,#ec4899);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
+.hero-badge-text{background:linear-gradient(135deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(14px, 4.2vw, 18px);line-height:1.3;margin-bottom:10px;text-align:center;}
+.hero h1 .word-glow{background:linear-gradient(135deg,#7c3aed,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:word-glow-soft 3s ease-in-out infinite;}
+@keyframes word-glow-soft{
+  0%,100%{filter:brightness(1);}
+  50%{filter:brightness(2.0) drop-shadow(0 0 8px #7c3aed) drop-shadow(0 0 3px #06b6d4);}
+}
 .hero p{color:var(--muted);font-size:13px;line-height:1.6;max-width:320px;margin:0 auto;}
 
 /* MODE SELECTOR */
 .mode-section{padding:0 16px 20px;}
 .mode-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;text-align:center;}
 .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.mode-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:16px 12px;cursor:pointer;transition:all 0.2s;text-align:center;}
-.mode-card:hover{border-color:rgba(124,58,237,0.5);background:rgba(124,58,237,0.05);}
-.mode-card.active{border-color:var(--accent);background:rgba(124,58,237,0.1);}
-.mode-icon{font-size:28px;margin-bottom:8px;}
-.mode-title{font-size:13px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:4px;}
-.mode-desc{font-size:11px;color:var(--muted);line-height:1.4;}
-.mode-badge{display:inline-block;background:var(--gradient);color:white;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:6px;}
+.mode-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:0;cursor:pointer;transition:all 0.2s;text-align:center;overflow:hidden;}
+.mode-card:hover{border-color:rgba(148,197,255,0.35);background:rgba(148,197,255,0.03);}
+.mode-card.active{border-color:rgba(148,197,255,0.6);background:rgba(148,197,255,0.06);box-shadow:0 0 18px rgba(148,197,255,0.12);}
+.mode-preview{width:100%;height:90px;object-fit:cover;display:block;border-radius:0;}
+.mode-preview-video{width:100%;height:90px;object-fit:cover;display:block;border-radius:0;pointer-events:none;}
+.mode-card-body{padding:10px 10px 12px;}
+.mode-icon{font-size:22px;margin-bottom:5px;}
+.mode-title{font-size:13px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:3px;}
+.mode-desc{display:none;}
+.mode-badge{display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85);font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:5px;}
+.mode-badge.gold{background:linear-gradient(135deg,#7c3aed,#ec4899);border:none;color:white;}
 
 /* MAIN CARD */
 .main-card{background:var(--card);border:1px solid var(--border);border-radius:20px;margin:0 16px 16px;overflow:hidden;}
@@ -57,7 +77,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 
 /* UPLOAD ZONE */
 .upload-zone{border:2px dashed var(--border);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(124,58,237,0.05);}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(29,111,242,0.05);}
 .upload-zone.has-image{border-style:solid;border-color:var(--accent);padding:0;}
 .upload-icon{font-size:32px;margin-bottom:8px;}
 .upload-title{font-size:14px;font-weight:600;margin-bottom:4px;}
@@ -70,23 +90,22 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 /* TEXT INPUT */
 .text-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;resize:none;height:90px;line-height:1.5;}
 .text-input:focus{outline:none;border-color:var(--accent);}
-.text-input::placeholder{color:var(--muted);}
+.text-input::placeholder{color:rgba(255,255,255,0.75);}
 .char-count{text-align:right;font-size:11px;color:var(--muted);margin-top:4px;}
 
 /* DURATION SELECTOR */
 .duration-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .duration-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 8px;cursor:pointer;transition:all 0.2s;text-align:center;}
-.duration-card:hover{border-color:rgba(124,58,237,0.5);}
-.duration-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.1);}
+.duration-card:hover{border-color:rgba(29,111,242,0.5);}
+.duration-card.selected{border-color:var(--accent);background:rgba(29,111,242,0.1);}
 .duration-sec{font-size:18px;font-weight:800;font-family:'Syne',sans-serif;}
 .duration-label{font-size:10px;color:var(--muted);margin-top:2px;}
-.duration-credits{font-size:10px;color:#c4b5fd;margin-top:4px;font-weight:600;}
+.duration-credits{font-size:10px;color:#7eb8ff;margin-top:4px;font-weight:600;}
 
-/* UNIVERSE SELECTOR */
-.universe-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.universe-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:10px;}
-.universe-card:hover{border-color:rgba(124,58,237,0.5);}
-.universe-card.selected{border-color:var(--accent);background:rgba(124,58,237,0.1);}
+/* UNIVERSE CHIPS */
+.universe-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:7px 13px;cursor:pointer;transition:all 0.2s;font-size:12px;font-weight:600;color:var(--muted);}
+.universe-chip:hover{border-color:rgba(29,111,242,0.5);color:var(--text);}
+.universe-chip.selected{border-color:var(--accent);background:rgba(29,111,242,0.15);color:#7eb8ff;}
 .universe-emoji{font-size:24px;}
 .universe-info{}
 .universe-name{font-size:13px;font-weight:700;}
@@ -95,18 +114,18 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 /* PRESET CHIPS */
 .preset-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
 .preset-chip{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all 0.2s;}
-.preset-chip:hover{border-color:var(--accent);color:#c4b5fd;}
+.preset-chip:hover{border-color:var(--accent);color:#7eb8ff;}
 
 /* ACTOR TIP */
-.actor-tip{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:12px;margin-bottom:12px;font-size:12px;color:#c4b5fd;line-height:1.5;}
+.actor-tip{background:rgba(29,111,242,0.08);border:1px solid rgba(29,111,242,0.2);border-radius:12px;padding:12px;margin-bottom:12px;font-size:12px;color:#7eb8ff;line-height:1.5;}
 .actor-tip strong{display:block;margin-bottom:4px;}
 
 /* GENERATE BTN */
 .generate-section{padding:16px;}
-.generate-btn{width:100%;padding:16px;background:var(--gradient);border:none;border-radius:14px;color:white;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;}
+.generate-btn{width:100%;padding:16px;background:linear-gradient(135deg,#7c3aed,#ec4899);border:none;border-radius:14px;color:white;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;}
 .generate-btn:disabled{opacity:0.5;cursor:not-allowed;}
 .cost-info{text-align:center;font-size:12px;color:var(--muted);margin-bottom:12px;}
-.cost-info span{color:#c4b5fd;font-weight:600;}
+.cost-info span{color:#7eb8ff;font-weight:600;}
 
 /* PROGRESS */
 .progress-section{display:none;padding:28px 20px;text-align:center;margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:20px;}
@@ -146,8 +165,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#7c3aed"/>
-      <stop offset="100%" style="stop-color:#ec4899"/>
+      <stop offset="0%" style="stop-color:#1d6ff2"/>
+      <stop offset="100%" style="stop-color:#0ea5e9"/>
     </linearGradient>
   </defs>
 </svg>
@@ -156,15 +175,15 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <div class="header">
   <a href="/" class="logo">
     <div class="logo-icon">🎬</div>
-    <span class="logo-text">Limineo Studio</span>
+    <span class="logo-text"><span>L</span><span>i</span><span>m</span><span>i</span><span>n</span><span>e</span><span>o</span><span> </span><span>S</span><span>t</span><span>u</span><span>d</span><span>i</span><span>o</span></span>
   </a>
   <a href="/" class="back-btn">← Retour</a>
 </div>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">✨ Kling 3.0 — Cinéma IA</div>
-  <h1>Crée des <span>vidéos</span> avec l'IA</h1>
+  <div class="hero-badge">✨ <span class="hero-badge-text">Kling 3.0 — Cinéma IA</span></div>
+  <h1>Créez des <span class="word-glow">vidéos</span> avec l'IA</h1>
   <p>Images, vidéos cinématiques et même toi comme acteur principal — tout en quelques secondes.</p>
 </div>
 
@@ -172,30 +191,75 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <div class="mode-section">
   <div class="mode-label">Choisis ton mode de création</div>
   <div class="mode-grid">
+
+    <!-- IMAGE IA -->
     <div class="mode-card active" onclick="setMode('image')" id="mode-image">
-      <div class="mode-icon">🖼️</div>
-      <div class="mode-title">Image IA</div>
-      <div class="mode-desc">Génère une image depuis un prompt</div>
-      <div class="mode-badge">1 crédit</div>
+      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
+        <img class="mode-preview" src="https://picsum.photos/seed/galaxy/300/90" alt="Image IA preview" onerror="this.style.display='none'"/>
+        <div style="position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,0.6);border-radius:6px;padding:2px 7px;font-size:9px;color:#7eb8ff;font-weight:700;">📸 PHOTO</div>
+      </div>
+      <div class="mode-card-body">
+        <div class="mode-icon">🖼️</div>
+        <div class="mode-title">Image IA</div>
+        <div class="mode-desc">Génère une image depuis un prompt</div>
+        <div class="mode-badge">1 crédit</div>
+      </div>
     </div>
+
+    <!-- VIDÉO IA -->
     <div class="mode-card" onclick="setMode('video')" id="mode-video">
-      <div class="mode-icon">🎬</div>
-      <div class="mode-title">Vidéo IA</div>
-      <div class="mode-desc">Crée une vidéo cinématique</div>
-      <div class="mode-badge">5-15 crédits</div>
+      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
+        <video class="mode-preview-video" autoplay muted loop playsinline
+          src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
+          poster="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=300&q=80">
+        </video>
+        <div style="position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,0.6);border-radius:6px;padding:2px 7px;font-size:9px;color:#7eb8ff;font-weight:700;">▶ VIDÉO</div>
+      </div>
+      <div class="mode-card-body">
+        <div class="mode-icon">🎬</div>
+        <div class="mode-title">Vidéo IA</div>
+        <div class="mode-desc">Crée une vidéo cinématique</div>
+        <div class="mode-badge">5-15 crédits</div>
+      </div>
     </div>
+
+    <!-- IMAGE → VIDÉO -->
     <div class="mode-card" onclick="setMode('img2video')" id="mode-img2video">
-      <div class="mode-icon">🖼️➡️🎬</div>
-      <div class="mode-title">Image → Vidéo</div>
-      <div class="mode-desc">Anime une image existante</div>
-      <div class="mode-badge">5-15 crédits</div>
+      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;display:flex;">
+        <img style="width:50%;height:100%;object-fit:cover;flex-shrink:0;" src="https://picsum.photos/seed/mountain/150/90" alt="before" onerror="this.style.display='none'"/>
+        <div style="width:2px;background:var(--accent);flex-shrink:0;"></div>
+        <video style="width:50%;height:100%;object-fit:cover;flex-shrink:0;" autoplay muted loop playsinline
+          src="https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4"
+          poster="https://images.unsplash.com/photo-1431440869543-efaf3388c585?w=150&q=80">
+        </video>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--accent);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;">▶</div>
+      </div>
+      <div class="mode-card-body">
+        <div class="mode-icon">🖼️➡️🎬</div>
+        <div class="mode-title">Image → Vidéo</div>
+        <div class="mode-desc">Anime une image existante</div>
+        <div class="mode-badge">5-15 crédits</div>
+      </div>
     </div>
+
+    <!-- TOI DANS UN FILM -->
     <div class="mode-card" onclick="setMode('actor')" id="mode-actor">
-      <div class="mode-icon">🎭</div>
-      <div class="mode-title">Toi dans un film</div>
-      <div class="mode-desc">Ta photo → acteur principal</div>
-      <div class="mode-badge">🔥 NOUVEAU</div>
+      <div style="position:relative;height:90px;overflow:hidden;background:#0a1628;">
+        <video class="mode-preview-video" autoplay muted loop playsinline
+          src="https://assets.mixkit.co/videos/preview/mixkit-man-running-through-a-forest-32807-large.mp4"
+          poster="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&q=80">
+        </video>
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(8,12,20,0.7));"></div>
+        <div style="position:absolute;bottom:5px;left:5px;background:linear-gradient(135deg,rgba(124,58,237,0.35),rgba(236,72,153,0.35));border:1px solid rgba(196,181,253,0.4);border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700;background-clip:padding-box;"><span style="background:linear-gradient(135deg,#c4b5fd,#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">🔥 NOUVEAU</span></div>
+      </div>
+      <div class="mode-card-body">
+        <div class="mode-icon">🎭</div>
+        <div class="mode-title">Toi dans un film</div>
+        <div class="mode-desc">Ta photo → acteur principal</div>
+        <div class="mode-badge gold">🔥 NOUVEAU</div>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -211,54 +275,38 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     </div>
     <div class="upload-zone" id="uploadZone" onclick="triggerUpload()">
       <div id="uploadPlaceholder">
-        <div class="upload-icon">📷</div>
-        <div class="upload-title">Appuie pour choisir une photo</div>
-        <div class="upload-sub">JPG, PNG — max 10MB</div>
+        <div style="margin-bottom:10px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="rgba(29,111,242,0.12)"/><path d="M20 26V18M20 18L16 22M20 18L24 22" stroke="url(#up)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 28h12" stroke="url(#up)" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="up" x1="14" y1="18" x2="26" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></div>
+        <div class="upload-title">Appuie pour choisir un fichier</div>
+        <div class="upload-sub">Images : JPG, PNG, WEBP &nbsp;|&nbsp; Vidéos : MP4, MOV</div>
       </div>
-      <img id="uploadedImg" class="upload-img" alt="Photo uploadée"/>
-      <input type="file" id="fileInput" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;"/>
+      <img id="uploadedImg" class="upload-img" alt="Fichier uploadé"/>
+      <input type="file" id="fileInput" accept="image/*,video/mp4,video/quicktime" style="position:absolute;opacity:0;width:0;height:0;"/>
     </div>
-    <button class="change-img-btn" id="changeImgBtn" onclick="document.getElementById('fileInput').click()">✎ Changer la photo</button>
+    <button class="change-img-btn" id="changeImgBtn" onclick="document.getElementById('fileInput').click()">✎ Changer le fichier</button>
   </div>
 
   <!-- UNIVERSE (actor only) -->
   <div class="card-section" id="universeSection" style="display:none;">
-    <div class="section-label"><span>🎬</span> Univers du film</div>
-    <div class="universe-grid">
-      <div class="universe-card selected" onclick="selectUniverse(this,'action')" id="uni-action">
-        <div class="universe-emoji">💥</div>
-        <div class="universe-info">
-          <div class="universe-name">Action</div>
-          <div class="universe-desc">Explosions, poursuites</div>
-        </div>
-      </div>
-      <div class="universe-card" onclick="selectUniverse(this,'scifi')" id="uni-scifi">
-        <div class="universe-emoji">🚀</div>
-        <div class="universe-info">
-          <div class="universe-name">Sci-Fi</div>
-          <div class="universe-desc">Espace, futur</div>
-        </div>
-      </div>
-      <div class="universe-card" onclick="selectUniverse(this,'fantasy')" id="uni-fantasy">
-        <div class="universe-emoji">⚔️</div>
-        <div class="universe-info">
-          <div class="universe-name">Fantasy</div>
-          <div class="universe-desc">Dragons, magie</div>
-        </div>
-      </div>
-      <div class="universe-card" onclick="selectUniverse(this,'thriller')" id="uni-thriller">
-        <div class="universe-emoji">🕵️</div>
-        <div class="universe-info">
-          <div class="universe-name">Thriller</div>
-          <div class="universe-desc">Espion, mystère</div>
-        </div>
-      </div>
+    <div class="section-label"><span>🎬</span> Style de film</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <div class="universe-chip selected" onclick="selectUniverse(this,'action')" id="uni-action">💥 Action</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'scifi')" id="uni-scifi">🚀 Sci-Fi</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'fantasy')" id="uni-fantasy">⚔️ Fantasy</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'thriller')" id="uni-thriller">🕵️ Thriller</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'horror')" id="uni-horror">👻 Horreur</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'romance')" id="uni-romance">💕 Romance</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'western')" id="uni-western">🤠 Western</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'superhero')" id="uni-superhero">🦸 Super-héros</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'war')" id="uni-war">🪖 Guerre</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'cyberpunk')" id="uni-cyberpunk">🤖 Cyberpunk</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'documentary')" id="uni-documentary">🎥 Documentaire</div>
+      <div class="universe-chip" onclick="selectUniverse(this,'comedy')" id="uni-comedy">😂 Comédie</div>
     </div>
   </div>
 
   <!-- PROMPT (image, video, img2video) -->
   <div class="card-section" id="promptSection">
-    <div class="section-label"><span>✍️</span> Décris ta création</div>
+    <div class="section-label"><span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="url(#pen)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="pen" x1="2" y1="2" x2="14" y2="14" gradientUnits="userSpaceOnUse"><stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs></svg></span> Prompt</div>
     <textarea class="text-input" id="promptText" placeholder="Ex: Un astronaute marchant sur Mars au coucher du soleil, lumière dramatique..." maxlength="500" oninput="updateCount()"></textarea>
     <div class="char-count"><span id="charCount">0</span>/500</div>
     <div class="preset-chips" id="presetChips"></div>
@@ -346,14 +394,15 @@ let timerInterval = null;
 let elapsedSeconds = 0;
 
 // userId depuis localStorage (même logique que ton app)
-const userId = localStorage.getItem('userId') || 'demo-user';
+const savedUser = localStorage.getItem('limineo_user');
+const userId = savedUser ? JSON.parse(savedUser).id : 'demo-user';
 
 // ─── PRESETS par mode ─────────────────────────────────────────────────────────
 const PRESETS = {
-  image: ['🌅 Coucher de soleil', '🏙️ Ville futuriste', '🌊 Océan tempête', '🌌 Galaxie', '🦁 Lion majestueux'],
-  video: ['🚗 Course poursuite', '🌋 Éruption volcanique', '🌊 Vagues géantes', '🚀 Décollage fusée', '⚡ Orage dramatique'],
-  img2video: ['🌬️ Vent dans les cheveux', '👁️ Clignement des yeux', '🔥 Flammes autour', '💫 Lumière magique', '🌧️ Pluie légère'],
-  actor: [], // pas de preset texte pour actor
+  image: [],
+  video: [],
+  img2video: [],
+  actor: [],
 };
 
 const PRESET_TEXTS = {
@@ -422,7 +471,7 @@ function usePreset(label) {
 
 function updateGenerateBtn() {
   const icons = { image: '🖼️', video: '🎬', img2video: '🎬', actor: '🎭' };
-  const labels = { image: 'Générer l\'image', video: 'Générer la vidéo', img2video: 'Animer l\'image', actor: 'Me mettre dans le film !' };
+  const labels = { image: 'Générer l\'image', video: 'Générer la vidéo', img2video: 'Animer l\'image', actor: 'Générer maintenant' };
   document.getElementById('generateBtnIcon').textContent = icons[currentMode];
   document.getElementById('generateBtnText').textContent = labels[currentMode];
 }
@@ -477,7 +526,7 @@ function selectDuration(el, sec) {
 
 // ─── UNIVERSE ─────────────────────────────────────────────────────────────────
 function selectUniverse(el, universe) {
-  document.querySelectorAll('.universe-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.universe-chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   currentUniverse = universe;
 }
