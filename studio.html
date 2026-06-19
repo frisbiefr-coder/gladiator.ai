@@ -385,7 +385,7 @@ function setMode(mode) {
   uploadSection.style.display = (mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
   universeSection.style.display = mode === 'actor' ? 'block' : 'none';
   actorTip.style.display = mode === 'actor' ? 'block' : 'none';
-  promptSection.style.display = mode === 'actor' ? 'none' : 'block';
+  promptSection.style.display = 'block';
   durationSection.style.display = (mode === 'video' || mode === 'img2video' || mode === 'actor') ? 'block' : 'none';
   if (mode === 'actor') {
     uploadLabel.innerHTML = '<span>📸</span> Ta photo (tu seras l\'acteur)';
